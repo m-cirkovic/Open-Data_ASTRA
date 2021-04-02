@@ -1,0 +1,10 @@
+{
+  "/api": {
+    "target": "https://api.opentransportdata.swiss/TDP/Soap_Datex2/Pull ",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api": ""
+    }
+  }
+}

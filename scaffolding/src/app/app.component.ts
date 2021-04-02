@@ -17,6 +17,7 @@ export class AppComponent {
     console.log('constructor opened');
   }
 
+
   onClickMe() {
     const body = '<?xml version="1.0" encoding="UTF-8"?>\n' +
       '<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tdpplv1="http://datex2.eu/wsdl/TDP/Soap_Datex2/Pull/v1" xmlns:dx223="http://datex2.eu/schema/2/2_0">\n' +
@@ -38,9 +39,10 @@ export class AppComponent {
       headers: new HttpHeaders()
         .set('Content-Type', 'text/xml')
         .append('Authorization', '57c5dbbbf1fe4d0001000018543da6f8789f4f868587d0de6163eccd')
-        .append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS')
+        .append('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, DELETE, PUT')
         .append('Access-Control-Allow-Origin', '*')
-        .append('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Access-Control-Allow-Origin, Access-Control-Request-Method')
+        .append('Access-Control-Allow-Credentials', 'true')
+        .append('Access-Control-Allow-Headers', 'append,delete,entries,foreach,get,has,keys,set,values,Authorization')
         .append('SOAPAction', 'http://opentransportdata.swiss/TDP/Soap_Datex2/Pull/v1/pullMeasuredData')
         .append('SOAPAction', 'http://opentransportdata.swiss/TDP/Soap_Datex2/Pull/v1/pullMeasurementSiteTable')
     }).subscribe(data => {

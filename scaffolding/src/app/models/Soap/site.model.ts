@@ -53,6 +53,7 @@ export interface MeasurementSpecificCharacteristicsWrapper {
 }
 
 export interface MeasurementSpecificCharacteristics{
+    ['@_index']:string;
     period: Period;
     specificMeasurementValueType: SpecificMeasurementValueType;
     specificVehicleCharacteristics: SpecificVehicleCharacteristics;

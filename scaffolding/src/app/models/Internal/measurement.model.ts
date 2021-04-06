@@ -9,7 +9,7 @@ export class Measurements{
         return this._publicationDate
     }
 
-    get Measurement(): Measurement[]{
+    get measurement(): Measurement[]{
         return this._measurements;
     }
 }

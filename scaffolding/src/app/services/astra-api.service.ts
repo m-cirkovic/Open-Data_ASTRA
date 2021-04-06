@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import * as Parser from 'fast-xml-parser'
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { concatAll, map, tap } from 'rxjs/operators';
 import { SitePayloadPublication } from '../models/Soap/site.model';
 import { SoapWrapper } from '../models/Soap/soap.model';
@@ -16,12 +16,41 @@ export class AstraApiService {
   private _auth = '57c5dbbbf1fe4d0001000018543da6f8789f4f868587d0de6163eccd';
   private _body$ = this._http.get('assets/SoapRequestBody.xml', { responseType: 'text' });
 
+  private _measurements: Measurements;
+  private _sites: Site[];
+
   constructor(private _http: HttpClient) {
-    
   }
 
+  public getMeasurements(): Observable<Measurements>{
+    if(this._measurements){
+      return of(this._measurements)
+    }else{
+      return this._fetchMeasurements();
+    }
+  }
 
-  public getMeasurements(): Observable<any> {
+  public getSites(): Observable<Site[]>{
+    if(this._sites){
+      return of(this._sites);
+    }else{
+      return this._fetchSites();
+    }
+  }
+
+  public getNestedSites(): Observable<Site[]>{
+    return this.getMeasurements().pipe(
+      map(m => new Map<string, Measurement>(m.measurement.map(measurement => [measurement.siteId, measurement]))),
+      map(m => this.getSites().pipe( map(site => {
+        site.forEach(s => s.measurements = m.get(s.siteId));
+        return site;
+      }))),
+      concatAll(),
+      tap(s => this._sites = s),
+    )
+  }
+
+  private _fetchMeasurements(): Observable<Measurements> {
     return this._body$.pipe(
       map(body => this._http.post('/api', body, {
         responseType: 'text',
@@ -70,11 +99,11 @@ export class AstraApiService {
         }
       }
       ))),
-      tap(console.log)
+      tap(ms => this._measurements = ms),
     )
   }
 
-  public getSites() {
+  private _fetchSites(): Observable<Site[]> {
     return this._body$.pipe(
       map(body => this._http.post('/api', body, {
         responseType: 'text',
@@ -93,12 +122,13 @@ export class AstraApiService {
         site.measurementSiteLocation.pointByCoordinates.pointCoordinates.longitude['#text'],
         site.measurementSiteLocation.pointByCoordinates.pointCoordinates.latitude['#text'],
         site.measurementSpecificCharacteristics.map(c => new MeasurementCharacteristics(
+          c.measurementSpecificCharacteristics['@_index'],
           c.measurementSpecificCharacteristics.period['#text'],
           c.measurementSpecificCharacteristics.specificMeasurementValueType['#text'],
           c.measurementSpecificCharacteristics.specificVehicleCharacteristics.vehicleType['#text']
         ))
       ))),
-      tap(console.log),
+      tap(sites => this._sites = sites)
     )
   }
 }

@@ -16,13 +16,4 @@ export class AppComponent {
   constructor(private _astraApi: AstraApiService) {
   }
 
-  getMeasurementsites() {
-    this._astraApi.getSites()
-      .subscribe();
-  }
-
-  getMeasurements() {
-    this._astraApi.getMeasurements()
-      .subscribe();
-  }
 }

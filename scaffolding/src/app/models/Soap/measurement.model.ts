@@ -42,7 +42,7 @@ export interface AverageVehicleSpeed {
 }
 
 export interface Speed {
-    ['@_type']: number;
+    ['@_type']: string;
     ['#text']: number;
 }
 
@@ -70,7 +70,7 @@ export interface Value{
 
 export interface VehicleFlowRate {
     '#text': number;
-    ['@_type']: number;
+    ['@_type']: string;
 }
 
 export interface MeasurementSiteReference {

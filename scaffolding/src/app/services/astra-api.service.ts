@@ -1,13 +1,14 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import * as Parser from 'fast-xml-parser'
-import { Observable, of } from 'rxjs';
-import { concatAll, map, tap } from 'rxjs/operators';
+import { iif, Observable, of } from 'rxjs';
+import { catchError, concatAll, map, mergeMap, tap } from 'rxjs/operators';
 import { SitePayloadPublication } from '../models/Soap/site.model';
 import { SoapWrapper } from '../models/Soap/soap.model';
-import { MeasurementCharacteristics, Site } from '../models/Internal/site.model';
-import { MeasurementPayloadPublication, MeasuredValue, Value, BasicData } from '../models/Soap/measurement.model';
+import { MeasurementCharacteristics, Lane, Site } from '../models/Internal/site.model';
+import { MeasurementPayloadPublication } from '../models/Soap/measurement.model';
 import { Measurements, Measurement, MeasurementData } from '../models/Internal/measurement.model';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -15,39 +16,70 @@ export class AstraApiService {
 
   private _auth = '57c5dbbbf1fe4d0001000018543da6f8789f4f868587d0de6163eccd';
   private _body$ = this._http.get('assets/SoapRequestBody.xml', { responseType: 'text' });
+  private _errorMessageMap: Map<string, string>;
 
   private _measurements: Measurements;
-  private _sites: Site[];
+  private _lanes: Lane[];
+  private _staticLanes: Lane[];
 
   constructor(private _http: HttpClient) {
+    this._http.get('assets/ErrorMessages.json').subscribe(msg => this._errorMessageMap = new Map(Object.entries(msg)));
   }
 
-  public getMeasurements(): Observable<Measurements>{
-    if(this._measurements){
+
+  public getStaticLanes(): Observable<Lane[]> {
+    if (this._measurements) {
+      return of(this._staticLanes);
+    } else {
+      return this._fetchStaticLanes();
+    }
+  }
+
+  public getMeasurements(): Observable<Measurements> {
+    if (this._measurements) {
       return of(this._measurements)
-    }else{
+    } else {
       return this._fetchMeasurements();
     }
   }
 
-  public getSites(): Observable<Site[]>{
-    if(this._sites){
-      return of(this._sites);
-    }else{
-      return this._fetchSites();
+  public getLanes(): Observable<Lane[]> {
+    if (this._lanes) {
+      return of(this._lanes);
+    } else {
+      return this._fetchLanes();
     }
   }
 
-  public getNestedSites(): Observable<Site[]>{
+  public getNestedLanes(laneOptions?: { dynamic?: boolean }): Observable<Lane[]> {
+    let data$: Observable<Lane[]> = laneOptions?.dynamic ? this.getLanes() : this.getStaticLanes();
     return this.getMeasurements().pipe(
       map(m => new Map<string, Measurement>(m.measurement.map(measurement => [measurement.siteId, measurement]))),
-      map(m => this.getSites().pipe( map(site => {
-        site.forEach(s => s.measurements = m.get(s.siteId));
-        return site;
-      }))),
+      map(m => data$.pipe(
+        tap(site => site.forEach(s => s.measurements = m.get(s.siteId)))
+      )),
       concatAll(),
-      tap(s => this._sites = s),
+      tap(s => this._lanes = s),
     )
+  }
+
+  public getSites(siteOptions?: { dynamic?: boolean }): Observable<Site[]> {
+    return this.getNestedLanes(siteOptions).pipe(
+      map(lanes => lanes.reduce(this._laneReducer, new Map<number, Lane[]>())),
+      map(map => Array.from(map.entries())),
+      map(k => k.map(s => new Site(s[0], s[1])))
+    )
+  }
+
+  private _laneReducer(prev: Map<number, Lane[]>, curr: Lane): Map<number, Lane[]> {
+    let i = prev.get(curr.specificLocation)
+    if (i) {
+      i.push(curr);
+      prev.set(curr.specificLocation, i);
+    } else {
+      prev.set(curr.specificLocation, [curr]);
+    }
+    return prev;
   }
 
   private _fetchMeasurements(): Observable<Measurements> {
@@ -83,7 +115,8 @@ export class AstraApiService {
                   v.measuredValue.basicData.vehicleFlow.vehicleFlowRate['@_type']
                 )
               }
-            })
+            }),
+            new Date(ms.publicationTime['#text'])
           )
         } else {
           const v = m.measuredValue;
@@ -94,7 +127,8 @@ export class AstraApiService {
               v.measuredValue.basicData.vehicleFlow.vehicleFlowRate['#text'],
               v.measuredValue.basicData.vehicleFlow.vehicleFlowRate['@_type']
             )],
-            v.measuredValue.basicData.vehicleFlow.reasonForDataError.values.value['#text']
+            new Date(ms.publicationTime['#text']),
+            this._errorMessageMap.get(v.measuredValue.basicData.vehicleFlow.reasonForDataError.values.value['#text'])
           )
         }
       }
@@ -103,7 +137,14 @@ export class AstraApiService {
     )
   }
 
-  private _fetchSites(): Observable<Site[]> {
+  private _fetchStaticLanes(): Observable<Lane[]> {
+    return this._http.get('assets/StaticMeasurementSites.xml', { responseType: 'text' }).pipe(
+      this._mapLanes,
+      tap(staticLanes => this._staticLanes = staticLanes)
+    )
+  }
+
+  private _fetchLanes(): Observable<Lane[]> {
     return this._body$.pipe(
       map(body => this._http.post('/api', body, {
         responseType: 'text',
@@ -114,11 +155,19 @@ export class AstraApiService {
       })
       ),
       concatAll(),
+      this._mapLanes,
+      tap(lanes => this._lanes = lanes)
+    )
+  }
+
+  private _mapLanes(lanes: Observable<string>): Observable<Lane[]> {
+    return lanes.pipe(
       map(xml => Parser.parse(xml, { ignoreNameSpace: true, ignoreAttributes: false })),
-      map(sites => <SoapWrapper<SitePayloadPublication>>sites),
-      map(sites => sites.Envelope.Body.d2LogicalModel.payloadPublication.measurementSiteTable.measurementSiteRecord),
-      map(sites => sites.map(site => new Site(
+      map(lanes => <SoapWrapper<SitePayloadPublication>>lanes),
+      map(lanes => lanes.Envelope.Body.d2LogicalModel.payloadPublication.measurementSiteTable.measurementSiteRecord),
+      map(lanes => lanes.map(site => new Lane(
         site['@_id'],
+        site.measurementSiteLocation.alertCPoint?.alertCMethod4PrimaryPointLocation.alertCLocation.specificLocation['#text'],
         site.measurementSiteLocation.pointByCoordinates.pointCoordinates.longitude['#text'],
         site.measurementSiteLocation.pointByCoordinates.pointCoordinates.latitude['#text'],
         site.measurementSpecificCharacteristics.map(c => new MeasurementCharacteristics(
@@ -128,7 +177,6 @@ export class AstraApiService {
           c.measurementSpecificCharacteristics.specificVehicleCharacteristics.vehicleType['#text']
         ))
       ))),
-      tap(sites => this._sites = sites)
-    )
+    );
   }
 }

@@ -20,7 +20,19 @@ export interface MeasurementSiteLocation {
 }
 
 export interface AlertCPoint {
-    //can be implemented if information is needed
+    alertCMethod4PrimaryPointLocation: AlertCMethod4PrimaryPointLocation;
+}
+
+export interface AlertCMethod4PrimaryPointLocation{
+    alertCLocation: AlertCLocation;
+}
+
+export interface AlertCLocation{
+    specificLocation: SpecificLocation;
+}
+
+export interface SpecificLocation{
+    ['#text']: number
 }
 
 export interface PointByCoordinates {

@@ -18,7 +18,8 @@ export class Measurement{
 
     constructor(
         private _siteId: string,
-        private _measurements: MeasurementData[],
+        private _measurementData: MeasurementData[],
+        private _publicationTime: Date,
         private _reasonForDataError?: string,
     ){}
 
@@ -26,12 +27,16 @@ export class Measurement{
         return this._siteId;
     }
 
-    get measurements(): MeasurementData[]{
-        return this._measurements;
+    get measurementData(): MeasurementData[]{
+        return this._measurementData;
     }
 
     get reasonForDataError(): string{
         return this._reasonForDataError;
+    }
+
+    get publicationTime():Date{
+        return this._publicationTime;
     }
 }
 
@@ -39,7 +44,7 @@ export class MeasurementData{
     constructor(
         private _typeId: string,
         private _value: number,
-        private _signifier: number,
+        private _signifier: string,
     ){}
 
     get type(): string{
@@ -50,7 +55,7 @@ export class MeasurementData{
         return this._value;
     }
 
-    get signifier(): number{
+    get signifier(): string{
         return this._signifier;
     }
 }

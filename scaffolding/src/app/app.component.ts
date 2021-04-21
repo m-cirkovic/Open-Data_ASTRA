@@ -1,9 +1,5 @@
-import { Component } from '@angular/core';
-import * as Parser from 'fast-xml-parser'
-import { SoapWrapper } from './models/Soap/soap.model';
-import { MeasurementPayloadPublication } from './models/Soap/measurement.model';
-import { SitePayloadPublication } from './models/Soap/site.model';
-import { AstraApiService } from './services/astra-api.service';
+import {Component, ElementRef, OnInit, Renderer2} from '@angular/core';
+import {AstraApiService} from './services/astra-api.service';
 
 @Component({
   selector: 'app-root',
@@ -15,5 +11,4 @@ export class AppComponent {
 
   constructor(private _astraApi: AstraApiService) {
   }
-
 }

@@ -8,6 +8,21 @@ import { ScatterComponent } from './scatter/scatter.component';
 import { HttpClientModule } from '@angular/common/http';
 import { MapComponent } from './map/map.component';
 import { AppRoutingModule } from './app-routing.module';
+import {AccordionModule} from 'ngx-bootstrap/accordion';
+import {BsModalService, ModalModule} from 'ngx-bootstrap/modal';
+import {ComponentLoaderFactory} from 'ngx-bootstrap/component-loader';
+import {PositioningService} from 'ngx-bootstrap/positioning';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {MarkerService} from './services/marker.service';
+import {PopUpService} from './services/pop-up.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ModalComponent } from './modal/modal.component';
+import {MatDialogModule} from '@angular/material/dialog';
+
+
+
+
+
 
 @NgModule({
   declarations: [
@@ -15,15 +30,21 @@ import { AppRoutingModule } from './app-routing.module';
     BarComponent,
     PieComponent,
     ScatterComponent,
-    MapComponent
+    MapComponent,
+    ModalComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
-    
+    AccordionModule.forRoot(),
+    ModalModule,
+    NgbModule,
+    BrowserAnimationsModule,
+    MatDialogModule
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  providers: [BsModalService, ComponentLoaderFactory, PositioningService, MarkerService, PopUpService],
+  bootstrap: [AppComponent],
+  entryComponents: [ModalComponent]
 })
 export class AppModule { }

@@ -7,7 +7,7 @@ import {AstraApiService} from './services/astra-api.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'scaffolding';
+  title = 'Verkehrszähler';
 
   constructor(private _astraApi: AstraApiService) {
   }

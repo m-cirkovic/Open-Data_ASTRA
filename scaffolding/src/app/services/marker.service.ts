@@ -4,7 +4,7 @@ import * as L from 'leaflet';
 import { PopUpService } from './pop-up.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ModalComponent } from '../modal/modal.component';
-import { Observable } from 'rxjs';
+import { from, Observable, of } from 'rxjs';
 import { catchError, concatAll, map, mergeMap, tap } from 'rxjs/operators';
 
 @Injectable({
@@ -17,8 +17,8 @@ export class MarkerService {
     public matDialog: MatDialog) { }
 
   makeLayers(): Observable<L.LayerGroup[]> {
-
-    return this._astraApi.getSites({ dynamic: false })
+    return of([L.layerGroup()]);
+   /*return this._astraApi.getSites({ dynamic: false })
       .pipe(
         map(sites => {
           let errorLayer = L.layerGroup();
@@ -50,7 +50,7 @@ export class MarkerService {
               }));
           return [errorLayer, normalLayer];
         })
-      );
+      );*/
   }
 
   // https://morioh.com/p/903aa1355d7f -> to scale circle

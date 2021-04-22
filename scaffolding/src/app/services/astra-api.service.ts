@@ -1,13 +1,15 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import * as Parser from 'fast-xml-parser'
-import { iif, Observable, of } from 'rxjs';
-import { catchError, concatAll, map, mergeMap, tap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, concatAll, map, tap } from 'rxjs/operators';
 import { SitePayloadPublication } from '../models/Soap/site.model';
 import { SoapWrapper } from '../models/Soap/soap.model';
 import { MeasurementCharacteristics, Lane, Site } from '../models/Internal/site.model';
-import { MeasurementPayloadPublication } from '../models/Soap/measurement.model';
+import { BasicData, MeasuredValue, MeasurementPayloadPublication } from '../models/Soap/measurement.model';
 import { Measurements, Measurement, MeasurementData } from '../models/Internal/measurement.model';
+import { MeasurementIndexMapperService } from './measurement-index-mapper.service';
+import { ErrorMessageMapperService } from './error-message-mapper.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,73 +18,11 @@ export class AstraApiService {
 
   private _auth = '57c5dbbbf1fe4d0001000018543da6f8789f4f868587d0de6163eccd';
   private _body$ = this._http.get('assets/SoapRequestBody.xml', { responseType: 'text' });
-  private _errorMessageMap: Map<string, string>;
 
-  private _measurements: Measurements;
-  private _lanes: Lane[];
-  private _staticLanes: Lane[];
-
-  constructor(private _http: HttpClient) {
-    this._http.get('assets/ErrorMessages.json').subscribe(msg => this._errorMessageMap = new Map(Object.entries(msg)));
-  }
-
-
-  public getStaticLanes(): Observable<Lane[]> {
-    if (this._measurements) {
-      return of(this._staticLanes);
-    } else {
-      return this._fetchStaticLanes();
-    }
+  constructor(private _http: HttpClient, private _indexMapper: MeasurementIndexMapperService, private _msgMapper: ErrorMessageMapperService) {
   }
 
   public getMeasurements(): Observable<Measurements> {
-    if (this._measurements) {
-      return of(this._measurements)
-    } else {
-      return this._fetchMeasurements();
-    }
-  }
-
-  public getLanes(): Observable<Lane[]> {
-    if (this._lanes) {
-      return of(this._lanes);
-    } else {
-      return this._fetchLanes();
-    }
-  }
-
-  public getNestedLanes(laneOptions?: { dynamic?: boolean }): Observable<Lane[]> {
-    let data$: Observable<Lane[]> = laneOptions?.dynamic ? this.getLanes() : this.getStaticLanes();
-    return this.getMeasurements().pipe(
-      map(m => new Map<string, Measurement>(m.measurement.map(measurement => [measurement.siteId, measurement]))),
-      map(m => data$.pipe(
-        tap(site => site.forEach(s => s.measurements = m.get(s.siteId)))
-      )),
-      concatAll(),
-      tap(s => this._lanes = s),
-    )
-  }
-
-  public getSites(siteOptions?: { dynamic?: boolean }): Observable<Site[]> {
-    return this.getNestedLanes(siteOptions).pipe(
-      map(lanes => lanes.reduce(this._laneReducer, new Map<number, Lane[]>())),
-      map(map => Array.from(map.entries())),
-      map(k => k.map(s => new Site(s[0], s[1])))
-    )
-  }
-
-  private _laneReducer(prev: Map<number, Lane[]>, curr: Lane): Map<number, Lane[]> {
-    let i = prev.get(curr.specificLocation)
-    if (i) {
-      i.push(curr);
-      prev.set(curr.specificLocation, i);
-    } else {
-      prev.set(curr.specificLocation, [curr]);
-    }
-    return prev;
-  }
-
-  private _fetchMeasurements(): Observable<Measurements> {
     return this._body$.pipe(
       map(body => this._http.post('/api', body, {
         responseType: 'text',
@@ -100,51 +40,42 @@ export class AstraApiService {
         if (m.measuredValue instanceof Array) {
           return new Measurement(
             m.measurementSiteReference['@_id'],
-            m.measuredValue.map(v => {
-              let speed = v.measuredValue.basicData.averageVehicleSpeed?.speed['#text'];
-              if (speed) {
-                return new MeasurementData(
-                  v['@_type'],
-                  speed,
-                  v.measuredValue.basicData.averageVehicleSpeed.speed['@_type']
-                )
-              } else {
-                return new MeasurementData(
-                  v['@_type'],
-                  v.measuredValue.basicData.vehicleFlow.vehicleFlowRate['#text'],
-                  v.measuredValue.basicData.vehicleFlow.vehicleFlowRate['@_type']
-                )
-              }
-            }),
-            new Date(ms.publicationTime['#text'])
+            new Date(ms.publicationTime['#text']),
+            m.measuredValue.map(v => new MeasurementData(
+              this._indexMapper.getVehicle(v['@_index']),
+              this._indexMapper.getUnit(v['@_index']),
+              this._getMeasurementDataValue(v.measuredValue.basicData)
+            )
+            )
           )
         } else {
-          const v = m.measuredValue;
           return new Measurement(
             m.measurementSiteReference['@_id'],
-            [new MeasurementData(
-              v['@_type'],
-              v.measuredValue.basicData.vehicleFlow.vehicleFlowRate['#text'],
-              v.measuredValue.basicData.vehicleFlow.vehicleFlowRate['@_type']
-            )],
             new Date(ms.publicationTime['#text']),
-            this._errorMessageMap.get(v.measuredValue.basicData.vehicleFlow.reasonForDataError.values.value['#text'])
+            [
+              new MeasurementData(
+                this._indexMapper.getVehicle(m.measuredValue['@_index']),
+                this._indexMapper.getUnit(m.measuredValue['@_index']),
+                this._getMeasurementDataValue(m.measuredValue.measuredValue.basicData)
+              )
+            ],
+            this._msgMapper.getMsg(m.measuredValue.basicData?.vehicleFlow.reasonForDataError.values.value['#text'])
           )
         }
-      }
-      ))),
-      tap(ms => this._measurements = ms),
+      }))),
+      tap(console.log)
     )
   }
 
-  private _fetchStaticLanes(): Observable<Lane[]> {
-    return this._http.get('assets/StaticMeasurementSites.xml', { responseType: 'text' }).pipe(
-      this._mapLanes,
-      tap(staticLanes => this._staticLanes = staticLanes)
-    )
+  private _getMeasurementDataValue(basicData: BasicData): number {
+    if (basicData.averageVehicleSpeed?.speed['#text']) {
+      return basicData.averageVehicleSpeed?.speed['#text']
+    } else {
+      return basicData.vehicleFlow.vehicleFlowRate['#text']
+    }
   }
 
-  private _fetchLanes(): Observable<Lane[]> {
+  public getLanes(): Observable<Lane[]> {
     return this._body$.pipe(
       map(body => this._http.post('/api', body, {
         responseType: 'text',
@@ -155,12 +86,11 @@ export class AstraApiService {
       })
       ),
       concatAll(),
-      this._mapLanes,
-      tap(lanes => this._lanes = lanes)
+      this._mapToLanes,
     )
   }
 
-  private _mapLanes(lanes: Observable<string>): Observable<Lane[]> {
+  private _mapToLanes(lanes: Observable<string>): Observable<Lane[]> {
     return lanes.pipe(
       map(xml => Parser.parse(xml, { ignoreNameSpace: true, ignoreAttributes: false })),
       map(lanes => <SoapWrapper<SitePayloadPublication>>lanes),

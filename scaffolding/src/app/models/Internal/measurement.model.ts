@@ -18,8 +18,8 @@ export class Measurement{
 
     constructor(
         private _siteId: string,
-        private _measurementData: MeasurementData[],
         private _publicationTime: Date,
+        private _measurementData: MeasurementData[],
         private _reasonForDataError?: string,
     ){}
 
@@ -38,24 +38,31 @@ export class Measurement{
     get publicationTime():Date{
         return this._publicationTime;
     }
+
+    get summarizedMeasurements(){
+        //TODO: CachService (Datenverwaltungsklasse), LaneMapper, SiteMapper, Sitedrawer, D3 einbinden
+        return "";
+    }
 }
 
 export class MeasurementData{
     constructor(
-        private _typeId: string,
-        private _value: number,
-        private _signifier: string,
+        private _vehicleType: string,
+        private _unit: string,
+        private _value: number
     ){}
 
-    get type(): string{
-        return this._typeId;
+    get vehicleType(): string{
+        return this._vehicleType;
+    }
+
+    get unit(): string{
+        return this._unit;
     }
 
     get value(): number{
         return this._value;
     }
 
-    get signifier(): string{
-        return this._signifier;
-    }
+    
 }

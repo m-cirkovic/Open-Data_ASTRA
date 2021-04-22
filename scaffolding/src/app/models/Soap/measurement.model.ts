@@ -26,7 +26,7 @@ export interface SiteMeasurements {
     ]
  */
 export interface MeasuredValue {
-    '@_type': string
+    '@_index': string;
     measuredValue?: MeasuredValue;
     basicData?: BasicData;
     measurementTimeDefault: AstraTime;

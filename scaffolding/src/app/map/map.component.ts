@@ -1,8 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-} from '@angular/core';
+import { AfterViewInit, Component, ElementRef } from '@angular/core';
 import * as L from 'leaflet';
 import { AstraApiService } from '../services/astra-api.service';
 
@@ -38,10 +34,9 @@ export class MapComponent implements AfterViewInit {
     OpenStreetMap: this.openStreetMap_CH,
     OpenTopoMap: this.openTopoMap
   };
-  private siteLayers: L.Control.LayersObject;
 
-  constructor(private _astraApi: AstraApiService,
-    private _elementRef: ElementRef,
+  constructor(
+    private _astraApi: AstraApiService,
     public config: NgbModalConfig,
     private markerService: MarkerService) {
   }
@@ -49,11 +44,7 @@ export class MapComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this._initMap();
-    this.markerService.makeLayers()
-      .pipe(tap(la => la[1].addTo(this.map)))
-      .subscribe(la => {
-        L.control.layers(this.mapLayers, {'Fehlerhafte Messstellen':la[0], 'Normale Messstellen': la[1]}, { position: 'topleft' }).addTo(this.map);
-      });
+    this._astraApi.getMeasurements().subscribe();
   }
 
   private _initMap(): void {
@@ -62,6 +53,7 @@ export class MapComponent implements AfterViewInit {
       zoomControl: false
     }).setView([46.6, 7.7], 10);
     this.swissTopo.addTo(this.map);
+    L.control.layers(this.mapLayers, undefined, { position: 'topleft' }).addTo(this.map);
   }
 
 }

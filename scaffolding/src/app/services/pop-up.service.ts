@@ -30,7 +30,7 @@ export class PopUpService {
   private _mapToHtml(m: Measurement): string {
     let res = '';
     let iteration = 0;
-    m.measurementData.forEach(d => res += `${iteration++ === 0 ? '' : '<tr><td><p></p></td>'}<td>${d.signifier.split(':')[1]}</td><td>${d.value}</td></tr>`);
+    m.measurementData.forEach(d => res += `${iteration++ === 0 ? '' : '<tr><td><p></p></td>'}<td>${d.unit}</td><td>${d.value}</td></tr>`);
     return res;
   }
 }

@@ -1,7 +1,6 @@
 import { Measurement } from "./measurement.model";
 
 export class Site {
-
     
     constructor(
         private _specificLocation: number,

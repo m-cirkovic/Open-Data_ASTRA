@@ -1,10 +1,11 @@
 import { AfterViewInit, Component, ElementRef } from '@angular/core';
 import * as L from 'leaflet';
-import { AstraApiService } from '../services/astra-api.service';
+import { AstraApiService } from '../services/data/astra/astra-api.service';
 
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { MarkerService } from '../services/marker.service';
+import { MarkerService } from '../services/map/marker.service';
 import { tap } from 'rxjs/operators';
+import { AstraCacheService } from '../services/data/astra/astra-cache.service';
 
 
 @Component({
@@ -36,15 +37,14 @@ export class MapComponent implements AfterViewInit {
   };
 
   constructor(
-    private _astraApi: AstraApiService,
     public config: NgbModalConfig,
     private markerService: MarkerService) {
-  }
+    }
 
 
   ngAfterViewInit(): void {
     this._initMap();
-    this._astraApi.getMeasurements().subscribe();
+    
   }
 
   private _initMap(): void {

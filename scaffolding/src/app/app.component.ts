@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit, Renderer2} from '@angular/core';
-import {AstraApiService} from './services/astra-api.service';
+import {AstraApiService} from './services/data/astra/astra-api.service';
 
 @Component({
   selector: 'app-root',

@@ -40,7 +40,7 @@ export class Measurement{
     }
 
     get summarizedMeasurements(){
-        //TODO: CachService (Datenverwaltungsklasse), LaneMapper, SiteMapper, Sitedrawer, D3 einbinden
+        //TODO: CacheService (Datenverwaltungsklasse), LaneMapper, SiteMapper, Sitedrawer, D3 einbinden
         return "";
     }
 }

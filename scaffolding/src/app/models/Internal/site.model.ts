@@ -1,7 +1,11 @@
+import { ThisReceiver } from "@angular/compiler";
 import { Measurement } from "./measurement.model";
 
 export class Site {
     
+    
+    public locationName: string;
+
     constructor(
         private _specificLocation: number,
         private _lanes: Lane[]

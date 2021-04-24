@@ -3,9 +3,11 @@ import * as L from 'leaflet';
 import { AstraApiService } from '../services/data/astra/astra-api.service';
 
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { MarkerService } from '../services/map/marker.service';
+import { MarkerService as LayerService } from '../services/map/marker.service';
 import { tap } from 'rxjs/operators';
 import { AstraCacheService } from '../services/data/astra/astra-cache.service';
+import { LaneLayerService } from '../services/map/lane-layer.service';
+import { PopUpService } from '../services/map/pop-up.service';
 
 
 @Component({
@@ -29,7 +31,9 @@ export class MapComponent implements AfterViewInit {
     attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a>, SRTM | © <a href="http://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
   });
 
-  private map;
+  private map: L.Map;
+  private sitelayer: L.LayerGroup;
+
   public mapLayers: L.Control.LayersObject = {
     SwissTopo: this.swissTopo,
     OpenStreetMap: this.openStreetMap_CH,
@@ -38,13 +42,18 @@ export class MapComponent implements AfterViewInit {
 
   constructor(
     public config: NgbModalConfig,
-    private markerService: MarkerService) {
-    }
+    private _layerService: LaneLayerService,
+    private _popupService: PopUpService) {
+  }
 
 
   ngAfterViewInit(): void {
     this._initMap();
-    
+    this._layerService.getAll().subscribe(layers => {
+      this.sitelayer = layers;
+      this.sitelayer.addTo(this.map)
+    });
+
   }
 
   private _initMap(): void {

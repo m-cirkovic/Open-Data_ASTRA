@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ScatterComponent } from './scatter.component';
+import { SplashScreenComponent } from './splash-screen.component';
 
-describe('ScatterComponent', () => {
-  let component: ScatterComponent;
-  let fixture: ComponentFixture<ScatterComponent>;
+describe('SplashScreenComponent', () => {
+  let component: SplashScreenComponent;
+  let fixture: ComponentFixture<SplashScreenComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ScatterComponent ]
+      declarations: [ SplashScreenComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ScatterComponent);
+    fixture = TestBed.createComponent(SplashScreenComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

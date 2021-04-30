@@ -1,30 +1,24 @@
-import {Injectable} from '@angular/core';
-import {
-  Router, Resolve,
-  RouterStateSnapshot,
-  ActivatedRouteSnapshot
-} from '@angular/router';
-import {Observable, of} from 'rxjs';
-import {SplashScreenStateService} from '../services/splash-screen-state.service';
-import {MarkerService} from '../services/marker.service';
+import { Injectable } from '@angular/core';
+import { Resolve, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
+import { LayerGroup } from 'leaflet';
+import { Observable, of } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { LaneLayerService } from '../services/map/lane-layer.service';
+import { SplashScreenStateService } from '../services/splash-screen-state.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class MapResolver implements Resolve<boolean> {
+export class MapResolver implements Resolve<LayerGroup> {
+  
   constructor(
-    private markerService: MarkerService,
-    private splashScreenStateService: SplashScreenStateService
+    private splashScreenStateService: SplashScreenStateService,
+    private layerService: LaneLayerService
   ) {
   }
 
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
-    return new Promise((resolve, reject) => {
-      this.markerService.makeLayers();
-      setTimeout(() => {
-        this.splashScreenStateService.stop();
-        resolve(of(['lol']));
-      }, 5000);
-    });
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<LayerGroup> {
+    return this.layerService.getAll().pipe(tap(() => this.splashScreenStateService.stop));
+
   }
 }

@@ -9,7 +9,6 @@ import {BsModalService, ModalModule} from 'ngx-bootstrap/modal';
 import {ComponentLoaderFactory} from 'ngx-bootstrap/component-loader';
 import {PositioningService} from 'ngx-bootstrap/positioning';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import {MarkerService} from './services/map/marker.service';
 import {PopUpService} from './services/map/pop-up.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ModalComponent } from './modal/modal.component';
@@ -39,7 +38,6 @@ import { SplashScreenComponent } from './splash-screen/splash-screen.component';
     BsModalService,
     ComponentLoaderFactory,
     PositioningService,
-    MarkerService,
     PopUpService,
     SplashScreenStateService
   ],

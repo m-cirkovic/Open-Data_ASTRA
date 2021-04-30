@@ -17,7 +17,7 @@ export class LaneLayerService {
 
 
     getAll(): Observable<L.LayerGroup>{
-      return this._astraCache.sitesWithLatestMeasurements().pipe(
+      return this._astraCache.sitesWithLatestMeasurements({dynamicMeasurements:false, dynamicSites:false}).pipe(
         map(l => {
           let all = L.layerGroup();
           l.map(s => L.circleMarker([s.lanes[0].lat, s.lanes[0].lng], {color: 'blue'}).addTo(all).bindPopup(this._popupService.siteToHtml(s)));

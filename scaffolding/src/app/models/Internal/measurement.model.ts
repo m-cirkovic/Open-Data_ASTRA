@@ -39,20 +39,6 @@ export class Measurement{
         return this._publicationTime;
     }
 
-    get avgSpeed(): number{
-       let kmh:MeasurementData[] = this._measurementData.filter(m => m.unit ==='km/h')
-       let avgKmh = 0;
-       let num = 0;
-       kmh.forEach(k => {avgKmh+=k.value; num++})
-       return avgKmh / num 
-    }
-    get avgVehicles():number{
-        let kmh:MeasurementData[] = this._measurementData.filter(m => m.unit ==='Fahrzeug/h')
-        let avgNum = 0;
-        let num = 0;
-        kmh.forEach(k => {avgNum+=k.value; num++})
-        return avgNum / num
-    }
 }
 
 export class MeasurementData{

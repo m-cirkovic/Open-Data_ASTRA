@@ -18,20 +18,6 @@ export class Site {
     get lanes(){
         return this._lanes;
     }
-    
-    get avgSpeed():number{
-        let avg = 0;
-        let num = 0; 
-        this.lanes.forEach(l => {num++;avg += l.measurements?.avgSpeed})
-        return avg/num;
-    }
-
-    get avgVehicles():number{
-        let avg = 0;
-        let num = 0; 
-        this.lanes.forEach(l => {num++;avg += l.measurements?.avgVehicles})
-        return avg/num;
-    }
 
 }
 

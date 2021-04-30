@@ -11,7 +11,7 @@ export class PopUpService {
 
 
   public siteToHtml(site: Site): string{
-    return `<h1>Richtung ${site.locationName}</h1><p>Geschwindigkeit: ${site.avgSpeed}</p><p>Anzahl Fahrzeuge: ${site.avgVehicles}</p>`;
+    return `<h1>Richtung ${site.locationName}</h1><p>Geschwindigkeit: </p><p>Anzahl Fahrzeuge: </p>`;
   }
 
 }

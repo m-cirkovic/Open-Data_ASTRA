@@ -19,6 +19,7 @@ export class AstraCacheService {
 
 
   private _latestMeasurments: Measurements;
+  private _staticMeasurements: Measurements;
   private _dynamicSites: Site[];
   private _staticSites: Site[];
 
@@ -33,9 +34,10 @@ export class AstraCacheService {
    * Call to optain the latest measurements
    * @returns latest Measurements which are nested in the sites.
    */
-  public sitesWithLatestMeasurements(siteOptions?: { dynamic: boolean }): Observable<Site[]> {
-    let site$: Observable<Site[]> = siteOptions?.dynamic ? this._getDynamicSites() : this._getStaticSites();
-    return this._laneMapper.fillWithMeasurements(this._getLatestMeasurements(), site$)
+  public sitesWithLatestMeasurements(siteOptions?: { dynamicSites?: boolean, dynamicMeasurements?:boolean }): Observable<Site[]> {
+    let site$: Observable<Site[]> = siteOptions?.dynamicSites ? this._getDynamicSites() : this._getStaticSites();
+    let measurement$: Observable<Measurements> = siteOptions?.dynamicSites ? this._getLatestMeasurements() : this._getStaticMeasurements();
+    return this._laneMapper.fillWithMeasurements(measurement$, site$)
   }
 
 
@@ -44,6 +46,14 @@ export class AstraCacheService {
       return of(this._latestMeasurments)
     }else{
       return this._fetchMeasurements();
+    }
+  }
+
+  private _getStaticMeasurements(){
+    if(this._staticMeasurements){
+      return of(this._staticMeasurements)
+    }else{
+      return this._fetchStaticMeasurements();
     }
   }
 
@@ -61,6 +71,12 @@ export class AstraCacheService {
     } else {
       return this._fetchStaticSites()
     }
+  }
+
+  private _fetchStaticMeasurements(): Observable<Measurements>{
+    return this._astraApi.getStaticMeasurements().pipe(
+      tap( a=> this._staticMeasurements = a)
+    )
   }
 
   private _fetchMeasurements(): Observable<Measurements> {

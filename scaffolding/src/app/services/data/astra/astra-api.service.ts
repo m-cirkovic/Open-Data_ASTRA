@@ -19,7 +19,46 @@ export class AstraApiService {
   private _auth = '57c5dbbbf1fe4d0001000018543da6f8789f4f868587d0de6163eccd';
   private _body$ = this._http.get('assets/SoapRequestBody.xml', { responseType: 'text' });
 
-  constructor(private _http: HttpClient, private _indexMapper: MeasurementIndexMapperService, private _msgMapper: ErrorMessageMapperService) {
+  constructor(
+    private _http: HttpClient,
+    private _indexMapper: MeasurementIndexMapperService,
+    private _msgMapper: ErrorMessageMapperService
+    ) {
+  }
+
+  public getStaticMeasurements(): Observable<Measurements> {
+    return this._http.get('/assets/measurements.xml', { responseType: 'text' }).pipe(
+      map(xml => Parser.parse(xml, { ignoreNameSpace: true, ignoreAttributes: false })),
+      map(ms => <SoapWrapper<MeasurementPayloadPublication>>ms),
+      map(ms => ms.Envelope.Body.d2LogicalModel.payloadPublication),
+      map(ms => new Measurements(new Date(ms.publicationTime['#text']), ms.siteMeasurements.map(m => {
+        if (m.measuredValue instanceof Array) {
+          return new Measurement(
+            m.measurementSiteReference['@_id'],
+            new Date(ms.publicationTime['#text']),
+            m.measuredValue.map(v => new MeasurementData(
+              this._indexMapper.getVehicle(v['@_index']),
+              this._indexMapper.getUnit(v['@_index']),
+              this._getMeasurementDataValue(v.measuredValue.basicData)
+            )
+            )
+          )
+        } else {
+          return new Measurement(
+            m.measurementSiteReference['@_id'],
+            new Date(ms.publicationTime['#text']),
+            [
+              new MeasurementData(
+                this._indexMapper.getVehicle(m.measuredValue['@_index']),
+                this._indexMapper.getUnit(m.measuredValue['@_index']),
+                this._getMeasurementDataValue(m.measuredValue.measuredValue.basicData)
+              )
+            ],
+            this._msgMapper.getMsg(m.measuredValue.basicData?.vehicleFlow.reasonForDataError.values.value['#text'])
+          )
+        }
+      }))),
+    )
   }
 
   public getMeasurements(): Observable<Measurements> {
@@ -64,6 +103,7 @@ export class AstraApiService {
         }
       }))),
     )
+
   }
 
   private _getMeasurementDataValue(basicData: BasicData): number {
@@ -90,7 +130,7 @@ export class AstraApiService {
   }
 
   public getStaticLanes(): Observable<Lane[]> {
-    return this._http.get('assets/StaticMeasurementSites.xml', { responseType: 'text'}).pipe(
+    return this._http.get('assets/StaticMeasurementSites.xml', { responseType: 'text' }).pipe(
       this._mapToLanes
     )
   }
@@ -113,5 +153,40 @@ export class AstraApiService {
         ))
       ))),
     );
+  }
+
+  private _maptoMeasuremnets(measurements: Observable<string>): Observable<Measurements> {
+    return measurements.pipe(
+      map(xml => Parser.parse(xml, { ignoreNameSpace: true, ignoreAttributes: false })),
+      map(ms => <SoapWrapper<MeasurementPayloadPublication>>ms),
+      map(ms => ms.Envelope.Body.d2LogicalModel.payloadPublication),
+      map(ms => new Measurements(new Date(ms.publicationTime['#text']), ms.siteMeasurements.map(m => {
+        if (m.measuredValue instanceof Array) {
+          return new Measurement(
+            m.measurementSiteReference['@_id'],
+            new Date(ms.publicationTime['#text']),
+            m.measuredValue.map(v => new MeasurementData(
+              this._indexMapper.getVehicle(v['@_index']),
+              this._indexMapper.getUnit(v['@_index']),
+              this._getMeasurementDataValue(v.measuredValue.basicData)
+            )
+            )
+          )
+        } else {
+          return new Measurement(
+            m.measurementSiteReference['@_id'],
+            new Date(ms.publicationTime['#text']),
+            [
+              new MeasurementData(
+                this._indexMapper.getVehicle(m.measuredValue['@_index']),
+                this._indexMapper.getUnit(m.measuredValue['@_index']),
+                this._getMeasurementDataValue(m.measuredValue.measuredValue.basicData)
+              )
+            ],
+            this._msgMapper.getMsg(m.measuredValue.basicData?.vehicleFlow.reasonForDataError.values.value['#text'])
+          )
+        }
+      }))),
+    )
   }
 }

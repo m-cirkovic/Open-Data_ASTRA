@@ -1,7 +1,7 @@
 import {
   AfterViewInit,
   Component,
-  ElementRef,
+  ElementRef, OnInit,
 } from '@angular/core';
 import * as L from 'leaflet';
 import { AstraApiService } from '../services/astra-api.service';
@@ -9,6 +9,7 @@ import { AstraApiService } from '../services/astra-api.service';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MarkerService } from '../services/marker.service';
 import { tap } from 'rxjs/operators';
+import {ActivatedRoute} from '@angular/router';
 
 
 @Component({
@@ -40,19 +41,30 @@ export class MapComponent implements AfterViewInit {
   };
   private siteLayers: L.Control.LayersObject;
 
-  constructor(private _astraApi: AstraApiService,
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private _astraApi: AstraApiService,
     private _elementRef: ElementRef,
     public config: NgbModalConfig,
     private markerService: MarkerService) {
   }
+/*
+  ngOnInit(): void {
+    this.activatedRoute.snapshot.data.itemsList
+      .subscribe(res => {
+        console.log({ res });
+      });
+    console.log(this.markerService.getLayers());
+  }
+*/
 
 
   ngAfterViewInit(): void {
     this._initMap();
-    this.markerService.makeLayers()
+    this.markerService.getLayers()
       .pipe(tap(la => la[1].addTo(this.map)))
       .subscribe(la => {
-        L.control.layers(this.mapLayers, {'Fehlerhafte Messstellen':la[0], 'Normale Messstellen': la[1]}, { position: 'topleft' }).addTo(this.map);
+        L.control.layers(this.mapLayers, {'Fehlerhafte Messstellen': la[0], 'Normale Messstellen': la[1]}, { position: 'topleft' }).addTo(this.map);
       });
   }
 

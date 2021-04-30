@@ -13,16 +13,17 @@ import { catchError, concatAll, map, mergeMap, tap } from 'rxjs/operators';
 export class MarkerService {
 
   constructor(private _astraApi: AstraApiService,
-    private popupService: PopUpService,
-    public matDialog: MatDialog) { }
+              private popupService: PopUpService,
+              public matDialog: MatDialog) { }
+    layers: Observable<L.LayerGroup[]>;
 
-  makeLayers(): Observable<L.LayerGroup[]> {
+  makeLayers(): void {
 
-    return this._astraApi.getSites({ dynamic: false })
+    this.layers = this._astraApi.getSites({ dynamic: false })
       .pipe(
         map(sites => {
-          let errorLayer = L.layerGroup();
-          let normalLayer = L.layerGroup();
+          const errorLayer = L.layerGroup();
+          const normalLayer = L.layerGroup();
           // errors
           sites
             .filter(s => s.lanes.filter(m => !m.measurements || m.measurements?.reasonForDataError)?.length > 0)
@@ -52,6 +53,11 @@ export class MarkerService {
         })
       );
   }
+
+  getLayers(): Observable<L.LayerGroup[]>{
+    return this.layers;
+  }
+
 
   // https://morioh.com/p/903aa1355d7f -> to scale circle
 

@@ -9,6 +9,8 @@ import {AstraApiService} from './services/data/astra/astra-api.service';
 export class AppComponent {
   title = 'Verkehrszähler';
 
-  constructor(private _astraApi: AstraApiService) {
+  constructor(
+    private _astraApi: AstraApiService
+    ) {
   }
 }

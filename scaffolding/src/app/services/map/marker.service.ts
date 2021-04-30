@@ -4,6 +4,9 @@ import { PopUpService } from './pop-up.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { from, Observable, of } from 'rxjs';
 import { AstraCacheService } from '../data/astra/astra-cache.service';
+import { catchError, concatAll, map, mergeMap, tap } from 'rxjs/operators';
+import {ModalInfoService} from './modal-info.service';
+import { AstraApiService } from '../data/astra/astra-api.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,15 +16,19 @@ export class MarkerService {
   constructor(
     private popupService: PopUpService,
     public matDialog: MatDialog,
-    private _astraCache: AstraCacheService) { }
+    private _astraCache: AstraCacheService,
+    private modalInfoService: ModalInfoService,
+   ) { }
+  
+    layers: Observable<L.LayerGroup[]>;
 
   makeLayers(): Observable<L.LayerGroup[]> {
     return of([L.layerGroup()]);
    /*return this._astraApi.getSites({ dynamic: false })
       .pipe(
         map(sites => {
-          let errorLayer = L.layerGroup();
-          let normalLayer = L.layerGroup();
+          const errorLayer = L.layerGroup();
+          const normalLayer = L.layerGroup();
           // errors
           sites
             .filter(s => s.lanes.filter(m => !m.measurements || m.measurements?.reasonForDataError)?.length > 0)
@@ -36,10 +43,10 @@ export class MarkerService {
                 popUp.getElement()
                   .querySelector('.open-modal')
                   .addEventListener('click', (e) => {
-                    console.log('hallo');
+                    this.modalInfoService.saveInfo(s);
                     const dialogConfig = new MatDialogConfig();
                     // The user can't close the dialog by clicking outside its body
-                    dialogConfig.disableClose = true;
+                    dialogConfig.disableClose = false;
                     dialogConfig.id = 'modal-component';
                     dialogConfig.height = '350px';
                     dialogConfig.width = '600px';
@@ -51,6 +58,11 @@ export class MarkerService {
         })
       );*/
   }
+
+  getLayers(): Observable<L.LayerGroup[]>{
+    return this.layers;
+  }
+
 
   // https://morioh.com/p/903aa1355d7f -> to scale circle
 

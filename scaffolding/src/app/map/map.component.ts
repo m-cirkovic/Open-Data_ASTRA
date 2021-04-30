@@ -8,6 +8,7 @@ import { tap } from 'rxjs/operators';
 import { AstraCacheService } from '../services/data/astra/astra-cache.service';
 import { LaneLayerService } from '../services/map/lane-layer.service';
 import { PopUpService } from '../services/map/pop-up.service';
+import {ActivatedRoute} from '@angular/router';
 
 
 @Component({
@@ -41,10 +42,25 @@ export class MapComponent implements AfterViewInit {
   };
 
   constructor(
+<<<<<<< HEAD
+=======
+    private activatedRoute: ActivatedRoute,
+    private _astraApi: AstraApiService,
+    private _elementRef: ElementRef,
+>>>>>>> main
     public config: NgbModalConfig,
     private _layerService: LaneLayerService,
     private _popupService: PopUpService) {
   }
+/*
+  ngOnInit(): void {
+    this.activatedRoute.snapshot.data.itemsList
+      .subscribe(res => {
+        console.log({ res });
+      });
+    console.log(this.markerService.getLayers());
+  }
+*/
 
 
   ngAfterViewInit(): void {

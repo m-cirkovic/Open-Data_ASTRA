@@ -1,10 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppComponent } from './app.component';
-import { BarComponent } from './bar/bar.component';
-import { PieComponent } from './pie/pie.component';
-import { ScatterComponent } from './scatter/scatter.component';
 import { HttpClientModule } from '@angular/common/http';
 import { MapComponent } from './map/map.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -13,25 +9,20 @@ import {BsModalService, ModalModule} from 'ngx-bootstrap/modal';
 import {ComponentLoaderFactory} from 'ngx-bootstrap/component-loader';
 import {PositioningService} from 'ngx-bootstrap/positioning';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import {MarkerService} from './services/marker.service';
-import {PopUpService} from './services/pop-up.service';
+import {PopUpService} from './services/map/pop-up.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ModalComponent } from './modal/modal.component';
 import {MatDialogModule} from '@angular/material/dialog';
-
-
-
-
+import {SplashScreenStateService} from './services/splash-screen-state.service';
+import { SplashScreenComponent } from './splash-screen/splash-screen.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    BarComponent,
-    PieComponent,
-    ScatterComponent,
     MapComponent,
-    ModalComponent
+    ModalComponent,
+    SplashScreenComponent
   ],
   imports: [
     BrowserModule,
@@ -43,7 +34,13 @@ import {MatDialogModule} from '@angular/material/dialog';
     BrowserAnimationsModule,
     MatDialogModule
   ],
-  providers: [BsModalService, ComponentLoaderFactory, PositioningService, MarkerService, PopUpService],
+  providers: [
+    BsModalService,
+    ComponentLoaderFactory,
+    PositioningService,
+    PopUpService,
+    SplashScreenStateService
+  ],
   bootstrap: [AppComponent],
   entryComponents: [ModalComponent]
 })

@@ -5,6 +5,7 @@ import { AstraApiService } from '../services/astra-api.service';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MarkerService } from '../services/marker.service';
 import { tap } from 'rxjs/operators';
+import {ActivatedRoute} from '@angular/router';
 
 
 @Component({
@@ -36,15 +37,34 @@ export class MapComponent implements AfterViewInit {
   };
 
   constructor(
+    private activatedRoute: ActivatedRoute,
     private _astraApi: AstraApiService,
+    private _elementRef: ElementRef,
     public config: NgbModalConfig,
     private markerService: MarkerService) {
   }
+/*
+  ngOnInit(): void {
+    this.activatedRoute.snapshot.data.itemsList
+      .subscribe(res => {
+        console.log({ res });
+      });
+    console.log(this.markerService.getLayers());
+  }
+*/
 
 
   ngAfterViewInit(): void {
     this._initMap();
+<<<<<<< HEAD
     this._astraApi.getMeasurements().subscribe();
+=======
+    this.markerService.getLayers()
+      .pipe(tap(la => la[1].addTo(this.map)))
+      .subscribe(la => {
+        L.control.layers(this.mapLayers, {'Fehlerhafte Messstellen': la[0], 'Normale Messstellen': la[1]}, { position: 'topleft' }).addTo(this.map);
+      });
+>>>>>>> 492ae46955ac5dd0157aca66e11fd04103c17ee4
   }
 
   private _initMap(): void {

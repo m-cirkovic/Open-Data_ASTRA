@@ -14,11 +14,9 @@ export class MapResolver implements Resolve<LayerGroup> {
   constructor(
     private splashScreenStateService: SplashScreenStateService,
     private layerService: LaneLayerService
-  ) {
-  }
+  ) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<LayerGroup> {
-    return this.layerService.getAll().pipe(tap(() => this.splashScreenStateService.stop));
-
+    return this.layerService.getAll().pipe(tap(() => this.splashScreenStateService.stop()));
   }
 }

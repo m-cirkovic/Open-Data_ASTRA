@@ -6,15 +6,25 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ModalComponent } from '../modal/modal.component';
 import { Observable } from 'rxjs';
 import { catchError, concatAll, map, mergeMap, tap } from 'rxjs/operators';
+import {ModalInfoService} from './modal-info.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MarkerService {
 
+<<<<<<< Updated upstream
   constructor(private _astraApi: AstraApiService,
     private popupService: PopUpService,
     public matDialog: MatDialog) { }
+=======
+  constructor(
+    private modalInfoService: ModalInfoService,
+    private _astraApi: AstraApiService,
+    private popupService: PopUpService,
+    public matDialog: MatDialog) { }
+    layers: Observable<L.LayerGroup[]>;
+>>>>>>> Stashed changes
 
   makeLayers(): Observable<L.LayerGroup[]> {
 
@@ -37,10 +47,10 @@ export class MarkerService {
                 popUp.getElement()
                   .querySelector('.open-modal')
                   .addEventListener('click', (e) => {
-                    console.log('hallo');
+                    this.modalInfoService.saveInfo(s);
                     const dialogConfig = new MatDialogConfig();
                     // The user can't close the dialog by clicking outside its body
-                    dialogConfig.disableClose = true;
+                    dialogConfig.disableClose = false;
                     dialogConfig.id = 'modal-component';
                     dialogConfig.height = '350px';
                     dialogConfig.width = '600px';

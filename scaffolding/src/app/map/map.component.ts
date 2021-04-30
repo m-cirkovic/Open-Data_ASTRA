@@ -56,15 +56,7 @@ export class MapComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this._initMap();
-<<<<<<< HEAD
     this._astraApi.getMeasurements().subscribe();
-=======
-    this.markerService.getLayers()
-      .pipe(tap(la => la[1].addTo(this.map)))
-      .subscribe(la => {
-        L.control.layers(this.mapLayers, {'Fehlerhafte Messstellen': la[0], 'Normale Messstellen': la[1]}, { position: 'topleft' }).addTo(this.map);
-      });
->>>>>>> 492ae46955ac5dd0157aca66e11fd04103c17ee4
   }
 
   private _initMap(): void {

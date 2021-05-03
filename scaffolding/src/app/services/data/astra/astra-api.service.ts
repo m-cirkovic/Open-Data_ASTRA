@@ -54,7 +54,7 @@ export class AstraApiService {
                 this._getMeasurementDataValue(m.measuredValue.measuredValue.basicData)
               )
             ],
-            this._msgMapper.getMsg(m.measuredValue.basicData?.vehicleFlow.reasonForDataError.values.value['#text'])
+            this._msgMapper.getMsg(m)
           )
         }
       }))),
@@ -98,7 +98,7 @@ export class AstraApiService {
                 this._getMeasurementDataValue(m.measuredValue.measuredValue.basicData)
               )
             ],
-            this._msgMapper.getMsg(m.measuredValue.basicData?.vehicleFlow.reasonForDataError.values.value['#text'])
+            this._msgMapper.getMsg(m)
           )
         }
       }))),
@@ -183,7 +183,7 @@ export class AstraApiService {
                 this._getMeasurementDataValue(m.measuredValue.measuredValue.basicData)
               )
             ],
-            this._msgMapper.getMsg(m.measuredValue.basicData?.vehicleFlow.reasonForDataError.values.value['#text'])
+            this._msgMapper.getMsg(m)
           )
         }
       }))),

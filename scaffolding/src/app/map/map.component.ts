@@ -4,8 +4,10 @@ import * as L from 'leaflet';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LaneLayerService } from '../services/map/lane-layer.service';
 import { PopUpService } from '../services/map/pop-up.service';
-import {ActivatedRoute} from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { AstraCacheService } from '../services/data/astra/astra-cache.service';
+import { concat, merge } from 'rxjs';
+import { concatAll, map, reduce, tap } from 'rxjs/operators';
 
 
 @Component({
@@ -29,8 +31,9 @@ export class MapComponent implements AfterViewInit {
     attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a>, SRTM | © <a href="http://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
   });
 
-  private map: L.Map;
-  private sitelayer: L.LayerGroup;
+  private _map: L.Map;
+  public control: L.Control;
+  public siteLayers: L.Control.LayersObject = {};
 
   public mapLayers: L.Control.LayersObject = {
     SwissTopo: this.swissTopo,
@@ -45,33 +48,30 @@ export class MapComponent implements AfterViewInit {
     private _layerService: LaneLayerService,
     private _popupService: PopUpService) {
   }
-/*
-  ngOnInit(): void {
-    this.activatedRoute.snapshot.data.itemsList
-      .subscribe(res => {
-        console.log({ res });
-      });
-    console.log(this.markerService.getLayers());
-  }
-*/
 
 
   ngAfterViewInit(): void {
     this._initMap();
-    this._layerService.getAll().subscribe(layers => {
-      this.sitelayer = layers;
-      this.sitelayer.addTo(this.map)
-    });
+
+    let a = this._layerService.getErrorLayers()
+    let b = this._layerService.getNormalLayers()
+
+    merge(a, b).pipe(
+      tap(a => a),
+      reduce((acc, curr) => { return { ...acc, ...curr } }, this.siteLayers),
+      tap(console.log),
+      tap(layers => L.control.layers(this.mapLayers, layers, { position: 'topleft' }).addTo(this._map))
+    ).subscribe()
 
   }
 
   private _initMap(): void {
-    this.map = L.map('map', {
+    this._map = L.map('map', {
       minZoom: 8,
       zoomControl: false
     }).setView([46.6, 7.7], 10);
-    this.swissTopo.addTo(this.map);
-    L.control.layers(this.mapLayers, undefined, { position: 'topleft' }).addTo(this.map);
+    this.swissTopo.addTo(this._map);
+
   }
 
 }

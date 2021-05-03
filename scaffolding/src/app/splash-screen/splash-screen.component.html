@@ -1,7 +1,8 @@
-<div *ngIf="showSplash" class="app-splash-screen" [ngStyle]="{'opacity': opacityChange, 'transition': splashTransition}">
-
-  <div class="app-splash-content">
-    <div data-text="Loading ..." class="loading-text">Loading ...
-    </div>
+<div class="d-flex">
+  <div class="spinner-border text-warning" role="status">
+    <span class="sr-only">Loading...</span>
   </div>
+  <p class="text-warning ml-3 my-auto loading-text">Loading</p>
 </div>
+
+<p class="text-warning">{{funnySlogan}}</p>

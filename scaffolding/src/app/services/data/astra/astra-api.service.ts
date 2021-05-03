@@ -143,8 +143,8 @@ export class AstraApiService {
       map(lanes => lanes.map(site => new Lane(
         site['@_id'],
         site.measurementSiteLocation.alertCPoint?.alertCMethod4PrimaryPointLocation.alertCLocation.specificLocation['#text'],
-        site.measurementSiteLocation.pointByCoordinates.pointCoordinates.longitude['#text'],
-        site.measurementSiteLocation.pointByCoordinates.pointCoordinates.latitude['#text'],
+        site.measurementSiteLocation.pointByCoordinates?.pointCoordinates.longitude['#text'],
+        site.measurementSiteLocation.pointByCoordinates?.pointCoordinates.latitude['#text'],
         site.measurementSpecificCharacteristics.map(c => new MeasurementCharacteristics(
           c.measurementSpecificCharacteristics['@_index'],
           c.measurementSpecificCharacteristics.period['#text'],

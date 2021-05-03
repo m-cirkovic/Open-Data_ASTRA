@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import {SplashScreenStateService} from '../services/splash-screen-state.service';
+import { Component, Input, OnInit } from '@angular/core';
+import { interval, of, timer } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-splash-screen',
@@ -7,32 +8,25 @@ import {SplashScreenStateService} from '../services/splash-screen-state.service'
   styleUrls: ['./splash-screen.component.css']
 })
 export class SplashScreenComponent implements OnInit {
-  // The screen starts with the maximum opacity
-  public opacityChange = 1;
-  public splashTransition;
-  // First access the splash is visible
-  public showSplash = true;
-  readonly ANIMATION_DURATION = 1;
+  
+  public funnySlogans = 
+  [
+    "waking up developer",
+    "brewing coffe",
+    "spinning up computer",
+    "gathering measurements",
+    "collect dropped data"
+  ]
 
+  public funnySlogan: string = '';
   constructor(
-    private splashScreenStateService: SplashScreenStateService
   ) { }
 
   ngOnInit(): void {
-    // Somewhere the stop method has been invoked
-    this.splashScreenStateService.subscribe(res => {
-      this.hideSplashAnimation();
-    });
+    timer(this.funnySlogans.length, 800).pipe(
+      tap(a => this.funnySlogan = this.funnySlogans[a])
+    ).subscribe()
   }
 
-  private hideSplashAnimation(): void {
-    // Setting the transition
-    this.splashTransition = `opacity ${this.ANIMATION_DURATION}s`;
-    this.opacityChange = 0;
-    setTimeout(() => {
-      // After the transition is ended the showSplash will be hided
-      this.showSplash = !this.showSplash;
-    }, 1000);
-  }
-
+  
 }

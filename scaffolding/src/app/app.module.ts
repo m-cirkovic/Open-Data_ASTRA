@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, OnInit } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
@@ -13,9 +13,7 @@ import {PopUpService} from './services/map/pop-up.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ModalComponent } from './modal/modal.component';
 import {MatDialogModule} from '@angular/material/dialog';
-import {SplashScreenStateService} from './services/splash-screen-state.service';
 import { SplashScreenComponent } from './splash-screen/splash-screen.component';
-
 
 @NgModule({
   declarations: [
@@ -38,8 +36,7 @@ import { SplashScreenComponent } from './splash-screen/splash-screen.component';
     BsModalService,
     ComponentLoaderFactory,
     PositioningService,
-    PopUpService,
-    SplashScreenStateService
+    PopUpService
   ],
   bootstrap: [AppComponent],
   entryComponents: [ModalComponent]

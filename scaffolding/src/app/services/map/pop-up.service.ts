@@ -11,11 +11,10 @@ export class PopUpService {
 
 
   public siteToHtml(site: Site): string {
-    let measurements: Measurement[] = [];
-    site.lanes.forEach(s => measurements.push(s.measurements));
+    let measurements = site.lanes.map(s => s.measurements);
     let noError = measurements.filter(m => !m?.reasonForDataError);
     let error = measurements.filter(m => m?.reasonForDataError);
-    return `<h1>Richtung ${site.locationName}</h1><p>Geschwindigkeit: ${PopUpService.getAvgVehicleSpeed(noError)} </p><p>Anzahl Fahrzeuge: ${PopUpService.getAvgVehicles(noError)}</p>${PopUpService.getErrorMsg(error)}`;
+    return `<h1>Richtung ${site.locationName}</h1><p>Geschwindigkeit: ${PopUpService.getAvgVehicleSpeed(noError)} km/h</p><p>Anzahl Fahrzeuge pro Stunde: ${PopUpService.getAvgVehicles(noError)}</p>${PopUpService.getErrorMsg(error)}`;
   }
 
   static getAvg(measurements: Measurement[], matcher: string): number {
@@ -32,7 +31,7 @@ export class PopUpService {
       totalNum++;
     })
     let res = flowSum / totalNum;
-    return Number.isNaN(res) ? 0 : res;
+    return Number.isNaN(res) ? 0 : Math.round(res);
   }
 
   static getAvgVehicles(measurements: Measurement[]): number {
@@ -45,7 +44,7 @@ export class PopUpService {
   static getErrorMsg(measurements: Measurement[]): string {
     if (measurements?.length > 0) {
       return `<p class="text-danger">Dieser Standort hat Fehlerhafte Messungen.</p>`
-    }else{
+    } else {
       return '';
     }
   }

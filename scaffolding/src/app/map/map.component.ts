@@ -1,13 +1,10 @@
-import { AfterViewInit, Component, ElementRef } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import * as L from 'leaflet';
 
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LaneLayerService } from '../services/map/lane-layer.service';
-import { PopUpService } from '../services/map/pop-up.service';
-import { ActivatedRoute } from '@angular/router';
-import { AstraCacheService } from '../services/data/astra/astra-cache.service';
-import { concat, merge } from 'rxjs';
-import { concatAll, map, reduce, tap } from 'rxjs/operators';
+import { merge, Observable } from 'rxjs';
+import { reduce, tap } from 'rxjs/operators';
 
 
 @Component({
@@ -16,7 +13,7 @@ import { concatAll, map, reduce, tap } from 'rxjs/operators';
   styleUrls: ['./map.component.css'],
   providers: [NgbModalConfig, NgbModal]
 })
-export class MapComponent implements AfterViewInit {
+export class MapComponent implements OnInit {
 
   swissTopo = L.tileLayer('https://wmts20.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg', {
     attribution: '&copy; <a href="https://www.swisstopo.ch/" target="_blank">Swisstopo</a>',
@@ -33,36 +30,25 @@ export class MapComponent implements AfterViewInit {
 
   private _map: L.Map;
   public control: L.Control;
-  public siteLayers: L.Control.LayersObject = {};
 
   public mapLayers: L.Control.LayersObject = {
     SwissTopo: this.swissTopo,
     OpenStreetMap: this.openStreetMap_CH,
     OpenTopoMap: this.openTopoMap
   };
+  
+  @Input() siteLayers: L.Control.LayersObject;
 
   constructor(
-    private activatedRoute: ActivatedRoute,
-    private _elementRef: ElementRef,
-    public config: NgbModalConfig,
-    private _layerService: LaneLayerService,
-    private _popupService: PopUpService) {
+    public config: NgbModalConfig
+  ) {
   }
 
 
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
     this._initMap();
-
-    let a = this._layerService.getErrorLayers()
-    let b = this._layerService.getNormalLayers()
-
-    merge(a, b).pipe(
-      tap(a => a),
-      reduce((acc, curr) => { return { ...acc, ...curr } }, this.siteLayers),
-      tap(console.log),
-      tap(layers => L.control.layers(this.mapLayers, layers, { position: 'topleft' }).addTo(this._map))
-    ).subscribe()
-
+    L.control.layers(this.mapLayers, this.siteLayers, {position: 'topleft', collapsed: false}).addTo(this._map)
+    Object.keys(this.siteLayers).forEach(key => this.siteLayers[key].addTo(this._map))
   }
 
   private _initMap(): void {

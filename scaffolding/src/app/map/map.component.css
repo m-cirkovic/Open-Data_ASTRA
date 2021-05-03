@@ -5,7 +5,9 @@
   right: 0;
   bottom: 0;
 }
-
+.foregroud{
+  z-index: 1;
+}
 .map-frame {
   border: 2px solid black;
   height: 100%;

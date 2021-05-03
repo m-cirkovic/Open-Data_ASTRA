@@ -3,6 +3,7 @@ import { Resolve, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/r
 import { LayerGroup } from 'leaflet';
 import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { AstraCacheService } from '../services/data/astra/astra-cache.service';
 import { LaneLayerService } from '../services/map/lane-layer.service';
 import { SplashScreenStateService } from '../services/splash-screen-state.service';
 
@@ -13,12 +14,11 @@ export class MapResolver implements Resolve<LayerGroup> {
   
   constructor(
     private splashScreenStateService: SplashScreenStateService,
-    private layerService: LaneLayerService
+    private cache: AstraCacheService
   ) {
   }
 
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<LayerGroup> {
-    return this.layerService.getAll().pipe(tap(() => this.splashScreenStateService.stop));
-
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> {
+    return this.cache.sitesWithLatestMeasurements().pipe(tap(() => this.splashScreenStateService.stop));
   }
 }

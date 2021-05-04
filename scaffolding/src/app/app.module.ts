@@ -14,13 +14,15 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ModalComponent } from './modal/modal.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import { SplashScreenComponent } from './splash-screen/splash-screen.component';
+import { SideBarComponent } from './side-bar/side-bar.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MapComponent,
     ModalComponent,
-    SplashScreenComponent
+    SplashScreenComponent,
+    SideBarComponent
   ],
   imports: [
     BrowserModule,

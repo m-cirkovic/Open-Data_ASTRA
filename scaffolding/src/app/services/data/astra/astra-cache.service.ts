@@ -36,12 +36,11 @@ export class AstraCacheService {
    */
   public sitesWithLatestMeasurements(siteOptions?: { dynamicSites?: boolean, dynamicMeasurements?:boolean }): Observable<Site[]> {
     let site$: Observable<Site[]> = siteOptions?.dynamicSites ? this._getDynamicSites() : this._getStaticSites();
-    let measurement$: Observable<Measurements> = siteOptions?.dynamicSites ? this._getLatestMeasurements() : this._getStaticMeasurements();
+    let measurement$: Observable<Measurements> = siteOptions?.dynamicSites ? this.getLatestMeasurements() : this._getStaticMeasurements();
     return this._laneMapper.fillWithMeasurements(measurement$, site$)
   }
 
-
-  private _getLatestMeasurements(): Observable<Measurements> {
+  public getLatestMeasurements(): Observable<Measurements> {
     if(this._latestMeasurments){
       return of(this._latestMeasurments)
     }else{

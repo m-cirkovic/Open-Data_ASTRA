@@ -28,7 +28,7 @@ export class MapComponent implements OnInit {
     attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a>, SRTM | © <a href="http://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
   });
 
-  private _map: L.Map;
+  public map: L.Map;
   public control: L.Control;
 
   public mapLayers: L.Control.LayersObject = {
@@ -47,17 +47,21 @@ export class MapComponent implements OnInit {
 
   ngOnInit(): void {
     this._initMap();
-    L.control.layers(this.mapLayers, this.siteLayers, {position: 'topleft', collapsed: false}).addTo(this._map)
-    Object.keys(this.siteLayers).forEach(key => this.siteLayers[key].addTo(this._map))
+    L.control.layers(this.mapLayers, this.siteLayers, {position: 'topright', collapsed: false}).addTo(this.map)
+    Object.keys(this.siteLayers).forEach(key => this.siteLayers[key].addTo(this.map))
   }
 
   private _initMap(): void {
-    this._map = L.map('map', {
+    this.map = L.map('map', {
       minZoom: 8,
       zoomControl: false
     }).setView([46.6, 7.7], 10);
-    this.swissTopo.addTo(this._map);
+    this.swissTopo.addTo(this.map);
 
+  }
+
+  public updateMap(msg: String){
+    console.log(msg)
   }
 
 }

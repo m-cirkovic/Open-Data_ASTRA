@@ -60,8 +60,8 @@ export class MapComponent implements OnInit {
 
   }
 
-  public updateMap(msg: String){
-    console.log(msg)
+  public updateMap(newLayers: L.Control.LayersObject){
+    console.log(newLayers);
   }
 
 }

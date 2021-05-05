@@ -1,6 +1,7 @@
 import { ThisReceiver } from '@angular/compiler';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Control, DomUtil, Map } from 'leaflet';
+import { LaneLayerService } from '../services/map/lane-layer.service';
 
 @Component({
   selector: 'app-side-bar',
@@ -12,10 +13,11 @@ export class SideBarComponent implements OnInit {
   @Output() updateData = new EventEmitter();
   @Input() map: Map;
   sidebar: Control;
-
+  dynamic: boolean = false;
+  loading: boolean = false;
   private _currentTab: string;
 
-  constructor() { }
+  constructor(private _laneLayers: LaneLayerService) { }
 
   ngOnInit(): void {
     let SideBar = Control.extend({
@@ -48,7 +50,12 @@ export class SideBarComponent implements OnInit {
   }
 
   changeData(){
-    this.updateData.emit('hello from sidebar')
+    this.loading = true;
+    this._laneLayers.getAllLayers({dynamic: this.dynamic}).subscribe(layers => {
+      this.updateData.emit(layers);
+      this.loading = false;
+      this.dynamic = !this.dynamic;
+    })
   }
 
 }

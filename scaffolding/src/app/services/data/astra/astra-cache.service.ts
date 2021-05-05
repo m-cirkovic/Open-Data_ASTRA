@@ -17,7 +17,6 @@ import { TmcMapperService } from '../mappers/tmc-mapper.service';
  */
 export class AstraCacheService {
 
-
   private _latestMeasurments: Measurements;
   private _staticMeasurements: Measurements;
   private _dynamicSites: Site[];

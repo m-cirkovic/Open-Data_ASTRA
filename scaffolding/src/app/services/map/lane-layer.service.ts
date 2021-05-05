@@ -16,24 +16,25 @@ export class LaneLayerService {
     private _popupService: PopUpService
   ) { }
 
-  getAllLayers(): Observable<L.Control.LayersObject>{
+  getAllLayers(options?: {dynamic?: boolean}): Observable<L.Control.LayersObject>{
     let siteLayersSeed: L.Control.LayersObject = {};
-    return merge(this.getNormalLayers(), this.getErrorLayers()).pipe(
+    return merge(this.getNormalLayers(options), this.getErrorLayers()).pipe(
       reduce((acc, curr) => { return { ...acc, ...curr } }, siteLayersSeed),
       catchError((err, caught) => of({}))
     )
   }
 
-  getNormalLayers(): Observable<L.Control.LayersObject> {
-    return this._astraCache.sitesWithLatestMeasurements({ dynamicMeasurements: false, dynamicSites: false }).pipe(
+  getNormalLayers(options?: {dynamic?: boolean}): Observable<L.Control.LayersObject> {
+    return this._astraCache.sitesWithLatestMeasurements({ dynamicMeasurements: options?.dynamic, dynamicSites: options?.dynamic }).pipe(
+      tap(a => console.log(a[0].lanes[0].measurements.publicationTime)),
       map(s => s.filter(sites => sites.lanes.filter(l => !l.measurements?.reasonForDataError).length > 0)),
       map(s => this.mapToLayerGroup(s, this._popupService)),
-      map(l => { return { ['Normale Messstellen']: l } })
+      map(l => { return { ['Normale Messstellen']: l } }),
     )
   }
 
-  getErrorLayers(): Observable<L.Control.LayersObject> {
-    return this._astraCache.sitesWithLatestMeasurements({ dynamicMeasurements: false, dynamicSites: false }).pipe(
+  getErrorLayers(options?: {dynamic?: boolean}): Observable<L.Control.LayersObject> {
+    return this._astraCache.sitesWithLatestMeasurements({ dynamicMeasurements: options?.dynamic, dynamicSites: options?.dynamic }).pipe(
       map(s => s.filter(sites => sites.lanes.filter(l => l.measurements?.reasonForDataError).length > 0)),
       map(s => this.mapToLayerGroup(s, this._popupService)),
       map(l => { return { ['Messstellen mit Fehlern']: l } })

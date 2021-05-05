@@ -44,6 +44,8 @@ svg{
 .tab-pane{
     display: none;
     min-width: 25vw;
+    
+    max-width: 35vw;
 }
 .header{
     margin-top: 0;

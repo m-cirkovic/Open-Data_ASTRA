@@ -38,7 +38,7 @@
             </li>
         </ul>
     </div>
-    <div class="content pt-2">
+    <div class="pt-2">
         <div id="info" class="tab-pane ">
             <div class="header">
                 <div class="mr-1 flex between align-items-center">
@@ -57,6 +57,21 @@
                 <div class="mr-1 flex between align-items-center">
                     <h1>Einstellungen</h1><img (click)="hidePane()" src="assets/icons/close.svg">
                 </div>
+                <h2>Modus</h2>
+                <p>Es gibt den Realmodus, bei welchem die Daten der letzten Minute dargestellt werden, und den
+                    Snapshotmodus, welcher einen statischen Datensatz aus der Vergangenheit anzeigt. Hier kann zwischen
+                    den Modi gewechselt werden.</p>
+                <p>Die Daten sind im <span *ngIf="!dynamic">Snapshot</span><span *ngIf="dynamic">Real</span>modus</p>
+                <button (click)="changeData()">
+                   <span *ngIf="!loading">wechseln</span> 
+                   <div class="d-flex" *ngIf="loading">
+                    <div class="spinner-border text-warning" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    <p class="text-warning ml-3 my-auto loading-text">Loading</p>
+                </div>
+                </button>
+               
             </div>
         </div>
         <div id="maps" class="tab-pane">
@@ -70,7 +85,7 @@
             <div class="header">
                 <div class="mr-1 flex between align-items-center">
                     <h1>Messwerte</h1><img (click)="hidePane()" src="assets/icons/close.svg">
-                    
+
                 </div>
             </div>
             <button (click)="changeData()"></button>

@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
 import {ModalInfoService} from '../services/modal-info.service';
 import {Site} from '../models/Internal/site.model';
-import {Measurement} from '../models/Internal/measurement.model';
+import {Measurement, MeasurementData} from '../models/Internal/measurement.model';
+import {AstraCacheService} from '../services/data/astra/astra-cache.service';
+import {TmcMapperService} from '../services/data/mappers/tmc-mapper.service';
+import * as d3 from 'd3';
 
 @Component({
   selector: 'app-modal',
@@ -11,30 +14,24 @@ import {Measurement} from '../models/Internal/measurement.model';
 })
 export class ModalComponent implements OnInit {
 
-  infobox: Site;
-  station: any;
+  name: string;
 
   constructor(
     public dialogRef: MatDialogRef<ModalComponent>,
-    public modalInfoService: ModalInfoService) { }
+    private _astraCache: AstraCacheService,
+    private _tmcMapper: TmcMapperService) {
+  }
 
   ngOnInit(): void {
-    this.infobox = this.modalInfoService.getSavedSite();
-    console.log(this.getMeasurement(this.infobox));
+   this.name = this.getName();
+  }
+
+  public getName(): string {
+    return this._tmcMapper.getFirstName(this._astraCache.getSavedSpecificLocation());
   }
 
   public closeModal(): void {
     this.dialogRef.close();
   }
 
-  printInput(): void{
-    console.log('stupid boy');
-  }
-
-  getMeasurement(data: any): void {
-    this.station = data.specificLocation;
-    data.lanes.forEach(e => {
-      console.log(e.measurements._siteId);
-    });
-  }
 }

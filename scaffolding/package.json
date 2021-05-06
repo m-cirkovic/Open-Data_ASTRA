@@ -25,6 +25,8 @@
     "@angular/router": "~11.2.7",
     "@ansur/leaflet-pulse-icon": "^0.1.1",
     "@ng-bootstrap/ng-bootstrap": "^9.1.0",
+    "angular-d3-charts": "^5.0.0",
+    "angular-d3-sunburst": "^1.0.2",
     "bootstrap": "^4.6.0",
     "d3": "^6.6.2",
     "fast-xml-parser": "^3.19.0",

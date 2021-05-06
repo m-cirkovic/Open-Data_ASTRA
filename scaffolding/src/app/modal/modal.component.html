@@ -1,40 +1,9 @@
 <div id="modal-content-wrapper">
   <header id="modal-header">
-    <h1 id="modal-title">{{this.station}}</h1>
+    <h1 id="modal-title">Station {{this.name}}</h1>
   </header>
   <section id="modal-body">
-    <h2>hallo</h2>
-    <table class="table">
-      <caption>Werte der Stationnummer {{this.station}}</caption>
-      <thead>
-      <tr>
-        <th scope="col">Fahrzeug</th>
-        <th scope="col">Geschwindigkeit</th>
-        <th scope="col">Last</th>
-        <th scope="col">Handle</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <th scope="row">1</th>
-        <td>Mark</td>
-        <td>Otto</td>
-        <td>@mdo</td>
-      </tr>
-      <tr>
-        <th scope="row">2</th>
-        <td>Jacob</td>
-        <td>Thornton</td>
-        <td>@fat</td>
-      </tr>
-      <tr>
-        <th scope="row">3</th>
-        <td>Larry</td>
-        <td>the Bird</td>
-        <td>@twitter</td>
-      </tr>
-      </tbody>
-    </table>
+    <app-pie></app-pie>
   </section>
   <footer id="modal-footer">
     <button mat-raised-button id="modal-cancel-button" (click)="closeModal()">Go back</button>

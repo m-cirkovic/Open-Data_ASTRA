@@ -14,7 +14,7 @@ export class PopUpService {
     let measurements = site.lanes.map(s => s.measurements);
     let noError = measurements.filter(m => !m?.reasonForDataError);
     let error = measurements.filter(m => m?.reasonForDataError);
-    return `<h1>Richtung ${site.locationName}</h1><p>Geschwindigkeit: ${PopUpService.getAvgVehicleSpeed(noError)} km/h</p><p>Anzahl Fahrzeuge pro Stunde: ${PopUpService.getAvgVehicles(noError)}</p>${PopUpService.getErrorMsg(error)}`;
+    return `<h1>Richtung ${site.locationName}</h1><p>Geschwindigkeit: ${PopUpService.getAvgVehicleSpeed(noError)} km/h</p><p>Anzahl Fahrzeuge pro Stunde: ${PopUpService.getAvgVehicles(noError)}</p>${PopUpService.getErrorMsg(error)}<button mat-raised-button id="logout-button" class="open-modal">mehr Informationen...</button>`;
   }
 
   static getAvg(measurements: Measurement[], matcher: string): number {

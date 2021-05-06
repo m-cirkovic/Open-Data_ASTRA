@@ -15,6 +15,7 @@ import { ModalComponent } from './modal/modal.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import { SplashScreenComponent } from './splash-screen/splash-screen.component';
 import { SideBarComponent } from './side-bar/side-bar.component';
+import { PieComponent } from './pie/pie.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { SideBarComponent } from './side-bar/side-bar.component';
     MapComponent,
     ModalComponent,
     SplashScreenComponent,
-    SideBarComponent
+    SideBarComponent,
+    PieComponent
   ],
   imports: [
     BrowserModule,

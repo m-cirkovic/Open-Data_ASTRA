@@ -5,6 +5,8 @@ import { AstraCacheService } from '../data/astra/astra-cache.service';
 import * as L from 'leaflet';
 import { PopUpService } from './pop-up.service';
 import { Site } from 'src/app/models/Internal/site.model';
+import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
+import {ModalComponent} from '../../modal/modal.component';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +15,8 @@ export class LaneLayerService {
 
   constructor(
     private _astraCache: AstraCacheService,
-    private _popupService: PopUpService
+    private _popupService: PopUpService,
+    public _matDialog: MatDialog
   ) { }
 
   getAllLayers(): Observable<L.Control.LayersObject>{
@@ -42,7 +45,23 @@ export class LaneLayerService {
 
   mapToLayerGroup(sites: Site[], popup: PopUpService): L.LayerGroup {
     let layer = L.layerGroup();
-    sites.forEach(s => L.circleMarker([s.lanes[0].lat, s.lanes[0].lng], { color: 'blue' }).addTo(layer).bindPopup(popup.siteToHtml(s)))
+    sites.forEach(s => L.circleMarker([s.lanes[0].lat, s.lanes[0].lng], { color: 'blue' }).addTo(layer).bindPopup(popup.siteToHtml(s)).on('popupopen', (a) => {
+      const popUp = a.target.getPopup();
+      popUp.getElement()
+        .querySelector('.open-modal')
+        .addEventListener('click', (e) => {
+          s.lanes.forEach(a => this._astraCache.saveSiteId(a.siteId));
+          this._astraCache.saveSpecificLocation(s.specificLocation);
+          const dialogConfig = new MatDialogConfig();
+          // The user can't close the dialog by clicking outside its body
+          dialogConfig.disableClose = false;
+          dialogConfig.id = 'modal-component';
+          dialogConfig.height = '100%';
+          dialogConfig.width = '100%';
+          // https://material.angular.io/components/dialog/overview
+          const modalDialog = this._matDialog.open(ModalComponent, dialogConfig);
+        });
+    }));
     return layer;
   }
 }

@@ -9,7 +9,7 @@ import { TmcMapperService } from './tmc-mapper.service';
   providedIn: 'root'
 })
 export class LaneMapperService {
-  
+
 
   constructor(private _tmcMapper:TmcMapperService){}
 
@@ -28,7 +28,7 @@ export class LaneMapperService {
       tap(site => site.forEach(s => s.lanes.map(l => l.measurements = m.get(l.siteId))))
     )),
     concatAll(),
-   ) 
+   )
   }
 
   public static laneReducer(prev: Map<number, Lane[]>, curr: Lane): Map<number, Lane[]> {

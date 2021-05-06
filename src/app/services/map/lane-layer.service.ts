@@ -42,9 +42,25 @@ export class LaneLayerService {
     )
   }
 
-  private _mapToLayerGroup(sites: Site[], popup: PopUpService): L.LayerGroup {
+  mapToLayerGroup(sites: Site[], popup: PopUpService): L.LayerGroup {
     let layer = L.layerGroup();
-    sites.forEach(s => L.circleMarker([s.lanes[0].lat, s.lanes[0].lng], { color: this._getColor(s) }).addTo(layer).bindPopup(popup.siteToHtml(s)))
+    sites.forEach(s => L.circleMarker([s.lanes[0].lat, s.lanes[0].lng], { color: this._getColor()}).addTo(layer).bindPopup(popup.siteToHtml(s)).on('popupopen', (a) => {
+      const popUp = a.target.getPopup();
+      popUp.getElement()
+        .querySelector('.open-modal')
+        .addEventListener('click', (e) => {
+          s.lanes.forEach(a => this._astraCache.saveSiteId(a.siteId));
+          this._astraCache.saveSpecificLocation(s.specificLocation);
+          const dialogConfig = new MatDialogConfig();
+          // The user can't close the dialog by clicking outside its body
+          dialogConfig.disableClose = false;
+          dialogConfig.id = 'modal-component';
+          dialogConfig.height = '100%';
+          dialogConfig.width = '100%';
+          // https://material.angular.io/components/dialog/overview
+          const modalDialog = this._matDialog.open(ModalComponent, dialogConfig);
+        });
+    }));
     return layer;
   }
 

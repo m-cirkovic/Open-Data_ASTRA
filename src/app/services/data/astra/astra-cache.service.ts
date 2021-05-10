@@ -21,6 +21,8 @@ export class AstraCacheService {
   private _staticMeasurements: Measurements;
   private _dynamicSites: Site[];
   private _staticSites: Site[];
+  private _site: Site;
+  
 
   constructor(
     private _astraApi: AstraApiService,
@@ -98,7 +100,19 @@ export class AstraCacheService {
       concatAll(),
       tap(sites => sites.forEach(s => s.locationName = this._tmcMapper.getFirstName(s.specificLocation))),
       tap(s => this._dynamicSites = s)
-    )
+    );
+  }
+
+  public saveSite(site: Site): void {
+    this._site = site;
+  }
+
+  public getSavedSpecificLocation(): number {
+    return this._site.specificLocation;
+  }
+
+  public getSite(): Site {
+    return this._site;
   }
 
 }

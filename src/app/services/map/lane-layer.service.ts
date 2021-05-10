@@ -6,6 +6,8 @@ import * as L from 'leaflet';
 import { PopUpService } from './pop-up.service';
 import { Site } from 'src/app/models/Internal/site.model';
 import { AverageService } from '../data/mappers/average.service';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ModalComponent } from 'src/app/modal/modal.component';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +16,9 @@ export class LaneLayerService {
 
   constructor(
     private _astraCache: AstraCacheService,
-    private _popupService: PopUpService
+    private _popupService: PopUpService,
+    private _matDialog: MatDialog
+
   ) { }
 
   getAllLayers(options?: {dynamic?: boolean}): Observable<L.Control.LayersObject>{
@@ -29,7 +33,7 @@ export class LaneLayerService {
     return this._astraCache.sitesWithLatestMeasurements({ dynamicMeasurements: options?.dynamic, dynamicSites: options?.dynamic }).pipe(
       tap(a => console.log(a[0].lanes[0].measurements.publicationTime)),
       map(s => s.filter(sites => sites.lanes.filter(l => !l.measurements?.reasonForDataError).length > 0)),
-      map(s => this._mapToLayerGroup(s, this._popupService)),
+      map(s => this.mapToLayerGroup(s, this._popupService)),
       map(l => { return { ['Normale Messstellen']: l } }),
     )
   }
@@ -37,14 +41,30 @@ export class LaneLayerService {
   private _getErrorLayers(options?: {dynamic?: boolean}): Observable<L.Control.LayersObject> {
     return this._astraCache.sitesWithLatestMeasurements({ dynamicMeasurements: options?.dynamic, dynamicSites: options?.dynamic }).pipe(
       map(s => s.filter(sites => sites.lanes.filter(l => l.measurements?.reasonForDataError).length > 0)),
-      map(s => this._mapToLayerGroup(s, this._popupService)),
+      map(s => this.mapToLayerGroup(s, this._popupService)),
       map(l => { return { ['Messstellen mit Fehlern']: l } })
     )
   }
 
-  private _mapToLayerGroup(sites: Site[], popup: PopUpService): L.LayerGroup {
+  mapToLayerGroup(sites: Site[], popup: PopUpService): L.LayerGroup {
     let layer = L.layerGroup();
-    sites.forEach(s => L.circleMarker([s.lanes[0].lat, s.lanes[0].lng], { color: this._getColor(s) }).addTo(layer).bindPopup(popup.siteToHtml(s)))
+    sites.forEach(s => L.circleMarker([s.lanes[0].lat, s.lanes[0].lng], { color: this._getColor(s)}).addTo(layer).bindPopup(popup.siteToHtml(s)).on('popupopen', (a) => {
+      const popUp = a.target.getPopup();
+      popUp.getElement()
+        .querySelector('.open-modal')
+        .addEventListener('click', (e) => {
+          this._astraCache.saveSite(s);
+          
+          const dialogConfig = new MatDialogConfig();
+          // The user can't close the dialog by clicking outside its body
+          dialogConfig.disableClose = false;
+          dialogConfig.id = 'modal-component';
+          dialogConfig.height = '100%';
+          dialogConfig.width = '100%';
+          // https://material.angular.io/components/dialog/overview
+          const modalDialog = this._matDialog.open(ModalComponent, dialogConfig);
+        });
+    }));
     return layer;
   }
 

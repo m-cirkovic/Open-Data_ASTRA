@@ -21,8 +21,8 @@ export class AstraCacheService {
   private _staticMeasurements: Measurements;
   private _dynamicSites: Site[];
   private _staticSites: Site[];
-  private _siteId: string;
-  private _specificLocation: number;
+  private _site: Site;
+  
 
   constructor(
     private _astraApi: AstraApiService,
@@ -103,19 +103,16 @@ export class AstraCacheService {
     );
   }
 
-  public saveSiteId(id: string): void {
-    this._siteId = id;
+  public saveSite(site: Site): void {
+    this._site = site;
   }
 
-  public saveSpecificLocation(id: number): void {
-    this._specificLocation = id;
-  }
   public getSavedSpecificLocation(): number {
-    return this._specificLocation;
+    return this._site.specificLocation;
   }
 
-  public getSiteId(): string {
-    return this._siteId;
+  public getSite(): Site {
+    return this._site;
   }
 
 }

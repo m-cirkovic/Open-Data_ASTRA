@@ -15,6 +15,7 @@ import * as d3 from 'd3';
 export class ModalComponent implements OnInit {
 
   name: string;
+  site: Site;
 
   constructor(
     public dialogRef: MatDialogRef<ModalComponent>,
@@ -24,6 +25,7 @@ export class ModalComponent implements OnInit {
 
   ngOnInit(): void {
    this.name = this.getName();
+   this.site = this._astraCache.getSite();
   }
 
   public getName(): string {

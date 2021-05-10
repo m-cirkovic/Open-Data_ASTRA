@@ -53,8 +53,8 @@ export class LaneLayerService {
       popUp.getElement()
         .querySelector('.open-modal')
         .addEventListener('click', (e) => {
-          s.lanes.forEach(a => this._astraCache.saveSiteId(a.siteId));
-          this._astraCache.saveSpecificLocation(s.specificLocation);
+          this._astraCache.saveSite(s);
+          
           const dialogConfig = new MatDialogConfig();
           // The user can't close the dialog by clicking outside its body
           dialogConfig.disableClose = false;

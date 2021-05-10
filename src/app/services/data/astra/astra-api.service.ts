@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import * as Parser from 'fast-xml-parser'
 import { Observable, of } from 'rxjs';
-import { catchError, concatAll, map, tap } from 'rxjs/operators';
+import { catchError, concatAll, map, share, tap } from 'rxjs/operators';
 import { SitePayloadPublication } from '../../../models/Soap/site.model';
 import { SoapWrapper } from '../../../models/Soap/soap.model';
 import { MeasurementCharacteristics, Lane, Site } from '../../../models/Internal/site.model';
@@ -27,10 +27,11 @@ export class AstraApiService {
   }
 
   public getStaticMeasurements(): Observable<Measurements> {
-    return this._http.get('/assets/measurements.xml', { responseType: 'text' }).pipe(
+    return this._http.get('/assets/StaticMeasurements.xml', { responseType: 'text' }).pipe(
       map(r => this.mapToMeasurement(r, this._indexMapper, this._getMeasurementDataValue)),
       concatAll(),
-      catchError((err,cau) => {console.log(err,cau); return of(err)})
+      catchError((err,cau) => {console.log(err,cau); return of(err)}),
+      share()
     )
   }
 
@@ -47,7 +48,8 @@ export class AstraApiService {
       concatAll(),
       map(r => this.mapToMeasurement(r, this._indexMapper, this._getMeasurementDataValue)),
       concatAll(),
-      catchError((err,cau) => {console.log(err,cau); return of(err)})
+      catchError((err,cau) => {console.log(err,cau); return of(err)}),
+      share()
     )
 
   }
@@ -107,12 +109,14 @@ export class AstraApiService {
       ),
       concatAll(),
       this._mapToLanes,
+      share(),
     )
   }
 
   public getStaticLanes(): Observable<Lane[]> {
     return this._http.get('assets/StaticMeasurementSites.xml', { responseType: 'text' }).pipe(
-      this._mapToLanes
+      this._mapToLanes,
+      share(),
     )
   }
 

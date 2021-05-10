@@ -53,7 +53,7 @@ export class PieComponent implements OnInit, AfterViewInit {
 
   private drawChart(): void {
 
-    let data = this.lane.measurements.measurementData.filter(d => d.unit === 'Fahrzeug/h');
+    let data = this.lane.measurements.measurementData.filter(d => d.unit === 'Fahrzeug/h' && d.value > 0);
     // Compute the position of each group on the pie:
     const pie = d3.pie<any>().value((d: any) => Number(d.value));
 

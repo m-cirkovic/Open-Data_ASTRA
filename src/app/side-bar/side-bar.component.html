@@ -65,10 +65,10 @@
                     Snapshotmodus, welcher einen statischen Datensatz aus der Vergangenheit anzeigt. Hier kann zwischen
                     den Modi gewechselt werden.
                 </p>
-                <div class="d-flex flex-row">
-                    <p>Die Daten sind im <span *ngIf="!dynamic">Snapshot</span><span *ngIf="dynamic">Real</span>modus
+                <div class="d-flex flex-row align-items-center">
+                    <p class="my-auto" >Die Daten sind im <span *ngIf="!dynamic">Snapshot</span><span *ngIf="dynamic">Real</span>modus
                     </p>
-                    <button class="ml-2" (click)="changeData()">
+                    <button class="ml-2 my-auto" (click)="changeData()">
                         <span *ngIf="!loading">wechseln</span>
                         <div class="d-flex" *ngIf="loading">
                             <div class="spinner-border spinner-border-sm text-warning" role="status">

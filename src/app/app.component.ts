@@ -11,7 +11,7 @@ import { LaneLayerService } from './services/map/lane-layer.service';
 export class AppComponent {
   title = 'Verkehrszähler';
 
-  siteLayer$: Observable<any> = this._layerService.getAllLayers();
+  siteLayer$: Observable<any> = this._layerService.getAllLayers({dynamic: false});
 
   constructor(private _layerService: LaneLayerService) {
   }

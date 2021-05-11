@@ -1,42 +1,28 @@
 <div id="modal-content-wrapper">
-  <header id="modal-header">
-    <h1 id="modal-title">{{this.station}}</h1>
+  <header id="modal-header" class="mr-1 d-flex justify-content-between ">
+    <h1 id="modal-title">Richtung {{this.name}}</h1><img class="align-self-top" width="24" height="24"
+      (click)="closeModal()" src="assets/icons/close.svg">
   </header>
-  <section id="modal-body">
-    <h2>hallo</h2>
-    <table class="table">
-      <caption>Werte der Stationnummer {{this.station}}</caption>
-      <thead>
-      <tr>
-        <th scope="col">Fahrzeug</th>
-        <th scope="col">Geschwindigkeit</th>
-        <th scope="col">Last</th>
-        <th scope="col">Handle</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <th scope="row">1</th>
-        <td>Mark</td>
-        <td>Otto</td>
-        <td>@mdo</td>
-      </tr>
-      <tr>
-        <th scope="row">2</th>
-        <td>Jacob</td>
-        <td>Thornton</td>
-        <td>@fat</td>
-      </tr>
-      <tr>
-        <th scope="row">3</th>
-        <td>Larry</td>
-        <td>the Bird</td>
-        <td>@twitter</td>
-      </tr>
-      </tbody>
-    </table>
+  <section id="modal-body" class="d-flex flex-wrap">
+    <div *ngFor="let l of site.lanes" class="m-1">
+      <div class="card">
+        <div class="card-body">
+          <h3 class="card-title">Spur {{ l.siteId.split('.')[1] }}</h3>
+          <div class="card-text">
+            <div *ngIf="l.measurements.reasonForDataError; then error else noError"></div>
+            <ng-template #noError>
+              <app-pie [lane]="l"></app-pie>
+              <h4>Durchschnittsgeschwindikeit:</h4>
+              <p>Leichtverkehr: {{ getCarSpeed(l) }} km/h</p>
+              <p>Schwerverkehr: {{ getLorrySpeed(l) }} km/h</p>
+            </ng-template>
+            <ng-template #error>
+              <p style="width: 750px;"> Fehlermeldung: {{ l.measurements.reasonForDataError }}</p>
+            </ng-template>
+
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
-  <footer id="modal-footer">
-    <button mat-raised-button id="modal-cancel-button" (click)="closeModal()">Go back</button>
-  </footer>
 </div>

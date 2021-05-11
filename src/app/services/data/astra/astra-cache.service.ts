@@ -1,7 +1,6 @@
-import { HttpClient } from '@angular/common/http';
-import { ThisReceiver } from '@angular/compiler';
+
 import { Injectable } from '@angular/core';
-import { concat, Observable, of } from 'rxjs';
+import {  Observable, of, Subject } from 'rxjs';
 import { concatAll, map, tap } from 'rxjs/operators';
 import { Measurements } from '../../../models/Internal/measurement.model';
 import { Site } from '../../../models/Internal/site.model';
@@ -21,6 +20,7 @@ export class AstraCacheService {
   private _staticMeasurements: Measurements;
   private _dynamicSites: Site[];
   private _staticSites: Site[];
+  private _site: Site;
 
   constructor(
     private _astraApi: AstraApiService,
@@ -39,7 +39,7 @@ export class AstraCacheService {
     return this._laneMapper.fillWithMeasurements(measurement$, site$)
   }
 
-  public getLatestMeasurements(): Observable<Measurements> {
+  private getLatestMeasurements(): Observable<Measurements> {
     if (this._latestMeasurments) {
       return of(this._latestMeasurments)
     } else {
@@ -72,18 +72,27 @@ export class AstraCacheService {
   }
 
   private _fetchStaticMeasurements(): Observable<Measurements> {
+    if(this._staticMeasurements){
+      return of(this._staticMeasurements)
+    }
     return this._astraApi.getStaticMeasurements().pipe(
       tap(a => this._staticMeasurements = a)
     )
   }
 
   private _fetchMeasurements(): Observable<Measurements> {
+    if(this._latestMeasurments){
+      return of(this._latestMeasurments)
+    }
     return this._astraApi.getMeasurements().pipe(
       tap(m => this._latestMeasurments = m)
     )
   }
 
   private _fetchStaticSites(): Observable<Site[]> {
+    if(this._staticSites){
+      return of(this._staticSites)
+    }
     return this._astraApi.getStaticLanes().pipe(
       map(s => this._laneMapper.mapToSite(of(s))),
       concatAll(),
@@ -93,12 +102,27 @@ export class AstraCacheService {
   }
 
   private _fetchDynamicSites(): Observable<Site[]> {
+    if(this._dynamicSites){
+      return of(this._dynamicSites)
+    }
     return this._astraApi.getLanes().pipe(
       map(s => this._laneMapper.mapToSite(of(s))),
       concatAll(),
       tap(sites => sites.forEach(s => s.locationName = this._tmcMapper.getFirstName(s.specificLocation))),
       tap(s => this._dynamicSites = s)
-    )
+    );
+  }
+
+  public saveSite(site: Site): void {
+    this._site = site;
+  }
+
+  public getSavedSpecificLocation(): number {
+    return this._site.specificLocation;
+  }
+
+  public getSite(): Site {
+    return this._site;
   }
 
 }

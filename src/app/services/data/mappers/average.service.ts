@@ -16,8 +16,10 @@ export class AverageService {
       }
     }))
     flowData.forEach(f => {
-      flowSum += f.value;
-      totalNum++;
+      if(f.value !== 0){  
+        flowSum += f.value;
+        totalNum++;
+      }
     })
     let res = flowSum / totalNum;
     return Number.isNaN(res) ? 0 : Math.round(res);

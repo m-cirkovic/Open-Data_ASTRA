@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import {MatDialogRef} from '@angular/material/dialog';
-import {ModalInfoService} from '../services/modal-info.service';
-import {Site} from '../models/Internal/site.model';
-import {Measurement} from '../models/Internal/measurement.model';
+import { MatDialogRef } from '@angular/material/dialog';
+import { ModalInfoService } from '../services/modal-info.service';
+import { Lane, Site } from '../models/Internal/site.model';
+import { Measurement, MeasurementData } from '../models/Internal/measurement.model';
+import { AstraCacheService } from '../services/data/astra/astra-cache.service';
+import { TmcMapperService } from '../services/data/mappers/tmc-mapper.service';
+import * as d3 from 'd3';
 
 @Component({
   selector: 'app-modal',
@@ -11,30 +14,43 @@ import {Measurement} from '../models/Internal/measurement.model';
 })
 export class ModalComponent implements OnInit {
 
-  infobox: Site;
-  station: any;
+  name: string;
+  site: Site;
 
   constructor(
     public dialogRef: MatDialogRef<ModalComponent>,
-    public modalInfoService: ModalInfoService) { }
+    private _astraCache: AstraCacheService,
+    private _tmcMapper: TmcMapperService) {
+  }
 
   ngOnInit(): void {
-    this.infobox = this.modalInfoService.getSavedSite();
-    console.log(this.getMeasurement(this.infobox));
+    this.name = this.getName();
+    this.site = this._astraCache.getSite();
+  }
+
+  public getName(): string {
+    return this._tmcMapper.getFirstName(this._astraCache.getSavedSpecificLocation());
   }
 
   public closeModal(): void {
     this.dialogRef.close();
   }
 
-  printInput(): void{
-    console.log('stupid boy');
+  public getCarSpeed(l: Lane): number {
+    return l.measurements.measurementData.reduce((acc, curr) => {
+      if (curr.unit === 'km/h' && curr.vehicleType === 'Leichtfahrzeuge') {
+        acc = curr.value
+      }
+      return Math.round(acc)
+    }, 0)
+  }
+  public getLorrySpeed(l: Lane): number {
+    return l.measurements.measurementData.reduce((acc, curr) => {
+      if (curr.unit === 'km/h' && curr.vehicleType === 'Schwerverkehr') {
+        acc = curr.value
+      }
+      return Math.round(acc)
+    }, 0)
   }
 
-  getMeasurement(data: any): void {
-    this.station = data.specificLocation;
-    data.lanes.forEach(e => {
-      console.log(e.measurements._siteId);
-    });
-  }
 }

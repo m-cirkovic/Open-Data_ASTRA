@@ -44,13 +44,13 @@ svg{
 .tab-pane{
     display: none;
     min-width: 25vw;
-    
+
     max-width: 35vw;
 }
 .header{
     margin-top: 0;
     padding-top: 0;
-   
+
 }
 .header h1{
     margin: 0;
@@ -67,4 +67,16 @@ svg{
 }
 .mr-1{
     margin-right: 5px;
+}
+#close-button{
+  position: relative;
+  left: -7px
+}
+h2{
+  margin: 0;
+  padding: 0;
+}
+.button-img{
+  height: auto;
+  width: auto;
 }

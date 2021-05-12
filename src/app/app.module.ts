@@ -16,6 +16,7 @@ import {MatDialogModule} from '@angular/material/dialog';
 import { SplashScreenComponent } from './splash-screen/splash-screen.component';
 import { SideBarComponent } from './side-bar/side-bar.component';
 import { PieComponent } from './pie/pie.component';
+import {LeafletMarkerClusterModule} from '@asymmetrik/ngx-leaflet-markercluster';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { PieComponent } from './pie/pie.component';
     ModalModule,
     NgbModule,
     BrowserAnimationsModule,
-    MatDialogModule
+    MatDialogModule,
+    LeafletMarkerClusterModule
   ],
   providers: [
     BsModalService,

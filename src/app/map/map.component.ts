@@ -19,6 +19,8 @@ export class MapComponent implements OnInit {
 
   public mapLayers: L.Control.LayersObject;
 
+  markerClusterGroup: L.MarkerClusterGroup;
+  markerClusterData = [];
 
   constructor(
     public config: NgbModalConfig,
@@ -33,12 +35,13 @@ export class MapComponent implements OnInit {
   }
 
   private _initMap(): void {
-    this.mapLayers= this._mapLayerService.getMapLayers()
+    this.mapLayers = this._mapLayerService.getMapLayers();
     this.map = L.map('map', {
+      maxBoundsViscosity: 1.0,
       minZoom: 8,
       zoomControl: false,
       layers: [Object.values(this.mapLayers)[0]]
-    }).setView([46.6, 7.7], 10);  
+    }).setView([46.6, 7.7], 1);
   }
 
   private _addLayersToMap() {
@@ -60,6 +63,5 @@ export class MapComponent implements OnInit {
     this._addLayersToMap();
     this._addControlToMap();
   }
-
 }
 

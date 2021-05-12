@@ -14,7 +14,13 @@ export class PopUpService {
     let measurements = site.lanes.map(s => s.measurements);
     let noError = measurements.filter(m => !m?.reasonForDataError);
     let error = measurements.filter(m => m?.reasonForDataError);
-    return `<h1>Richtung ${site.locationName}</h1><p>Geschwindigkeit: ${AverageService.getAvgVehicleSpeed(noError)} km/h</p><p>Anzahl Fahrzeuge pro Stunde: ${AverageService.getAvgVehicles(noError)}</p>${PopUpService.getErrorMsg(error)}<button mat-raised-button id="logout-button" class="open-modal">Details</button>`;
+    return `<div class ="container-fluid">
+            <h2>Richtung ${site.locationName}</h2>
+            <hr>
+            <p><strong>Geschwindigkeit:</strong> ${AverageService.getAvgVehicleSpeed(noError)} km/h</p>
+            <p><strong>Anzahl Fahrzeuge pro Stunde:</strong> ${AverageService.getAvgVehicles(noError)}</p>${PopUpService.getErrorMsg(error)}
+            <button mat-raised-button style="right:5px" id="logout-button" class="open-modal" align="end">Details</button>
+            </div>`;
   }
 
   static getErrorMsg(measurements: Measurement[]): string {
@@ -24,5 +30,5 @@ export class PopUpService {
       return '';
     }
   }
-  
+
 }

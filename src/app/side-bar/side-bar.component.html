@@ -48,40 +48,58 @@
   <div class="pt-2">
     <div id="info" class="tab-pane ">
       <div class="header">
-        <img (click)="hidePane()" src="assets/icons/close.svg" class="pull-right">
-        <h1>Wilkommen</h1>
-        <p>
-          Informieren Sie sich auf unserer App, wo es schweizweit aktuell Stau hat. Durch die freizugänglichen Daten
-          der
-          ... haben wir eine App entwickelt
-          in welcher man nur in wenigen Klicks herausfinden kann, welche Route man für die nächste Fahrt vermeiden
-          sollte!
-        </p>
-        <h2>Anwendung</h2>
-        <p>Durch Betrachten der Karte erkennen Sie, auf welchen Strecken, es aktuell Stau hat:</p>
-        <p>.(blau). Freie fahrt! Die Strasse ist nur leicht befahren.</p>
-        <p>.(orange). Augen auf die Strasse, Sie sind nicht alleine!</p>
-        <p>.(rot). Es wird eine lange Fahrt. Vermeiden sie diesen Streckenabschnitt, falls möglich</p>
-        <p>
-          Für mehr Informationen über Ihre gwünschte Strecke, klicken Sie auf die entsprechende Messstation und es
-          erscheint ein Popopfenster mit der allgemeinen Verkehrslage.
-          Spezifischere Angaben zur Art des Verkehrs erhalten Sie durch das Klicken auf den erschienenen Knopf "weitere
-          Informationen".
-        </p>
-        <p> Die Art der Karte kann Ihren Wünschen entsprechend, oben rechts ausgewählt werden.
-          Ausserdem gibt es die Option die Messstationen mit Fehlern herauszufiltern.
-        </p>
-        <h2>Entwickler</h2>
-        <p>Diese App wurde im Rahmen der Opendata Vorlesung an der Universität Bern erstellt.</p>
-        <div class="mr-1 flex between align-items-center">
-          <p>Manuel Schüpbach: <br>
-            Bachelor Student Informatik</p>
-          <p>Marko Cirkovic: <br>
-            Bachelor Student Informatik</p>
-        </div>
-        <div class="mr-1 flex between align-items-center">
-          <img src="assets/images/astra_logo.jpg" class="img-fluid">
-          <img src="assets/images/unibe_logo.png" class="img-fluid">
+        <div class="container">
+          <div class="mr-1 flex between align-items">
+            <h1>Wilkommen</h1>
+            <img (click)="hidePane()" src="assets/icons/close.svg" id="close-button" class="float-right">
+          </div>
+          <p>
+            Informieren Sie sich auf unserer App, wo es schweizweit aktuell Stau hat. Durch die freizugänglichen Daten
+            der
+            ... haben wir eine App entwickelt
+            in welcher man nur in wenigen Klicks herausfinden kann, welche Route man für die nächste Fahrt vermeiden
+            sollte!
+          </p>
+          <h2>Anwendung</h2>
+          <p>Durch Betrachten der Karte erkennen Sie, auf welchen Strecken, es aktuell Stau hat:</p>
+          <div class="d-flex flex-row container p-1 my-1 border rounded">
+            <div id="blueCircle" class="p-2"></div>
+            <p class="p-2 my-auto">Freie fahrt! Die Strasse ist nur leicht befahren.</p>
+          </div>
+          <div class="d-flex flex-row container p-1 my-1 border rounded">
+            <div id="orangeCircle" class="p-2"></div>
+            <p class="p-2 my-auto">Augen auf die Strasse, Sie sind nicht alleine!</p>
+          </div>
+          <div class="d-flex flex-row container p-1 my-1 border rounded">
+            <div id="redCircle" class="p-2"></div>
+            <p class="p-2 my-auto">Es wird eine lange Fahrt. Vermeiden sie diesen Streckenabschnitt, falls möglich.</p>
+          </div>
+          <p>
+            Für mehr Informationen über Ihre gwünschte Strecke, klicken Sie auf die entsprechende Messstation und es
+            erscheint ein Popopfenster mit der allgemeinen Verkehrslage.
+            Spezifischere Angaben zur Art des Verkehrs erhalten Sie durch das Klicken auf den erschienenen Knopf
+            "weitere
+            Informationen".
+          </p>
+          <p> Die Art der Karte kann Ihren Wünschen entsprechend, oben rechts ausgewählt werden.
+            Ausserdem gibt es die Option die Messstationen mit Fehlern herauszufiltern.
+          </p>
+          <h2>Entwickler</h2>
+          <p>Diese App wurde im Rahmen der Opendata Vorlesung an der Universität Bern erstellt.</p>
+          <div class="mr-1 flex between align-items-center">
+            <p>Manuel Schüpbach: <br>
+              Bachelor Student Informatik</p>
+            <p>Marko Cirkovic: <br>
+              Bachelor Student Informatik</p>
+          </div>
+          <div class="row">
+            <div class="column">
+              <img src="assets/images/astra_logo.jpg" class="thumbnail button-img">
+            </div>
+            <div class="column">
+              <img src="assets/images/unibe_logo.png" class="thumbnail button-img">
+            </div>
+          </div>
         </div>
       </div>
     </div>

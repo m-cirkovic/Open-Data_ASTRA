@@ -67,14 +67,13 @@ export class LaneLayerService {
   }
 
   mapToLayerGroup(sites: Site[], popup: PopUpService, color: string): L.LayerGroup {
-    let layer = L.layerGroup();
+    let layer = L.markerClusterGroup();
     sites.forEach(s => L.circleMarker([s.lanes[0].lat, s.lanes[0].lng], { color: color }).addTo(layer).bindPopup(popup.siteToHtml(s)).on('popupopen', (a) => {
       const popUp = a.target.getPopup();
       popUp.getElement()
         .querySelector('.open-modal')
         .addEventListener('click', (e) => {
           this._astraCache.saveSite(s);
-
           const dialogConfig = new MatDialogConfig();
           // The user can't close the dialog by clicking outside its body
           dialogConfig.disableClose = false;

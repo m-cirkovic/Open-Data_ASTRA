@@ -29,5 +29,8 @@ export class TimeBarComponent implements OnInit {
   date(): Date{
     return this._astraCache.getMeasurementDate();
   }
+  current(): boolean{
+    return Date.now() - this._astraCache.getMeasurementDate().valueOf() < 1000 * 60;
+  }
 
 }

@@ -1,3 +1,4 @@
 <div id="timebar" class="timebar d-flex p-2">
-    <p class="my-auto font-weight-bold">{{ date() | date:'dd.MM.YY HH:mm:ss' }}</p>
+    <p *ngIf="!current()" class="my-auto font-weight-bold">{{ date() | date:'dd.MM.YY HH:mm' }}</p>
+    <p *ngIf="current()" class="my-auto font-weight-bold">{{ date() | date:'HH:mm' }} (aktuell)</p>
 </div>

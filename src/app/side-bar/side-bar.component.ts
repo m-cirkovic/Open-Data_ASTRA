@@ -1,4 +1,3 @@
-import { ThisReceiver } from '@angular/compiler';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Control, DomUtil, Map } from 'leaflet';
 import { LaneLayerService } from '../services/map/lane-layer.service';

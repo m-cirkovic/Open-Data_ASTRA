@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Control, DomUtil, Map } from 'leaflet';
+import { AstraCacheService } from '../services/data/astra/astra-cache.service';
 
 @Component({
   selector: 'app-time-bar',
@@ -11,7 +12,7 @@ export class TimeBarComponent implements OnInit {
   @Input() map: Map;
   timebar: Control;
 
-  constructor() { }
+  constructor(private _astraCache: AstraCacheService) { }
 
   ngOnInit(): void {
     let TimeBar = Control.extend({
@@ -22,8 +23,11 @@ export class TimeBarComponent implements OnInit {
     })
     this.timebar = new TimeBar({
       position: 'bottomright'
-    }).addTo(this.map)
-    
+    }).addTo(this.map) 
+  }
+
+  date(): Date{
+    return this._astraCache.getMeasurementDate();
   }
 
 }

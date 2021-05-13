@@ -17,6 +17,7 @@ import { SplashScreenComponent } from './splash-screen/splash-screen.component';
 import { SideBarComponent } from './side-bar/side-bar.component';
 import { PieComponent } from './pie/pie.component';
 import { TimeBarComponent } from './time-bar/time-bar.component';
+import {LeafletMarkerClusterModule} from '@asymmetrik/ngx-leaflet-markercluster';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { TimeBarComponent } from './time-bar/time-bar.component';
     ModalModule,
     NgbModule,
     BrowserAnimationsModule,
-    MatDialogModule
+    MatDialogModule,
+    LeafletMarkerClusterModule
   ],
   providers: [
     BsModalService,

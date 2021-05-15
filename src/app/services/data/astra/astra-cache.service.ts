@@ -21,6 +21,7 @@ export class AstraCacheService {
   private _dynamicSites: Site[];
   private _staticSites: Site[];
   private _site: Site;
+  private _currentMeasurementDate: Date;
 
   constructor(
     private _astraApi: AstraApiService,
@@ -36,7 +37,11 @@ export class AstraCacheService {
   public sitesWithLatestMeasurements(siteOptions?: { dynamicSites?: boolean, dynamicMeasurements?: boolean }): Observable<Site[]> {
     let site$: Observable<Site[]> = siteOptions?.dynamicSites ? this._getDynamicSites() : this._getStaticSites();
     let measurement$: Observable<Measurements> = siteOptions?.dynamicSites ? this.getLatestMeasurements() : this._getStaticMeasurements();
-    return this._laneMapper.fillWithMeasurements(measurement$, site$)
+    return this._laneMapper.fillWithMeasurements(measurement$, site$).pipe(tap(s => this._currentMeasurementDate = s[0].lanes[0].measurements.publicationTime))
+  }
+
+  public getMeasurementDate(): Date{
+    return this._currentMeasurementDate;
   }
 
   private getLatestMeasurements(): Observable<Measurements> {

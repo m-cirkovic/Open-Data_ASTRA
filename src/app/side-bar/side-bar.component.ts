@@ -40,7 +40,11 @@ export class SideBarComponent implements OnInit, AfterContentInit {
       .append('circle')
       .attr('cx', 25)
       .attr('cy', 25)
-      .attr('r', 25)
+      .attr('r', 20)
+      .attr('fill-opacity', '0.2')
+      .style('fill', 'MidnightBlue')
+      .style('stroke', 'blue')
+      .style('stroke-width', '5px')
       .style('fill', 'blue');
 
     d3.select('#orangeCircle')
@@ -50,7 +54,11 @@ export class SideBarComponent implements OnInit, AfterContentInit {
       .append('circle')
       .attr('cx', 25)
       .attr('cy', 25)
-      .attr('r', 25)
+      .attr('r', 20)
+      .attr('fill-opacity', '0.2')
+      .style('fill', 'MidnightBlue')
+      .style('stroke', 'orange')
+      .style('stroke-width', '5px')
       .style('fill', 'orange');
 
     d3.select('#redCircle')
@@ -60,7 +68,11 @@ export class SideBarComponent implements OnInit, AfterContentInit {
       .append('circle')
       .attr('cx', 25)
       .attr('cy', 25)
-      .attr('r', 25)
+      .attr('r', 20)
+      .attr('fill-opacity', '0.2')
+      .style('fill', 'MidnightBlue')
+      .style('stroke', 'red')
+      .style('stroke-width', '5px')
       .style('fill', 'red');
   }
 

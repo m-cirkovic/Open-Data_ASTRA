@@ -41,7 +41,7 @@ export class MapComponent implements OnInit {
       minZoom: 8,
       zoomControl: false,
       layers: [Object.values(this.mapLayers)[0]]
-    }).setView([46.6, 7.7], 1);
+    }).setView([46.6, 7.7], 7);
   }
 
   private _addLayersToMap() {

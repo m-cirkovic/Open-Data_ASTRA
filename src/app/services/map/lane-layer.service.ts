@@ -22,53 +22,68 @@ export class LaneLayerService {
   ) { }
 
   getAllLayers(options?: { dynamic?: boolean }): Observable<L.Control.LayersObject> {
-    let siteLayersSeed: L.Control.LayersObject = {};
-    let sites = this._astraCache.sitesWithLatestMeasurements({ dynamicMeasurements: options?.dynamic, dynamicSites: options?.dynamic })
+    const siteLayersSeed: L.Control.LayersObject = {};
+    const sites = this._astraCache.sitesWithLatestMeasurements({ dynamicMeasurements: options?.dynamic, dynamicSites: options?.dynamic });
     return merge(this._getNormalLayers(sites), this._getErrorLayers(sites), this._getJamLayers(sites), this._getStagnatingLayers(sites)).pipe(
-      reduce((acc, curr) => { return { ...acc, ...curr } }, siteLayersSeed),
+      reduce((acc, curr) => ({ ...acc, ...curr }), siteLayersSeed),
       catchError((err, caught) => of({}))
-    )
+    );
   }
 
-  private _getStagnatingLayers(s:Observable<Site[]>): Observable<L.Control.LayersObject> {
+  private _getStagnatingLayers(s: Observable<Site[]>): Observable<L.Control.LayersObject> {
     return s.pipe(
       map(s => s.filter(sites => sites.lanes.filter(l => !l.measurements?.reasonForDataError).length > 0)),
       map(s => s.filter(site => site.lanes.filter(l => l.measurements?.measurementData.filter(m => m.value >= 10 && m.value < 30 && m.value > 0 && m.unit === 'km/h').length > 0).length > 0)),
       map(s => this.mapToLayerGroup(s, this._popupService, 'orange')),
-      map(l => { return { ['Stockender Verkehr']: l } }),
-    )
+      map(l => ({ ['Stockender Verkehr']: l })),
+    );
   }
 
-  private _getJamLayers(s:Observable<Site[]>): Observable<L.Control.LayersObject> {
+  private _getJamLayers(s: Observable<Site[]>): Observable<L.Control.LayersObject> {
     return s.pipe(
       map(s => s.filter(sites => sites.lanes.filter(l => !l.measurements?.reasonForDataError).length > 0)),
       map(s => s.filter(site => site.lanes.filter(l => l.measurements?.measurementData.filter(m => m.value < 10 && m.value > 0 && m.unit === 'km/h').length > 0).length > 0)),
       map(s => this.mapToLayerGroup(s, this._popupService, 'red')),
-      map(l => { return { ['Stau']: l } }),
-    )
+      map(l => ({ ['Stau']: l })),
+    );
   }
 
-  private _getNormalLayers(s:Observable<Site[]>): Observable<L.Control.LayersObject> {
+  private _getNormalLayers(s: Observable<Site[]>): Observable<L.Control.LayersObject> {
     return s.pipe(
       tap(a => console.log(a[0].lanes[0].measurements.publicationTime)),
       map(s => s.filter(sites => sites.lanes.filter(l => !l.measurements?.reasonForDataError).length > 0)),
       map(s => s.filter(site => site.lanes.filter(l => l.measurements?.measurementData.filter(m => m.value > 30 && m.unit === 'km/h').length > 0).length > 0)),
       map(s => this.mapToLayerGroup(s, this._popupService, 'blue')),
-      map(l => { return { ['Normale Messstellen']: l } }),
-    )
+      map(l => ({ ['Normale Messstellen']: l })),
+    );
   }
 
-  private _getErrorLayers(s:Observable<Site[]>): Observable<L.Control.LayersObject> {
+  private _getErrorLayers(s: Observable<Site[]>): Observable<L.Control.LayersObject> {
     return s.pipe(
       map(s => s.filter(sites => sites.lanes.filter(l => l.measurements?.reasonForDataError).length > 0)),
-      map(s => this.mapToLayerGroup(s, this._popupService, 'blue')),
-      map(l => { return { ['Messstellen mit Fehlern']: l } })
-    )
+      map(s => this.mapToLayerGroup(s, this._popupService, 'blue' )),
+      map(l => ({ ['Messstellen mit Fehlern']: l }))
+    );
   }
 
   mapToLayerGroup(sites: Site[], popup: PopUpService, color: string): L.LayerGroup {
-    let layer = L.markerClusterGroup();
-    sites.forEach(s => L.circleMarker([s.lanes[0].lat, s.lanes[0].lng], { color: color }).addTo(layer).bindPopup(popup.siteToHtml(s)).on('popupopen', (a) => {
+    const layer = L.markerClusterGroup({
+      iconCreateFunction: (cluster) => {
+        const childCount = cluster.getChildCount();
+        let c = ' marker-cluster-';
+        if (color === 'red') {
+          c += 'red';
+        }
+        else if (color === 'orange') {
+          c += 'orange';
+        }
+        else {
+          c += 'blue';
+        }
+        return new L.DivIcon({ html: '<div><span>' + childCount + '</span></div>',
+          className: 'marker-cluster' + c, iconSize: new L.Point(40, 40) });
+      }});
+    sites.forEach(s => L.circleMarker([s.lanes[0].lat, s.lanes[0].lng], { color }).addTo(layer).bindPopup(popup.siteToHtml(s)).on('popupopen', (a) => {
       const popUp = a.target.getPopup();
       popUp.getElement()
         .querySelector('.open-modal')
@@ -88,7 +103,7 @@ export class LaneLayerService {
   }
 
   private _getAvg(site: Site): number {
-    let measurements = site.lanes.map(s => s.measurements);
+    const measurements = site.lanes.map(s => s.measurements);
     return AverageService.getAvg(measurements.filter(m => !m?.reasonForDataError), 'km/h');
   }
 

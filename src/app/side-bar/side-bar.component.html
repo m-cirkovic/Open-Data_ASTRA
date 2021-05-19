@@ -39,12 +39,15 @@
         <div class="header">
           <div class="mr-1 flex between align-items">
             <h1>Wilkommen</h1>
-            <img (click)="hidePane()" src="assets/icons/close.svg">
+            <button type="button" class="close" aria-label="Close" (click)="hidePane()">
+              <span aria-hidden="true">&times;</span>
+            </button>
           </div>
         </div>
         <p>
           Informieren Sie sich auf unserer App, wo es schweizweit aktuell Stau hat. Durch die freizugänglichen Daten
-          der <a href="https://opentransportdata.swiss/de/">Open-Data-Plattform Mobilität Schweiz</a> haben wir eine App entwickelt
+          der <a href="https://opentransportdata.swiss/de/">Open-Data-Plattform Mobilität Schweiz</a> haben wir eine App
+          entwickelt
           in welcher man nur in wenigen Klicks herausfinden kann, welche Route man für die nächste Fahrt vermeiden
           sollte!
         </p>
@@ -89,7 +92,10 @@
       <div class="container">
         <div class="header">
           <div class="mr-1 flex between align-items-center">
-            <h1>Einstellungen</h1><img (click)="hidePane()" src="assets/icons/close.svg">
+            <h1>Einstellungen</h1>
+            <button type="button" class="close" aria-label="Close" (click)="hidePane()">
+              <span aria-hidden="true">&times;</span>
+            </button>
           </div>
         </div>
         <h2>Modus</h2>
@@ -120,7 +126,10 @@
       <div class="container">
         <div class="header">
           <div class="mr-1 flex between align-items-center">
-            <h1>Entwickler</h1><img (click)="hidePane()" src="assets/icons/close.svg">
+            <h1>Entwickler</h1>
+            <button type="button" class="close" aria-label="Close" (click)="hidePane()">
+              <span aria-hidden="true">&times;</span>
+            </button>
           </div>
         </div>
         <p>Diese App wurde im Rahmen der Opendata Vorlesung an der Universität Bern erstellt.</p>

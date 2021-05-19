@@ -11,15 +11,17 @@ export class PopUpService {
   constructor() { }
 
   public siteToHtml(site: Site): string {
-    let measurements = site.lanes.map(s => s.measurements);
-    let noError = measurements.filter(m => !m?.reasonForDataError);
-    let error = measurements.filter(m => m?.reasonForDataError);
+    const measurements = site.lanes.map(s => s.measurements);
+    const noError = measurements.filter(m => !m?.reasonForDataError);
+    const error = measurements.filter(m => m?.reasonForDataError);
     return `<div class ="container-fluid">
             <h2>Richtung ${site.locationName}</h2>
             <hr>
-            <p><strong>Geschwindigkeit:</strong> ${AverageService.getAvgVehicleSpeed(noError)} km/h</p>
-            <p><strong>Anzahl Fahrzeuge pro Stunde:</strong> ${AverageService.getAvgVehicles(noError)}</p>${PopUpService.getErrorMsg(error)}
-            <button mat-raised-button style="right:5px" id="logout-button" class="open-modal" align="end">Details</button>
+            <p>
+            <strong>Geschwindigkeit:</strong> ${AverageService.getAvgVehicleSpeed(noError)} km/h <br>
+            <strong>Anzahl Fahrzeuge pro Stunde:</strong> ${AverageService.getAvgVehicles(noError)}</p>
+            ${PopUpService.getErrorMsg(error)}
+            <button class="open-modal tn btn-secondary btn-sm" >Details</button>
             </div>`;
   }
 

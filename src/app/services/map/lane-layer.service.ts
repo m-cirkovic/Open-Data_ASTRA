@@ -68,6 +68,7 @@ export class LaneLayerService {
 
   mapToLayerGroup(sites: Site[], popup: PopUpService, color: string): L.LayerGroup {
     const layer = L.markerClusterGroup({
+      disableClusteringAtZoom: 12,
       iconCreateFunction: (cluster) => {
         const childCount = cluster.getChildCount();
         let c = ' marker-cluster-';
@@ -93,8 +94,8 @@ export class LaneLayerService {
           // The user can't close the dialog by clicking outside its body
           dialogConfig.disableClose = false;
           dialogConfig.id = 'modal-component';
-          dialogConfig.height = '100%';
-          dialogConfig.width = '100%';
+          dialogConfig.height = '75%';
+          dialogConfig.width = '75%';
           // https://material.angular.io/components/dialog/overview
           const modalDialog = this._matDialog.open(ModalComponent, dialogConfig);
         });

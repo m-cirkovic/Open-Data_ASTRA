@@ -18,6 +18,7 @@ import { SideBarComponent } from './side-bar/side-bar.component';
 import { PieComponent } from './pie/pie.component';
 import { TimeBarComponent } from './time-bar/time-bar.component';
 import {LeafletMarkerClusterModule} from '@asymmetrik/ngx-leaflet-markercluster';
+import { LineSimulatorComponent } from './line-simulator/line-simulator.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import {LeafletMarkerClusterModule} from '@asymmetrik/ngx-leaflet-markercluster'
     SplashScreenComponent,
     SideBarComponent,
     PieComponent,
-    TimeBarComponent
+    TimeBarComponent,
+    LineSimulatorComponent
   ],
   imports: [
     BrowserModule,

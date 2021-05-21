@@ -13,7 +13,7 @@
           <div class="card-text">
             <div *ngIf="l.measurements.reasonForDataError; then error else noError"></div>
             <ng-template #noError>
-              <app-pie [lane]="l"></app-pie>
+              <app-line-simulator [lane]="l"></app-line-simulator>
               <h4>Durchschnittsgeschwindikeit:</h4>
               <p>Leichtverkehr: {{ getCarSpeed(l) }} km/h</p>
               <p>Schwerverkehr: {{ getLorrySpeed(l) }} km/h</p>
@@ -28,3 +28,26 @@
     </div>
   </section>
 </div>
+
+
+<!--
+<div class="card">
+        <div class="card-body">
+          <h3 class="card-title">Spur {{ l.siteId.split('.')[1] }}</h3>
+          <div class="card-text">
+            <div *ngIf="l.measurements.reasonForDataError; then error else noError"></div>
+            <ng-template #noError>
+              <app-line-simulator [lane]="l"></app-line-simulator>
+              <app-pie [lane]="l"></app-pie>
+              <h4>Durchschnittsgeschwindikeit:</h4>
+              <p>Leichtverkehr: {{ getCarSpeed(l) }} km/h</p>
+              <p>Schwerverkehr: {{ getLorrySpeed(l) }} km/h</p>
+            </ng-template>
+            <ng-template #error>
+              <p style="width: 750px;"> Fehlermeldung: {{ l.measurements.reasonForDataError }}</p>
+            </ng-template>
+
+          </div>
+        </div>
+      </div>
+-->

@@ -18,7 +18,7 @@ export class PieComponent implements OnInit, AfterViewInit {
   private colors;
 
   @Input() lane: Lane;
-  @ViewChild("pie") pie;
+  @ViewChild('pie') pie;
 
   constructor() { }
 
@@ -26,7 +26,7 @@ export class PieComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.createSvg();
     this.createColors();
     this.drawChart();
@@ -53,7 +53,7 @@ export class PieComponent implements OnInit, AfterViewInit {
 
   private drawChart(): void {
 
-    let data = this.lane.measurements.measurementData.filter(d => d.unit === 'Fahrzeug/h' && d.value > 0);
+    const data = this.lane.measurements.measurementData.filter(d => d.unit === 'Fahrzeug/h' && d.value > 0);
     // Compute the position of each group on the pie:
     const pie = d3.pie<any>().value((d: any) => Number(d.value));
 
@@ -69,7 +69,7 @@ export class PieComponent implements OnInit, AfterViewInit {
       )
       .attr('fill', (d, i) => (this.colors(i)))
       .attr('stroke', '#121926')
-      .style('stroke-width', '1px')
+      .style('stroke-width', '1px');
 
 
     // Add labels

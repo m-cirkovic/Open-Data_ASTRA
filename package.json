@@ -33,6 +33,7 @@
     "bootstrap": "^4.6.0",
     "bootstrap4-toggle": "^3.6.1",
     "d3": "^6.6.2",
+    "d3-ease": "^2.0.0",
     "fast-xml-parser": "^3.19.0",
     "leaflet": "^1.7.1",
     "leaflet-modal": "^0.2.0",

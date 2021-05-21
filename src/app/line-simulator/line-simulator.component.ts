@@ -22,7 +22,6 @@ export class LineSimulatorComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    console.log(this.pickUnit(this.getDistribution(this.lane)));
     this.createSvg();
     this.repeat();
   }
@@ -38,8 +37,7 @@ export class LineSimulatorComponent implements OnInit, AfterViewInit {
     const randomVal = Math.random();
     if (randomVal <= carProbability) {
       return 'car';
-    }
-    else {
+    } else {
       return 'truck';
     }
   }
@@ -89,6 +87,23 @@ export class LineSimulatorComponent implements OnInit, AfterViewInit {
     }, 0);
   }
 
+  public getTruckSpeed(l: Lane): number {
+    return l.measurements.measurementData.reduce((acc, curr) => {
+      if (curr.unit === 'km/h' && curr.vehicleType === 'Schwerverkehr') {
+        acc = curr.value;
+      }
+      return Math.round(acc);
+    }, 0);
+  }
+
+  private getSpeed(l: Lane, unit: string): number {
+    if (unit === 'car') {
+      return this.getCarSpeed(l);
+    } else {
+      return this.getTruckSpeed(l);
+    }
+  }
+
   private getDuration(speed: number): number {
     if (speed === 0) {
       return 0;
@@ -121,7 +136,7 @@ export class LineSimulatorComponent implements OnInit, AfterViewInit {
   }
 
   private chooseCircle(unit: string): void {
-    if (unit === 'car'){
+    if (unit === 'car') {
       this.createCarCircle();
     } else {
       this.createTruckCircle();
@@ -129,19 +144,20 @@ export class LineSimulatorComponent implements OnInit, AfterViewInit {
   }
 
   private repeat(): void {
-    this.chooseCircle(this.pickUnit(this.getDistribution(this.lane)));
+    const unit = this.pickUnit(this.getDistribution(this.lane))
+    this.chooseCircle(unit);
     this.circle
       .attr('cx', -25)
       .attr('cy', 25)
       .transition()
-      .duration(d3.easeLinear(this.getDuration(this.getCarSpeed(this.lane))))
+      .duration(d3.easeLinear(this.getDuration(this.getSpeed(this.lane, unit))))
       .attr('cx', 725)
       .transition()
       .duration(0)
       .attr('cx', -25);
     setTimeout(() => {
       this.repeat();
-    }, this.getDuration(this.getCarSpeed(this.lane)));
+    }, this.getDuration(this.getSpeed(this.lane, unit)));
   }
 
 }

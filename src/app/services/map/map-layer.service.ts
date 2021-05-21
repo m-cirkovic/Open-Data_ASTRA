@@ -19,10 +19,15 @@ export class MapLayerService {
   openTopoMap = tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a>, SRTM | © <a href="http://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
   });
+  stadiamap = tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
+    maxZoom: 20,
+    attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+  });
   private _mapLayers = {
     SwissTopo: this.swissTopo,
     OpenStreetMap: this.openStreetMap_CH,
-    OpenTopoMap: this.openTopoMap
+    OpenTopoMap: this.openTopoMap,
+    Smoothmap: this.stadiamap
   };
 
   getMapLayers(){

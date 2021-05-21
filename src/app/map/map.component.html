@@ -3,5 +3,5 @@
   <div class="map-frame">
     <div id="map"></div>
   </div>
-  <app-time-bar [map]="map"></app-time-bar>
+  <app-time-bar (updateData)="updateMap($event)" [map]="map"></app-time-bar>
 </div>

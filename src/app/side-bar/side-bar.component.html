@@ -103,21 +103,6 @@
           Snapshotmodus, welcher einen statischen Datensatz aus der Vergangenheit anzeigt. Hier kann zwischen
           den Modi gewechselt werden.
         </p>
-        <div>
-          <div class="d-flex flex-row container p-1 my-1 border rounded">
-            <label class="switch">
-              <input type="checkbox" (click)="changeData()">
-              <span class="slider round"></span>
-            </label>
-            <span class="p-2 my-auto" *ngIf="dynamic">Realmodus</span>
-            <div class="p-2 my-auto d-flex" *ngIf="loading">
-              <div class="spinner-border text-secondary" role="status">
-                <span class="sr-only">Loading...</span>
-              </div>
-            </div>
-            <span class="p-2 my-auto" *ngIf="!dynamic">Snapshotmodus</span>
-          </div>
-        </div>
       </div>
     </div>
   </div>

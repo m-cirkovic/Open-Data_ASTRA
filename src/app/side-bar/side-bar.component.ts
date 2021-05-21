@@ -10,7 +10,6 @@ import * as d3 from 'd3';
 })
 export class SideBarComponent implements OnInit, AfterContentInit {
 
-  @Output() updateData = new EventEmitter();
   @Input() map: Map;
   sidebar: Control;
   dynamic = false;
@@ -93,13 +92,6 @@ export class SideBarComponent implements OnInit, AfterContentInit {
     }
   }
 
-  changeData(): void {
-    this.loading = true;
-    this.dynamic = !this.dynamic;
-    this._laneLayers.getAllLayers({dynamic: this.dynamic}).subscribe(layers => {
-      this.updateData.emit(layers);
-      this.loading = false;
-    });
-  }
+  
 
 }

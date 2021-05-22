@@ -40,14 +40,20 @@ export class AstraCacheService {
     return this._laneMapper.fillWithMeasurements(measurement$, site$).pipe(tap(s => this._currentMeasurementDate = s[0].lanes[0].measurements.publicationTime))
   }
 
-  public getMeasurementDate(): Date{
+  public getMeasurementDate() : Date{
     return this._currentMeasurementDate;
   }
 
+  public isMostCurrentDate(): boolean{
+    return Date.now() - this._currentMeasurementDate.valueOf() < 1000 * 60;
+  }
+
   private getLatestMeasurements(): Observable<Measurements> {
-    if (this._latestMeasurments) {
+    
+    if (this._latestMeasurments && this.isMostCurrentDate()) {
       return of(this._latestMeasurments)
     } else {
+      console.log('zägg')
       return this._fetchMeasurements();
     }
   }
@@ -77,27 +83,18 @@ export class AstraCacheService {
   }
 
   private _fetchStaticMeasurements(): Observable<Measurements> {
-    if(this._staticMeasurements){
-      return of(this._staticMeasurements)
-    }
     return this._astraApi.getStaticMeasurements().pipe(
       tap(a => this._staticMeasurements = a)
     )
   }
 
   private _fetchMeasurements(): Observable<Measurements> {
-    if(this._latestMeasurments){
-      return of(this._latestMeasurments)
-    }
     return this._astraApi.getMeasurements().pipe(
       tap(m => this._latestMeasurments = m)
     )
   }
 
   private _fetchStaticSites(): Observable<Site[]> {
-    if(this._staticSites){
-      return of(this._staticSites)
-    }
     return this._astraApi.getStaticLanes().pipe(
       map(s => this._laneMapper.mapToSite(of(s))),
       concatAll(),
@@ -107,9 +104,6 @@ export class AstraCacheService {
   }
 
   private _fetchDynamicSites(): Observable<Site[]> {
-    if(this._dynamicSites){
-      return of(this._dynamicSites)
-    }
     return this._astraApi.getLanes().pipe(
       map(s => this._laneMapper.mapToSite(of(s))),
       concatAll(),

@@ -35,12 +35,17 @@ export class TimeBarComponent implements OnInit {
     return this._astraCache.getMeasurementDate();
   }
   current(): boolean{
-    return Date.now() - this._astraCache.getMeasurementDate().valueOf() < 1000 * 60;
+    return this._astraCache.isMostCurrentDate();
   }
 
   changeData(): void {
-    this.loading = true;
     this.dynamic = !this.dynamic;
+    this.getNewMeasurement();
+    
+  }
+
+  getNewMeasurement(): void{
+    this.loading = true;
     this._laneLayers.getAllLayers({dynamic: this.dynamic}).subscribe(layers => {
       this.updateData.emit(layers);
       this.loading = false;

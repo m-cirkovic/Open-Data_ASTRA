@@ -68,6 +68,7 @@ export class MapComponent implements OnInit{
 
   public updateMapLayer(newMapId: string){
     this.map.removeLayer(this.mapLayer);
-    this.map.addLayer(this._mapLayerService.getMap(newMapId))
+    this.mapLayer = this._mapLayerService.getMap(newMapId)
+    this.map.addLayer(this.mapLayer)
   }
 }

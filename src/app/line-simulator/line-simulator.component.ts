@@ -15,6 +15,12 @@ export class LineSimulatorComponent implements OnInit, AfterViewInit {
   @Input() lane: Lane;
   @ViewChild('lineSim') lineSim;
 
+  private maxVelocity = 125;
+  private animationDuration = 5000;
+  private maxAnimationDuration = this.animationDuration + 500;
+  
+
+
   constructor() {
   }
 
@@ -48,9 +54,6 @@ export class LineSimulatorComponent implements OnInit, AfterViewInit {
 
     if ((car !== 0) && (truck !== 0)) {
       return car / (car + truck);
-    }
-    if ((car === 0) && (truck !== 0)) {
-      return 0;
     }
     if ((car !== 0) && (truck === 0)) {
       return 1;
@@ -105,11 +108,8 @@ export class LineSimulatorComponent implements OnInit, AfterViewInit {
   }
 
   private getDuration(speed: number): number {
-    if (speed === 0) {
-      return 0;
-    } else {
-      return (2000 - (speed * 3));
-    }
+    if(speed === 0) return 0;
+    return this.animationDuration - ((speed / this.maxVelocity) * (this.animationDuration));
   }
 
   private createTruckCircle(): any {
@@ -150,7 +150,7 @@ export class LineSimulatorComponent implements OnInit, AfterViewInit {
       .attr('cx', -25)
       .attr('cy', 25)
       .transition()
-      .duration(d3.easeLinear(this.getDuration(this.getSpeed(this.lane, unit))))
+      .duration(this.getDuration(this.getSpeed(this.lane, unit)))
       .attr('cx', 725)
       .transition()
       .duration(0)

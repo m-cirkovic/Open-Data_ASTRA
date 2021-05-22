@@ -53,7 +53,6 @@ export class AstraCacheService {
     if (this._latestMeasurments && this.isMostCurrentDate()) {
       return of(this._latestMeasurments)
     } else {
-      console.log('zägg')
       return this._fetchMeasurements();
     }
   }

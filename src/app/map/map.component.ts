@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import * as L from 'leaflet';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MapLayerService } from '../services/map/map-layer.service';
+import { Subject } from 'rxjs';
 
 
 @Component({
@@ -10,14 +11,17 @@ import { MapLayerService } from '../services/map/map-layer.service';
   styleUrls: ['./map.component.css'],
   providers: [NgbModalConfig, NgbModal]
 })
-export class MapComponent implements OnInit {
+export class MapComponent implements OnInit{
+  
+  @Input() public siteLayers: L.Control.LayersObject;
+
+  layersSubject = new Subject<L.Control.LayersObject>();
 
   public map: L.Map;
   public mapControl: L.Control;
 
-  @Input() public siteLayers: L.Control.LayersObject;
-
-  public mapLayers: L.Control.LayersObject;
+  public savedSiteLayers: L.Control.LayersObject;
+  public mapLayer: L.TileLayer;
 
   markerClusterGroup: L.MarkerClusterGroup;
   markerClusterData = [];
@@ -25,43 +29,45 @@ export class MapComponent implements OnInit {
   constructor(
     public config: NgbModalConfig,
     private _mapLayerService: MapLayerService
-  ) { }
-
+  ) { 
+    
+  }
 
   ngOnInit(): void {
+    this.savedSiteLayers =this.siteLayers;
     this._initMap();
-    this._addControlToMap();
     this._addLayersToMap();
   }
 
   private _initMap(): void {
-    this.mapLayers = this._mapLayerService.getMapLayers();
+    this.mapLayer = this._mapLayerService.getMap();
     this.map = L.map('map', {
       maxBoundsViscosity: 1.0,
       minZoom: 8,
       zoomControl: false,
-      layers: [Object.values(this.mapLayers)[0]]
+      layers: [this.mapLayer]
     }).setView([46.6, 7.7], 10);
   }
 
   private _addLayersToMap() {
-    Object.values(this.siteLayers).forEach(val => val.addTo(this.map))
+    Object.values(this.savedSiteLayers).forEach(val => this.map.addLayer(val))
   }
   private _removeLayersFromMap() {
-    Object.values(this.siteLayers).forEach(val => val.removeFrom(this.map))
+    Object.values(this.savedSiteLayers).forEach(val => this.map.removeLayer(val))
   }
-  private _addControlToMap() {
-    this.mapControl = L.control.layers(this.mapLayers, this.siteLayers, { position: 'topright', collapsed: false }).addTo(this.map)
-  }
-  private _removeControlFromMap() {
-    this.mapControl.remove();
-  }
+  
   public updateMap(newLayers: L.Control.LayersObject) {
+    this.layersSubject.next(newLayers);
+  }
+
+  public updateFilter(newLayers: L.Control.LayersObject){
     this._removeLayersFromMap();
-    this._removeControlFromMap();
-    this.siteLayers = newLayers;
+    this.savedSiteLayers = newLayers;
     this._addLayersToMap();
-    this._addControlToMap();
+  }
+
+  public updateMapLayer(newMapId: string){
+    this.map.removeLayer(this.mapLayer);
+    this.map.addLayer(this._mapLayerService.getMap(newMapId))
   }
 }
-

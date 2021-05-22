@@ -5,8 +5,12 @@
     border-radius: 5px;
     display: flex;
     flex-direction: row;
+    height: 97vh;
+    color: gray;
 }
 .tabs {
+
+    height: 100%;
     margin: 0;
     padding:0;
 }
@@ -120,18 +124,31 @@ h2{
 	border-radius:5px;
 	text-align: center;
 }
-.map-button-text h3{
-  top: 50%;
-}
 .map-button:hover .map-button-text{
   visibility: visible;
 }
 .map-button{
   position: relative;
 	border-radius:5px;
-  width: 200px;
+  width: 48%;
 }
 .map-button img{
   border-radius: 5px;
   width: 100%;
+}
+.filter-button{
+  border-radius: 5px;
+  padding: 5px;
+  margin: 5px;
+  font-weight: bold;
+  text-decoration: none;
+  border: 2px solid var(--yellow);
+  background-color: white;
+  color: gray
+}
+
+.filter-button-inactive{
+  border: 2px solid gray;  
+  background-color: rgb(228, 228, 228,0.9);;
+  color: darkgray;
 }

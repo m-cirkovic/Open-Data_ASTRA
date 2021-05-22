@@ -20,7 +20,7 @@ export class LaneLayerService {
     private _matDialog: MatDialog
 
   ) { }
-
+  
   getAllLayers(options?: { dynamic?: boolean }): Observable<L.Control.LayersObject> {
     const siteLayersSeed: L.Control.LayersObject = {};
     const sites = this._astraCache.sitesWithLatestMeasurements({ dynamicMeasurements: options?.dynamic, dynamicSites: options?.dynamic });
@@ -35,7 +35,7 @@ export class LaneLayerService {
       map(s => s.filter(sites => sites.lanes.filter(l => !l.measurements?.reasonForDataError).length > 0)),
       map(s => s.filter(site => site.lanes.filter(l => l.measurements?.measurementData.filter(m => m.value >= 10 && m.value < 30 && m.value > 0 && m.unit === 'km/h').length > 0).length > 0)),
       map(s => this.mapToLayerGroup(s, this._popupService, 'orange')),
-      map(l => ({ ['Stockender Verkehr']: l })),
+      map(l => ({ ['stockend']: l })),
     );
   }
 
@@ -44,7 +44,7 @@ export class LaneLayerService {
       map(s => s.filter(sites => sites.lanes.filter(l => !l.measurements?.reasonForDataError).length > 0)),
       map(s => s.filter(site => site.lanes.filter(l => l.measurements?.measurementData.filter(m => m.value < 10 && m.value > 0 && m.unit === 'km/h').length > 0).length > 0)),
       map(s => this.mapToLayerGroup(s, this._popupService, 'red')),
-      map(l => ({ ['Stau']: l })),
+      map(l => ({ ['stau']: l })),
     );
   }
 
@@ -54,7 +54,7 @@ export class LaneLayerService {
       map(s => s.filter(sites => sites.lanes.filter(l => !l.measurements?.reasonForDataError).length > 0)),
       map(s => s.filter(site => site.lanes.filter(l => l.measurements?.measurementData.filter(m => m.value > 30 && m.unit === 'km/h').length > 0).length > 0)),
       map(s => this.mapToLayerGroup(s, this._popupService, 'blue')),
-      map(l => ({ ['Normale Messstellen']: l })),
+      map(l => ({ ['normal']: l })),
     );
   }
 
@@ -62,7 +62,7 @@ export class LaneLayerService {
     return s.pipe(
       map(s => s.filter(sites => sites.lanes.filter(l => l.measurements?.reasonForDataError).length > 0)),
       map(s => this.mapToLayerGroup(s, this._popupService, 'blue' )),
-      map(l => ({ ['Messstellen mit Fehlern']: l }))
+      map(l => ({ ['fehlerhaft']: l }))
     );
   }
 

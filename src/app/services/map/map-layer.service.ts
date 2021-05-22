@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {tileLayer} from 'leaflet';
+import {TileLayer, tileLayer} from 'leaflet';
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +30,19 @@ export class MapLayerService {
     Smoothmap: this.stadiamap
   };
 
+  private mapLayerMap: Map<string, TileLayer> =new Map(Object.entries({
+    'default': this.swissTopo,
+    'swisstopo': this.swissTopo,
+    'osm': this.openStreetMap_CH,
+    'opentopo': this.openTopoMap,
+    'stadia': this.stadiamap
+  }))
+
   getMapLayers(){
     return this._mapLayers;
+  }
+
+  getMap(mapId?: string): TileLayer{
+    return this.mapLayerMap.get(mapId ? mapId: 'default');
   }
 }

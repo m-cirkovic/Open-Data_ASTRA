@@ -1,7 +1,10 @@
-import {AfterContentInit, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import { AfterContentInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Control, DomUtil, Map } from 'leaflet';
 import { LaneLayerService } from '../services/map/lane-layer.service';
 import * as d3 from 'd3';
+import { ThisReceiver } from '@angular/compiler';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-side-bar',
@@ -10,13 +13,28 @@ import * as d3 from 'd3';
 })
 export class SideBarComponent implements OnInit, AfterContentInit {
 
+  @Output() changeMap = new EventEmitter();
+  @Output() changeFilter = new EventEmitter();
+
+  @Input() siteLayers: L.Control.LayersObject;
   @Input() map: Map;
+  @Input() mapChangeEvent$: Observable<Control.LayersObject>;
+
   sidebar: Control;
   dynamic = false;
   loading = false;
   private _currentTab: string;
 
-  constructor(private _laneLayers: LaneLayerService) { }
+  filterConfig = {
+    'normal': true,
+    'fehlerhaft': true,
+    'stau': true,
+    'stockend': true,
+  }
+
+  constructor(private _laneLayers: LaneLayerService) { 
+    
+  }
 
   ngOnInit(): void {
     const SideBar = Control.extend({
@@ -28,6 +46,7 @@ export class SideBarComponent implements OnInit, AfterContentInit {
     this.sidebar = new SideBar({
       position: 'topleft'
     }).addTo(this.map);
+    this.mapChangeEvent$.pipe(tap(e => this.siteLayers = e)).subscribe(()=> this.onFilterClick())
   }
 
   ngAfterContentInit(): void {
@@ -72,6 +91,8 @@ export class SideBarComponent implements OnInit, AfterContentInit {
       .style('stroke', 'red')
       .style('stroke-width', '5px')
       .style('fill', 'red');
+
+    this.onFilterClick();
   }
 
   hidePane(): void {
@@ -81,17 +102,45 @@ export class SideBarComponent implements OnInit, AfterContentInit {
 
   changeTab(tab: string): void {
     const current = document.getElementById(this._currentTab);
-    if (current){
+    if (current) {
       current.style.display = 'none';
     }
-    if (tab !== this._currentTab){
+    if (tab !== this._currentTab) {
       document.getElementById(tab).style.display = 'block';
       this._currentTab = tab;
-    }else{
+    } else {
       this._currentTab = null;
     }
   }
 
-  
+  onMapClick(event: string) {
+    this.changeMap.emit(event);
+  }
+
+  onFilterClick(filterId?: string) {
+    if (filterId) {
+      this.filterConfig[filterId] = !this.filterConfig[filterId];
+      if (this.filterConfig[filterId]) {
+        document.getElementById(filterId).classList.remove('filter-button-inactive')
+      } else {
+        document.getElementById(filterId).classList.add('filter-button-inactive')
+      }
+    }
+    let siteLayerSeed = {};
+    if (this.filterConfig.normal) {
+      siteLayerSeed['normal'] = this.siteLayers.normal
+    }
+    if (this.filterConfig.stau) {
+      siteLayerSeed['stau'] = this.siteLayers.stau
+    }
+    if (this.filterConfig.fehlerhaft) {
+      siteLayerSeed['fehlerhaft'] = this.siteLayers.fehlerhaft
+    }
+    if (this.filterConfig.stockend) {
+      siteLayerSeed['stockend'] = this.siteLayers.stockend
+    }
+    this.changeFilter.emit(siteLayerSeed)
+
+  }
 
 }

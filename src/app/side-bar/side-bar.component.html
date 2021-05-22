@@ -21,17 +21,6 @@
         </button>
       </li>
       <li>
-        <button (click)="changeTab( 'settings')">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear"
-            viewBox="0 0 16 16">
-            <path
-              d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z" />
-            <path
-              d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z" />
-          </svg>
-        </button>
-      </li>
-      <li>
         <button (click)="changeTab( 'personal')">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person"
             viewBox="0 0 16 16">
@@ -46,113 +35,109 @@
     <div id="info" class="tab-pane ">
       <div class="container">
         <div class="header">
-          <div class="mr-1 flex between align-items">
+          <div class="m-3 flex between align-items">
             <h1>Wilkommen</h1>
             <button type="button" class="close" aria-label="Close" (click)="hidePane()">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
         </div>
-        <p>
-          Informieren Sie sich auf unserer App, wo es schweizweit aktuell Stau hat. Durch die freizugänglichen Daten
-          der <a href="https://opentransportdata.swiss/de/">Open-Data-Plattform Mobilität Schweiz</a> haben wir eine App
-          entwickelt
-          in welcher man nur in wenigen Klicks herausfinden kann, welche Route man für die nächste Fahrt vermeiden
-          sollte!
-        </p>
-        <h2>Anwendung</h2>
-        <p>Durch Betrachten der Karte erkennen Sie, auf welchen Strecken, es aktuell Stau hat:</p>
-        <div class="d-flex flex-row container p-1 my-1 border rounded">
-          <div id="blueCircle" class="p-2"></div>
-          <p class="p-2 my-auto">Freie fahrt! Die Strasse ist nur leicht befahren.</p>
-        </div>
-        <div class="d-flex flex-row container p-1 my-1 border rounded">
-          <div id="orangeCircle" class="p-2"></div>
-          <p class="p-2 my-auto">Augen auf die Strasse, Sie sind nicht alleine! Man fahrt hier nicht schneller als
-            30km/h</p>
-        </div>
-        <div class="d-flex flex-row container p-1 my-1 border rounded">
-          <div id="redCircle" class="p-2"></div>
-          <p class="p-2 my-auto">Es wird eine lange Fahrt. Vermeiden sie diesen Streckenabschnitt, falls möglich. Man
-            fahrt hier nicht schneller als 10km/h</p>
-        </div>
-        <p>
-          Für mehr Informationen über Ihre gwünschte Strecke, klicken Sie auf die entsprechende Messstation und es
-          erscheint ein Popopfenster mit der allgemeinen Verkehrslage.
-          Spezifischere Angaben zur Art des Verkehrs erhalten Sie durch das Klicken auf den erschienenen Knopf
-          "weitere
-          Informationen".
-        </p>
-        <p> Die Art der Karte kann Ihren Wünschen entsprechend, oben rechts ausgewählt werden.
-          Ausserdem gibt es die Option gewünschte Messstationen herauszufiltern.
-        </p>
-        <hr>
-        <div class="container">
-          <div class="mr-1 flex between align-items">
-            <img src="assets/images/astra_logo.png" id="astra_logo" class="img-responsive">
-            <img src="assets/images/unibe_logo.png" id="unibe_logo" class="img-responsive">
+        <div class="m-3">
+          <p>
+            Informieren Sie sich auf unserer App, wo es schweizweit aktuell Stau hat. Durch die freizugänglichen Daten
+            der <a href="https://opentransportdata.swiss/de/">Open-Data-Plattform Mobilität Schweiz</a> haben wir eine
+            App
+            entwickelt
+            in welcher man nur in wenigen Klicks herausfinden kann, welche Route man für die nächste Fahrt vermeiden
+            sollte!
+          </p>
+          <h2>Anwendung</h2>
+          <p>Durch Betrachten der Karte erkennen Sie, auf welchen Strecken, es aktuell Stau hat:</p>
+          <div class="d-flex flex-row container p-1 my-1 border rounded">
+            <div id="blueCircle" class="p-2"></div>
+            <p class="p-2 my-auto">Freie fahrt! Die Strasse ist nur leicht befahren.</p>
+          </div>
+          <div class="d-flex flex-row container p-1 my-1 border rounded">
+            <div id="orangeCircle" class="p-2"></div>
+            <p class="p-2 my-auto">Augen auf die Strasse, Sie sind nicht alleine! Man fahrt hier nicht schneller als
+              30km/h</p>
+          </div>
+          <div class="d-flex flex-row container p-1 my-1 border rounded">
+            <div id="redCircle" class="p-2"></div>
+            <p class="p-2 my-auto">Es wird eine lange Fahrt. Vermeiden sie diesen Streckenabschnitt, falls möglich. Man
+              fahrt hier nicht schneller als 10km/h</p>
+          </div>
+          <p>
+            Für mehr Informationen über Ihre gwünschte Strecke, klicken Sie auf die entsprechende Messstation und es
+            erscheint ein Popopfenster mit der allgemeinen Verkehrslage.
+            Spezifischere Angaben zur Art des Verkehrs erhalten Sie durch das Klicken auf den erschienenen Knopf
+            "weitere
+            Informationen".
+          </p>
+          <p> Die Art der Karte kann Ihren Wünschen entsprechend, oben rechts ausgewählt werden.
+            Ausserdem gibt es die Option gewünschte Messstationen herauszufiltern.
+          </p>
+          <hr>
+          <div class="container">
+            <div class="mr-1 flex between align-items">
+              <img src="assets/images/astra_logo.png" id="astra_logo" class="img-responsive">
+              <img src="assets/images/unibe_logo.png" id="unibe_logo" class="img-responsive">
+            </div>
           </div>
         </div>
+
       </div>
     </div>
   </div>
-  <div class="pt-2">
-    <div id="settings" class="tab-pane">
-      <div class="container">
-        <div class="header">
-          <div class="mr-1 flex between align-items-center">
-            <h1>Einstellungen</h1>
-            <button type="button" class="close" aria-label="Close" (click)="hidePane()">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-        </div>
-        <h2>Modus</h2>
-        <p>Es gibt den Realmodus, bei welchem die Daten der letzten Minute dargestellt werden, und den
-          Snapshotmodus, welcher einen statischen Datensatz aus der Vergangenheit anzeigt. Hier kann zwischen
-          den Modi gewechselt werden.
-        </p>
-      </div>
-    </div>
-  </div>
+
   <div id="filter" class="tab-pane pt-2">
     <div class="container">
       <div class="header">
-        <div class="mr-1 flex between align-items-center">
+        <div class="m-3 flex between align-items-center">
           <h1>Filter</h1>
           <button type="button" class="close" aria-label="Close" (click)="hidePane()">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
       </div>
-      <h2>Karten</h2>
-      <div class="d-flex flex-row flex-wrap">
-        <div class="map-button m-1">
-          <div class="map-button-text">
-            <h3>Swiss Topo</h3>
-          </div>
-          <img src="/assets/images/swisstopo.png" >
+      <div class="m-3">
+        <h2 class="my-3">Messstellen</h2>
+        <div class="d-flex justify-content-center">
+          <a (click)="onFilterClick('normal')" class="filter-button filter-button-active" id="normal">Normaler Verkehr</a>
+          <a (click)="onFilterClick('fehlerhaft')" class="filter-button filter-button-active" id="fehlerhaft">Fehlerhafte Messungen</a>
+          <a (click)="onFilterClick('stau')" class="filter-button filter-button-active" id="stau">Stau</a>
+          <a (click)="onFilterClick('stockend')" class="filter-button filter-button-active" id="stockend">Stockender Verkehr</a>
         </div>
-        <div class="map-button m-1">
-          <div class="map-button-text">
-            <h3>Open Topo Map</h3>
+        <h2 class="my-3">Karten</h2>
+        <div class="d-flex flex-row flex-wrap justify-content-center">
+          <div (click)="onMapClick('swisstopo')" class="map-button m-1">
+            <div class="map-button-text d-flex justify-content-center align-items-center">
+              <h3>Swiss Topo</h3>
+            </div>
+            <img src="/assets/images/swisstopo.png">
           </div>
-          <img src="/assets/images/opentopo.png" >
-        </div>
-        <div class="map-button m-1">
-          <div class="map-button-text">
-            <h3>Open Street Map</h3>
+          <div (click)="onMapClick('opentopo')" class="map-button m-1">
+            <div class="map-button-text d-flex justify-content-center align-items-center">
+              <h3>Open Topo Map</h3>
+            </div>
+            <img src="/assets/images/opentopo.png">
           </div>
-          <img src="/assets/images/osm.png" >
-        </div>
-        <div class="map-button m-1">
-          <div class="map-button-text">
-            <h3>Stadia</h3>
+          <div (click)="onMapClick('osm')" class="map-button m-1">
+            <div class="map-button-text d-flex justify-content-center align-items-center">
+              <h3>Open Street Map</h3>
+            </div>
+            <img src="/assets/images/osm.png">
           </div>
-          <img src="/assets/images/stadia.png" >
+          <div (click)="onMapClick('stadia')" class="map-button m-1">
+            <div class="map-button-text d-flex justify-content-center align-items-center">
+              <h3>Stadia</h3>
+            </div>
+            <img src="/assets/images/stadia.png">
+          </div>
         </div>
       </div>
-      
+
+
     </div>
   </div>
   <div class="pt-2">

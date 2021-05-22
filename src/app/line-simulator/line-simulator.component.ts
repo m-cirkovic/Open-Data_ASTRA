@@ -109,7 +109,7 @@ export class LineSimulatorComponent implements OnInit, AfterViewInit {
 
   private getDuration(speed: number): number {
     if(speed === 0) return 0;
-    return this.animationDuration - ((speed / this.maxVelocity) * (this.animationDuration));
+    return this.maxAnimationDuration - ((speed / this.maxVelocity) * (this.animationDuration));
   }
 
   private createTruckCircle(): any {

@@ -16,9 +16,9 @@ export class LineSimulatorComponent implements OnInit, AfterViewInit {
   @ViewChild('lineSim') lineSim;
 
   private maxVelocity = 145;
+  private maxDensity = 1000;
   private animationDuration = 5000;
   private maxAnimationDuration = this.animationDuration + 500;
-  
 
 
   constructor() {
@@ -28,6 +28,8 @@ export class LineSimulatorComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    console.log(this.getTrafficDensity(this.lane));
+    console.log(this.lane);
     this.createSvg();
     this.repeat();
   }
@@ -107,8 +109,10 @@ export class LineSimulatorComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private getDuration(speed: number): number {
-    if(speed === 0) return 0;
+  private getSpeedDuration(speed: number): number {
+    if (speed === 0) {
+      return 0;
+    }
     return this.maxAnimationDuration - ((speed / this.maxVelocity) * (this.animationDuration));
   }
 
@@ -143,21 +147,39 @@ export class LineSimulatorComponent implements OnInit, AfterViewInit {
     }
   }
 
+  private getTrafficDensity(l: Lane): number {
+    return l.measurements.measurementData.reduce((acc, curr) => {
+      if (curr.unit === 'Fahrzeug/h' && curr.vehicleType === 'Schwerverkehr') {
+        acc += curr.value;
+      }
+      if (curr.unit === 'Fahrzeug/h' && curr.vehicleType === 'Leichtfahrzeuge') {
+        acc += curr.value;
+      }
+      return acc;
+    }, 0);
+  }
+
+  private getTraffic(density: number): number {
+    if (density === 0) {
+      return 0;
+    }
+    return this.maxAnimationDuration - ((density / this.maxDensity) * (this.animationDuration));
+  }
+
   private repeat(): void {
-    const unit = this.pickUnit(this.getDistribution(this.lane))
+    const unit = this.pickUnit(this.getDistribution(this.lane));
     this.chooseCircle(unit);
     this.circle
-      .attr('cx', -25)
-      .attr('cy', 25)
       .transition()
-      .duration(this.getDuration(this.getSpeed(this.lane, unit)))
+      .duration(this.getSpeedDuration(this.getSpeed(this.lane, unit)))
+      .ease(d3.easeLinear)
       .attr('cx', 725)
       .transition()
       .duration(0)
       .attr('cx', -25);
     setTimeout(() => {
       this.repeat();
-    }, this.getDuration(this.getSpeed(this.lane, unit)));
+    }, this.getTraffic(this.getTrafficDensity(this.lane)));
   }
 
 }

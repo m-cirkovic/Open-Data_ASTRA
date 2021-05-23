@@ -18,7 +18,7 @@ export class LineSimulatorComponent implements OnInit, AfterViewInit {
   private maxVelocity = 135;
   private animationDuration = 5000;
   private maxAnimationDuration = this.animationDuration + 1000;
-  
+  private maxDensity = 2000;
 
 
   constructor() {

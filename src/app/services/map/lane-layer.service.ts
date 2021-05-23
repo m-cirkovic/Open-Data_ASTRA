@@ -97,8 +97,8 @@ export class LaneLayerService {
           // The user can't close the dialog by clicking outside its body
           dialogConfig.disableClose = false;
           dialogConfig.id = 'modal-component';
-          dialogConfig.height = '75%';
-          dialogConfig.width = '75%';
+          dialogConfig.maxHeight = '75vh';
+          dialogConfig.maxWidth = '60vw';
           // https://material.angular.io/components/dialog/overview
           const modalDialog = this._matDialog.open(ModalComponent, dialogConfig);
         });

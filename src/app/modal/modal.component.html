@@ -1,5 +1,5 @@
 <div id="modal-content-wrapper">
-  <header id="modal-header" class="mr-1 d-flex justify-content-between ">
+  <header id="modal-header" class="m-3 d-flex justify-content-between align-items">
     <h1 id="modal-title">Richtung {{this.name}}</h1>
     <button type="button" class="close" aria-label="Close" (click)="closeModal()">
       <span aria-hidden="true">&times;</span>
@@ -14,9 +14,13 @@
             <div *ngIf="l.measurements.reasonForDataError; then error else noError"></div>
             <ng-template #noError>
               <app-line-simulator [lane]="l"></app-line-simulator>
-              <h4>Durchschnittsgeschwindikeit:</h4>
-              <p>Leichtverkehr: {{ getCarSpeed(l) }} km/h</p>
-              <p>Schwerverkehr: {{ getLorrySpeed(l) }} km/h</p>
+              <div class="container border">
+                <h4>Durchschnittsgeschwindikeit:</h4>
+                <p>
+                  <strong>Leichtverkehr:</strong> {{ getCarSpeed(l) }} km/h <br>
+                  <strong>Schwerverkehr:</strong> {{ getLorrySpeed(l) }} km/h
+                </p>
+              </div>
             </ng-template>
             <ng-template #error>
               <p style="width: 750px;"> Fehlermeldung: {{ l.measurements.reasonForDataError }}</p>
@@ -28,26 +32,3 @@
     </div>
   </section>
 </div>
-
-
-<!--
-<div class="card">
-        <div class="card-body">
-          <h3 class="card-title">Spur {{ l.siteId.split('.')[1] }}</h3>
-          <div class="card-text">
-            <div *ngIf="l.measurements.reasonForDataError; then error else noError"></div>
-            <ng-template #noError>
-              <app-line-simulator [lane]="l"></app-line-simulator>
-              <app-pie [lane]="l"></app-pie>
-              <h4>Durchschnittsgeschwindikeit:</h4>
-              <p>Leichtverkehr: {{ getCarSpeed(l) }} km/h</p>
-              <p>Schwerverkehr: {{ getLorrySpeed(l) }} km/h</p>
-            </ng-template>
-            <ng-template #error>
-              <p style="width: 750px;"> Fehlermeldung: {{ l.measurements.reasonForDataError }}</p>
-            </ng-template>
-
-          </div>
-        </div>
-      </div>
--->

@@ -8,14 +8,14 @@ import { tap } from 'rxjs/operators';
   styleUrls: ['./splash-screen.component.css']
 })
 export class SplashScreenComponent implements OnInit {
-  
-  public funnySlogans = 
+
+  public funnySlogans =
   [
-    "waking up developer",
-    "brewing coffe",
-    "spinning up computer",
-    "gathering measurements",
-    "collect dropped data"
+    "waking up the developer",
+    "brewing coffee",
+    "spinning up the computer",
+    "gathering the measurements",
+    "collecting dropped data"
   ]
 
   public funnySlogan: string = '';
@@ -28,5 +28,5 @@ export class SplashScreenComponent implements OnInit {
     ).subscribe()
   }
 
-  
+
 }

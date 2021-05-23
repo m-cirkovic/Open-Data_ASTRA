@@ -20,10 +20,10 @@ export class LaneLayerService {
     private _matDialog: MatDialog
 
   ) { }
-  
+
   getAllLayers(options?: { dynamic?: boolean }): Observable<L.Control.LayersObject> {
     const siteLayersSeed: L.Control.LayersObject = {};
-    const sites = this._astraCache.sitesWithLatestMeasurements({ dynamicMeasurements: options?.dynamic, dynamicSites: options?.dynamic });
+    const sites = this._astraCache.sitesWithLatestMeasurements(options.dynamic);
     return merge(this._getNormalLayers(sites), this._getErrorLayers(sites), this._getJamLayers(sites), this._getStagnatingLayers(sites)).pipe(
       reduce((acc, curr) => ({ ...acc, ...curr }), siteLayersSeed),
       catchError((err, caught) => of({}))
@@ -61,7 +61,7 @@ export class LaneLayerService {
   private _getErrorLayers(s: Observable<Site[]>): Observable<L.Control.LayersObject> {
     return s.pipe(
       map(s => s.filter(sites => sites.lanes.filter(l => l.measurements?.reasonForDataError).length > 0)),
-      map(s => this.mapToLayerGroup(s, this._popupService, 'blue' )),
+      map(s => this.mapToLayerGroup(s, this._popupService, 'blue')),
       map(l => ({ ['fehlerhaft']: l }))
     );
   }
@@ -81,9 +81,12 @@ export class LaneLayerService {
         else {
           c += 'blue';
         }
-        return new L.DivIcon({ html: '<div><span>' + childCount + '</span></div>',
-          className: 'marker-cluster' + c, iconSize: new L.Point(40, 40) });
-      }});
+        return new L.DivIcon({
+          html: '<div><span>' + childCount + '</span></div>',
+          className: 'marker-cluster' + c, iconSize: new L.Point(40, 40)
+        });
+      }
+    });
     sites.forEach(s => L.circleMarker([s.lanes[0].lat, s.lanes[0].lng], { color }).addTo(layer).bindPopup(popup.siteToHtml(s)).on('popupopen', (a) => {
       const popUp = a.target.getPopup();
       popUp.getElement()

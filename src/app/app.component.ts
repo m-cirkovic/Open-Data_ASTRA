@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { merge, Observable, of } from 'rxjs';
-import { catchError, reduce, tap } from 'rxjs/operators';
+import * as L from 'leaflet';
+import { Observable, } from 'rxjs';
 import { LaneLayerService } from './services/map/lane-layer.service';
 
 @Component({
@@ -11,7 +11,9 @@ import { LaneLayerService } from './services/map/lane-layer.service';
 export class AppComponent {
   title = 'Verkehrszähler';
 
-  siteLayer$: Observable<any> = this._layerService.getAllLayers({dynamic: false});
+  siteLayer$: Observable<any> = this._layerService.getAllLayers({ dynamic: false });
+
+
 
   constructor(private _layerService: LaneLayerService) {
   }

@@ -18,8 +18,9 @@ export class PopUpService {
             <h2>Richtung ${site.locationName}</h2>
             <hr>
             <p>
-            <strong>Geschwindigkeit:</strong> ${AverageService.getAvgVehicleSpeed(noError)} km/h <br>
-            <strong>Anzahl Fahrzeuge pro Stunde:</strong> ${AverageService.getAvgVehicles(noError)}</p>
+            <span title="Durchschnittsgeschwindigkeit über alle Spuren"><strong>Geschwindigkeit:</strong> ${AverageService.getAvgVehicleSpeed(noError)} km/h </span><br>
+            <span title="Durchschnitt über alle Spuren"><strong>Anzahl Fahrzeuge pro Stunde:</strong> ${AverageService.getAvgVehicles(noError)}</span>
+            </p>
             ${PopUpService.getErrorMsg(error)}
             <button class="open-modal tn btn-secondary btn-sm" >Details</button>
             </div>`;

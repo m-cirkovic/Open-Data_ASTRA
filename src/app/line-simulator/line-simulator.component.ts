@@ -15,9 +15,9 @@ export class LineSimulatorComponent implements OnInit, AfterViewInit {
   @Input() lane: Lane;
   @ViewChild('lineSim') lineSim;
 
-  private maxVelocity = 145;
+  private maxVelocity = 135;
   private animationDuration = 5000;
-  private maxAnimationDuration = this.animationDuration + 500;
+  private maxAnimationDuration = this.animationDuration + 1000;
   
 
 

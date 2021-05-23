@@ -1,10 +1,10 @@
 import { AfterContentInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Control, DomUtil, Map } from 'leaflet';
-import { LaneLayerService } from '../services/map/lane-layer.service';
+import { circle, Control, DomUtil, Icon, Map, Marker, marker, popup, tooltip } from 'leaflet';
 import * as d3 from 'd3';
-import { ThisReceiver } from '@angular/compiler';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { Site } from '../models/Internal/site.model';
+import { AstraCacheService } from '../services/data/astra/astra-cache.service';
 
 @Component({
   selector: 'app-side-bar',
@@ -25,6 +25,16 @@ export class SideBarComponent implements OnInit, AfterContentInit {
   loading = false;
   private _currentTab: string;
 
+
+  fastest: { value: number, site: Site };
+  slowest: { value: number, site: Site };
+  mostVehicles: { value: number, site: Site };
+  vehicleCount: number;
+  measurementCount: number;
+  siteCount: number;
+  topTenFastest: { value: number, site: Site }[];
+
+
   filterConfig = {
     'normal': true,
     'fehlerhaft': true,
@@ -32,8 +42,8 @@ export class SideBarComponent implements OnInit, AfterContentInit {
     'stockend': true,
   }
 
-  constructor(private _laneLayers: LaneLayerService) { 
-    
+  constructor(private _astraCache: AstraCacheService) {
+
   }
 
   ngOnInit(): void {
@@ -46,8 +56,11 @@ export class SideBarComponent implements OnInit, AfterContentInit {
     this.sidebar = new SideBar({
       position: 'topleft'
     }).addTo(this.map);
-    this.mapChangeEvent$.pipe(tap(e => this.siteLayers = e)).subscribe(()=> this.onFilterClick())
+    this.mapChangeEvent$.pipe(tap(e => this.siteLayers = e)).subscribe(() => this.refreshValues())
+    Icon.Default.imagePath = "assets/icons/"
   }
+
+
 
   ngAfterContentInit(): void {
     d3.select('#blueCircle')
@@ -91,8 +104,7 @@ export class SideBarComponent implements OnInit, AfterContentInit {
       .style('stroke', 'red')
       .style('stroke-width', '5px')
       .style('fill', 'red');
-
-    this.onFilterClick();
+    this.refreshValues()
   }
 
   hidePane(): void {
@@ -143,4 +155,137 @@ export class SideBarComponent implements OnInit, AfterContentInit {
 
   }
 
+  refreshValues() {
+    this.onFilterClick()
+    this.getFastest();
+    this.getSlowest();
+    this.getVehicleCount();
+    this.getMostVehicles();
+    this.getMeasurementCount();
+    this.getSiteCount();
+    this.getTopTenFastest();
+  }
+  getSiteCount() {
+    this.siteCount = this._astraCache.getCurrentNested().length;
+  }
+  getMeasurementCount() {
+    this.measurementCount = this._astraCache.getCurrentMeasurements()?.measurement?.length;
+  }
+  getMostVehicles() {
+    let maxV = 0;
+    let maxVSite: Site;
+    this._astraCache.getCurrentNested().forEach(s =>
+      s.lanes.forEach(l =>
+        l.measurements?.measurementData?.forEach(d => {
+          if (d.unit == 'Fahrzeug/h') {
+            if (d.value > maxV) {
+              maxV = d.value;
+              maxVSite = s
+            }
+          }
+        })
+      )
+    )
+
+    this.mostVehicles = { value: Math.round(maxV), site: maxVSite };
+  }
+  getVehicleCount() {
+
+  }
+  getSlowest() {
+    let min = 100000000;
+    let minSite: Site;
+    this._astraCache.getCurrentNested().forEach(s =>
+      s.lanes.forEach(l =>
+        l.measurements?.measurementData?.forEach(d => {
+          if (d.unit == 'km/h') {
+            if (d.value < min && d.value > 0 + 10e-2) {
+              min = d.value;
+              minSite = s
+            }
+          }
+        })
+      )
+    )
+    this.slowest = { value: Math.round(min), site: minSite };
+  }
+
+  getFastest() {
+    let max = 0;
+    let maxSite: Site;
+    this._astraCache.getCurrentNested().forEach(s =>
+      s.lanes.forEach(l =>
+        l.measurements?.measurementData?.forEach(d => {
+          if (d.unit == 'km/h') {
+            if (d.value > max) {
+              max = d.value;
+              maxSite = s
+            }
+          }
+        })
+      )
+    )
+
+    this.fastest = { value: Math.round(max), site: maxSite };
+  }
+
+  getTopTenFastest() {
+    let velocitySorted: number[] = []
+
+    let fastestSortet = [];
+    this._astraCache.getCurrentNested().forEach(s => {
+      let hasLanesFasterThanZero = false;
+      s.lanes.forEach(l => l.measurements?.measurementData?.forEach(d => {
+        if (d.unit === 'km/h' && d.value > 0) {
+          hasLanesFasterThanZero = true
+          velocitySorted.push(d.value)
+        }
+      }))
+      if (hasLanesFasterThanZero) {
+        fastestSortet.push(s)
+      }
+    })
+    fastestSortet = fastestSortet.sort(this._sortSiteByV)
+    velocitySorted = velocitySorted.sort((a, b) => b - a);
+    let topTenVFastest = velocitySorted.slice(0, 10);
+    this.topTenFastest = topTenVFastest.map((v, i: number) => { return { value: Math.round(v), site: fastestSortet[i] } })
+
+  }
+
+  focusOn(site: Site){
+    this.zoomTo(site)
+    this.setMarker(site);
+  }
+  zoomTo(site: Site) {
+    this.map.flyTo([site.lanes[0].lat, site.lanes[0].lng], this.map.getMaxZoom()-2, { duration: 2 })
+  }
+
+  setMarker(site: Site){
+    let mk: Marker = marker([site.lanes[0].lat, site.lanes[0].lng]).addEventListener('mousedown', () => mk.removeFrom(this.map)).addTo(this.map);
+  }
+
+  markTopTen(focus: Site) {
+    this.map.flyTo([focus.lanes[0].lat, focus.lanes[0].lng], this.map.getMinZoom(), { duration: 2 })
+    let mk: Marker[] = this.topTenFastest.map(s => {
+      return marker([s.site.lanes[0].lat, s.site.lanes[0].lng]).addEventListener('mousedown', () => mk.forEach(y => this.map.removeLayer(y))).addTo(this.map)
+    })
+  }
+
+  private _sortSiteByV(a: Site, b: Site): number {
+
+    let fastestA = 0;
+    let fastestB = 0;
+    a.lanes.forEach(l => l.measurements?.measurementData?.forEach(m => {
+      if (m.unit === 'km/h' && fastestA < m.value) {
+        fastestA = m.value;
+      }
+    }))
+    b.lanes.forEach(l => l.measurements?.measurementData?.forEach(m => {
+      if (m.unit === 'km/h' && fastestB < m.value) {
+        fastestB = m.value;
+      }
+    }))
+    return fastestB - fastestA;
+
+  }
 }

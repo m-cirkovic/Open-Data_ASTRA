@@ -2,8 +2,8 @@ import { ThisReceiver } from "@angular/compiler";
 import { Measurement } from "./measurement.model";
 
 export class Site {
-    
-    
+
+
     public locationName: string;
 
     constructor(
@@ -11,11 +11,11 @@ export class Site {
         private _lanes: Lane[]
     ) { }
 
-    get specificLocation(): number{
+    get specificLocation(): number {
         return this._specificLocation;
     }
 
-    get lanes(){
+    get lanes() {
         return this._lanes;
     }
 
@@ -24,14 +24,18 @@ export class Site {
 export class Lane {
 
     measurements: Measurement;
+    private _lat: number;
+    private _lng: number;
 
     constructor(
         private _siteId: string,
         private _specificLocation: number,
-        private _lng: number,
-        private _lat: number,
-        private _characteristics: MeasurementCharacteristics[]
-    ) { }
+        private _latLng: {lat:number, lng:number}
+    ) {
+        this._lat = _latLng.lat
+        this._lng = _latLng.lng;
+
+    }
 
     get siteId(): string {
         return this._siteId;
@@ -45,9 +49,7 @@ export class Lane {
     get lng(): number {
         return this._lng;
     }
-    get characteristics(): MeasurementCharacteristics[] {
-        return this._characteristics;
-    }
+
 }
 
 export class MeasurementCharacteristics {

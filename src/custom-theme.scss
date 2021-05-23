@@ -68,3 +68,8 @@ $scaffolding-theme: mat-light-theme((
 // that you are using.
 @include angular-material-theme($scaffolding-theme);
 
+.marker-cluster{
+  color: lightgray;
+  font-weight: bold;
+}
+

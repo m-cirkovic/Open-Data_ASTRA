@@ -17,7 +17,12 @@ export class LaneMapperService {
     return lanes.pipe(
       map(lanes => lanes.reduce(LaneMapperService.laneReducer, new Map<number, Lane[]>())),
       map(map => Array.from(map.entries())),
-      map(k => k.map(s => new Site(s[0], s[1])))
+      map(k => k.map(s => {
+        if(!s[0]){
+          console.log('err', s[0], s[1])
+        }
+        return new Site(s[0], s[1])
+      }))
     )
   }
 

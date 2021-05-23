@@ -5,11 +5,12 @@ import { Observable, of } from 'rxjs';
 import { catchError, concatAll, map, share, tap } from 'rxjs/operators';
 import { SitePayloadPublication } from '../../../models/Soap/site.model';
 import { SoapWrapper } from '../../../models/Soap/soap.model';
-import { MeasurementCharacteristics, Lane, Site } from '../../../models/Internal/site.model';
-import { BasicData, MeasuredValue, MeasurementPayloadPublication } from '../../../models/Soap/measurement.model';
+import { Lane } from '../../../models/Internal/site.model';
+import { BasicData, MeasurementPayloadPublication } from '../../../models/Soap/measurement.model';
 import { Measurements, Measurement, MeasurementData } from '../../../models/Internal/measurement.model';
 import { MeasurementIndexMapperService } from '../mappers/measurement-index-mapper.service';
 import { ErrorMessageMapperService } from '../mappers/error-message-mapper.service';
+import { BoundsService } from '../../map/BoundsService';
 
 @Injectable({
   providedIn: 'root'
@@ -17,8 +18,10 @@ import { ErrorMessageMapperService } from '../mappers/error-message-mapper.servi
 export class AstraApiService {
 
   private _auth = '57c5dbbbf1fe4d0001000018543da6f8789f4f868587d0de6163eccd';
-  private _body$ = this._http.get('assets/SoapRequestBody.xml', { responseType: 'text' });
-
+  private _body: string;
+  private _body$ = this._http.get('assets/SoapRequestBody.xml', { responseType: 'text' }).pipe(tap(b => this._body = b), share());
+  
+  
   constructor(
     private _http: HttpClient,
     private _indexMapper: MeasurementIndexMapperService,
@@ -36,7 +39,7 @@ export class AstraApiService {
   }
 
   public getMeasurements(): Observable<Measurements> {
-    return this._body$.pipe(
+    return this.getBody().pipe(
       map(body => this._http.post('/api', body, {
         responseType: 'text',
         headers: new HttpHeaders()
@@ -98,7 +101,7 @@ export class AstraApiService {
   }
 
   public getLanes(): Observable<Lane[]> {
-    return this._body$.pipe(
+    return this.getBody().pipe(
       map(body => this._http.post('/api', body, {
         responseType: 'text',
         headers: new HttpHeaders()
@@ -128,16 +131,14 @@ export class AstraApiService {
       map(lanes => lanes.map(site => new Lane(
         site['@_id'],
         site.measurementSiteLocation.alertCPoint?.alertCMethod4PrimaryPointLocation.alertCLocation.specificLocation['#text'],
-        site.measurementSiteLocation.pointByCoordinates?.pointCoordinates.longitude['#text'],
-        site.measurementSiteLocation.pointByCoordinates?.pointCoordinates.latitude['#text'],
-        site.measurementSpecificCharacteristics.map(c => new MeasurementCharacteristics(
-          c.measurementSpecificCharacteristics['@_index'],
-          c.measurementSpecificCharacteristics.period['#text'],
-          c.measurementSpecificCharacteristics.specificMeasurementValueType['#text'],
-          c.measurementSpecificCharacteristics.specificVehicleCharacteristics.vehicleType['#text']
-        ))
+        BoundsService.getLatLngOnMap(site.measurementSiteLocation.pointByCoordinates?.pointCoordinates.longitude['#text'],
+        site.measurementSiteLocation.pointByCoordinates?.pointCoordinates.latitude['#text'])
       ))),
     );
+  }
+
+  private _isInBounds(){
+
   }
 
   private _maptoMeasuremnets(measurements: Observable<string>): Observable<Measurements> {
@@ -173,5 +174,9 @@ export class AstraApiService {
         }
       }))),
     )
+  }
+
+  private getBody(): Observable<string>{
+    return this._body ? of(this._body) : this._body$
   }
 }

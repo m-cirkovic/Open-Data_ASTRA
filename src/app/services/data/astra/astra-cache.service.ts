@@ -1,7 +1,7 @@
 
 import { Injectable } from '@angular/core';
-import {  Observable, of, Subject } from 'rxjs';
-import { concatAll, map, tap } from 'rxjs/operators';
+import { Observable, of, Subject } from 'rxjs';
+import { concatAll, delay, map, tap } from 'rxjs/operators';
 import { Measurements } from '../../../models/Internal/measurement.model';
 import { Site } from '../../../models/Internal/site.model';
 import { AstraApiService } from './astra-api.service';
@@ -23,6 +23,9 @@ export class AstraCacheService {
   private _site: Site;
   private _currentMeasurementDate: Date;
 
+  private _currentNested: Site[];
+  private _measurement: Measurements;
+
   constructor(
     private _astraApi: AstraApiService,
     private _laneMapper: LaneMapperService,
@@ -34,22 +37,33 @@ export class AstraCacheService {
    * Call to optain the latest measurements
    * @returns latest Measurements which are nested in the sites.
    */
-  public sitesWithLatestMeasurements(siteOptions?: { dynamicSites?: boolean, dynamicMeasurements?: boolean }): Observable<Site[]> {
-    let site$: Observable<Site[]> = siteOptions?.dynamicSites ? this._getDynamicSites() : this._getStaticSites();
-    let measurement$: Observable<Measurements> = siteOptions?.dynamicSites ? this.getLatestMeasurements() : this._getStaticMeasurements();
-    return this._laneMapper.fillWithMeasurements(measurement$, site$).pipe(tap(s => this._currentMeasurementDate = s[0].lanes[0].measurements.publicationTime))
+  public sitesWithLatestMeasurements(dynamic: boolean): Observable<Site[]> {
+    let site$: Observable<Site[]> = dynamic ? this._getDynamicSites() : this._getStaticSites();
+    let _measurement$: Observable<Measurements> = dynamic ? this.getLatestMeasurements() : this._getStaticMeasurements();
+    _measurement$.pipe(tap(m => this._measurement = m));
+    return this._laneMapper.fillWithMeasurements(_measurement$, site$).pipe(
+      tap(s => this._currentMeasurementDate = s[0].lanes[0].measurements.publicationTime),
+      tap(s => this._currentNested = s)
+    )
   }
 
-  public getMeasurementDate() : Date{
+  public getCurrentNested(): Site[] {
+    return this._currentNested;
+  }
+
+  public getCurrentMeasurements(): Measurements {
+    return this._measurement;
+  }
+
+  public getMeasurementDate(): Date {
     return this._currentMeasurementDate;
   }
 
-  public isMostCurrentDate(): boolean{
+  public isMostCurrentDate(): boolean {
     return Date.now() - this._currentMeasurementDate.valueOf() < 1000 * 60;
   }
 
   private getLatestMeasurements(): Observable<Measurements> {
-    
     if (this._latestMeasurments && this.isMostCurrentDate()) {
       return of(this._latestMeasurments)
     } else {

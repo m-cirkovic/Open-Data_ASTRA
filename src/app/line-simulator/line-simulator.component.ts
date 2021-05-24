@@ -117,26 +117,21 @@ export class LineSimulatorComponent implements OnInit, AfterViewInit {
   }
 
   private createTruckCircle(): any {
-    this.circle = this.svg.append('circle')
-      .attr('cx', -25)
-      .attr('cy', 25)
-      .attr('r', 20)
-      .attr('fill-opacity', '0.1')
-      .style('fill', 'MidnightBlue')
-      .style('stroke', 'blue')
-      .style('stroke-width', '5px')
-      .style('fill', 'blue');
+    this.circle = this.svg.append('image')
+      .attr('xlink:href', 'assets/images/pngegg.png' )
+      .attr('x', -40)
+      .attr('y', 0)
+      .attr('height', 50)
+      .attr('width', 50);
   }
 
   private createCarCircle(): any {
-    this.circle = this.svg.append('circle')
-      .attr('cx', -25)
-      .attr('cy', 25)
-      .attr('r', 15)
-      .attr('fill-opacity', '0.1')
-      .style('fill', 'red')
-      .style('stroke', 'orange')
-      .style('stroke-width', '5px');
+    this.circle = this.svg.append('image')
+      .attr('xlink:href', 'assets/images/pngegg.png' )
+      .attr('x', -30)
+      .attr('y', 20)
+      .attr('height', 30)
+      .attr('width', 30);
   }
 
   private chooseCircle(unit: string): void {
@@ -173,10 +168,7 @@ export class LineSimulatorComponent implements OnInit, AfterViewInit {
       .transition()
       .duration(this.getSpeedDuration(this.getSpeed(this.lane, unit)))
       .ease(d3.easeLinear)
-      .attr('cx', 725)
-      .transition()
-      .duration(0)
-      .attr('cx', -25);
+      .attr('x', 725);
     setTimeout(() => {
       this.repeat();
     }, this.getTraffic(this.getTrafficDensity(this.lane)));

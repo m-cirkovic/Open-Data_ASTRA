@@ -124,7 +124,18 @@ export class LineSimulatorComponent implements OnInit, AfterViewInit {
       .attr('height', 50)
       .attr('width', 50);
   }
-
+/*
+    this.circle = this.svg.append('circle')
+      .attr('cx', -25)
+      .attr('cy', 25)
+      .attr('r', 20)
+      .attr('fill-opacity', '0.1')
+      .style('fill', 'MidnightBlue')
+      .style('stroke', 'blue')
+      .style('stroke-width', '5px')
+      .style('fill', 'blue');
+ */
+  
   private createCarCircle(): any {
     this.circle = this.svg.append('image')
       .attr('xlink:href', 'assets/images/pngegg.png' )

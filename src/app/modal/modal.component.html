@@ -1,9 +1,9 @@
 <div id="modal-content-wrapper">
-  <header id="modal-header" class="m-3 d-flex justify-content-between align-items">
-    <h1 id="modal-title">Richtung {{this.name}}</h1>
+  <header id="modal-header">
     <button type="button" class="close" aria-label="Close" (click)="closeModal()">
       <span aria-hidden="true">&times;</span>
     </button>
+    <h1 id="modal-title">Richtung {{this.name}}</h1>
   </header>
   <section id="modal-body" class="d-flex flex-wrap">
     <div *ngFor="let l of site.lanes" class="m-1">

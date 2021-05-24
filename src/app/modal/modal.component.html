@@ -23,7 +23,10 @@
               </div>
             </ng-template>
             <ng-template #error>
-              <p style="width: 750px;"> Fehlermeldung: {{ l.measurements.reasonForDataError }}</p>
+              <div class="d-flex flex-row container p-1 my-1">
+                <img src="/assets/icons/error-7-512.ico" height="4%" width="4%" class="my-auto">
+                <p style="width: 700px;" class="p-2 my-auto"> Fehlermeldung: {{ l.measurements.reasonForDataError }}</p>
+              </div>
             </ng-template>
 
           </div>

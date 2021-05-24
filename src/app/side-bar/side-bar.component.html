@@ -109,35 +109,38 @@
         </div>
       </div>
       <div class="m-3">
+        <p>Hier finden sie einige Zahlen welche aus den aktuellen Messungen berechnet wurden.</p>
+        <div (click)="clearAll()" class="filter-button ">
+          Alle Marker löschen
+        </div>
         <h3>Allgemeine Daten</h3>
-        <div (click)="focusOn(fastest.site)" title="km/h"
-          class="filter-button filter-button-active d-flex justify-content-between">
-          <span>Schnellste Messung: </span><span>{{ fastest.value }}</span>
+        <div (dblclick)="zoomTo(fastest.site)" (click)="focusOn(fastest.site)" title="km/h"
+          class="filter-button  d-flex justify-content-between">
+          <span>Schnellste Messung: </span><span>{{ fastest.site.locationName}} ({{ fastest.value }} km/h)</span>
         </div>
-        <div (click)="focusOn(slowest.site)" title="km/h"
-          class="filter-button filter-button-active d-flex justify-content-between">
-          <span>Langsamste Messung:</span><span>{{ slowest.value }}</span>
+        <div (dblclick)="zoomTo(slowest.site)" (click)="focusOn(slowest.site)" title="km/h"
+          class="filter-button  d-flex justify-content-between">
+          <span>Langsamste Messung:</span><span>{{ slowest.site.locationName}} ({{ slowest.value }} km/h)</span>
         </div>
-        <div title="Anzahl Fahrzeuge/h" (click)="focusOn(mostVehicles.site)"
-          class="filter-button filter-button-active d-flex justify-content-between">
-          <span>Höchster Verkehrsfluss:</span><span>{{ mostVehicles.value }}</span>
+        <div title="Anzahl Fahrzeuge/h" (dblclick)="zoomTo(mostVehicles.site)" (click)="focusOn(mostVehicles.site)"
+          class="filter-button  d-flex justify-content-between">
+          <span>Höchster Verkehrsfluss:</span><span>{{ mostVehicles.site.locationName}} ({{ mostVehicles.value }}
+            Fahrzeuge/h)</span>
         </div>
-        <div class="filter-button filter-button-active d-flex justify-content-between">
-          <span>Anzahl Messungen:</span><span>{{measurementCount}}</span>
-        </div>
-        <div class="filter-button filter-button-active d-flex justify-content-between">
+        <div class="filter-button  d-flex justify-content-between">
           <span>Anzahl Standorte:</span><span>{{siteCount}}</span>
         </div>
       </div>
       <div class="m-3">
         <h3>Top 10 schnellste Messungen</h3>
-        <div class="d-flex flex-row flex-wrap justify-content-start">
-          <div *ngFor="let t of topTenFastest" class="filter-button filter-button-active d-flex">
-            <div (dblclick)="zoomTo(t.site)" (click)="markTopTen(t.site)">
+        <div class="d-flex flex-row flex-wrap justify-content-start ">
+          <div *ngFor="let t of topTenFastest" class="filter-button  flex-grow-1">
+            <div (dblclick)="zoomTo(t.site)" (click)="focusOn(t.site)">
               <span>{{t.site.locationName}} </span> <span> ({{t.value}} km/h)</span>
             </div>
           </div>
         </div>
+        
       </div>
     </div>
   </div>
@@ -154,12 +157,12 @@
       <div class="m-3">
         <h2 class="my-3">Messstellen</h2>
         <div class="d-flex justify-content-center">
-          <a (click)="onFilterClick('normal')" class="filter-button filter-button-active" id="normal">Normaler
+          <a (click)="onFilterClick('normal')" class="filter-button " id="normal">Normaler
             Verkehr</a>
-          <a (click)="onFilterClick('fehlerhaft')" class="filter-button filter-button-active"
+          <a (click)="onFilterClick('fehlerhaft')" class="filter-button "
             id="fehlerhaft">Fehlerhafte Messungen</a>
-          <a (click)="onFilterClick('stau')" class="filter-button filter-button-active" id="stau">Stau</a>
-          <a (click)="onFilterClick('stockend')" class="filter-button filter-button-active" id="stockend">Stockender
+          <a (click)="onFilterClick('stau')" class="filter-button " id="stau">Stau</a>
+          <a (click)="onFilterClick('stockend')" class="filter-button " id="stockend">Stockender
             Verkehr</a>
         </div>
         <h2 class="my-3">Karten</h2>

@@ -1,5 +1,5 @@
 import { AfterContentInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { circle, Control, DomUtil, Icon, Map, Marker, marker, popup, tooltip } from 'leaflet';
+import { circle, Control, DomUtil, Icon, Map as LMap, Marker, marker, popup, tooltip } from 'leaflet';
 import * as d3 from 'd3';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -17,7 +17,7 @@ export class SideBarComponent implements OnInit, AfterContentInit {
   @Output() changeFilter = new EventEmitter();
 
   @Input() siteLayers: L.Control.LayersObject;
-  @Input() map: Map;
+  @Input() map: LMap;
   @Input() mapChangeEvent$: Observable<Control.LayersObject>;
 
   sidebar: Control;
@@ -35,12 +35,14 @@ export class SideBarComponent implements OnInit, AfterContentInit {
   topTenFastest: { value: number, site: Site }[];
 
 
-  filterConfig = {
+  private _filterConfig = {
     'normal': true,
     'fehlerhaft': true,
     'stau': true,
     'stockend': true,
   }
+
+  private _statSitesMarkers = new Map<number, Marker>();
 
   constructor(private _astraCache: AstraCacheService) {
 
@@ -48,63 +50,21 @@ export class SideBarComponent implements OnInit, AfterContentInit {
 
   ngOnInit(): void {
     const SideBar = Control.extend({
-      onAdd(map: Map) {
+      onAdd(map: LMap) {
         return DomUtil.get('sidebar');
       },
-      onRemove(map: Map) { }
+      onRemove(map: LMap) { }
     });
     this.sidebar = new SideBar({
       position: 'topleft'
     }).addTo(this.map);
-    this.mapChangeEvent$.pipe(tap(e => this.siteLayers = e)).subscribe(() => this.refreshValues())
+    this.mapChangeEvent$.pipe(tap(e => this.siteLayers = e)).subscribe(() => this._refreshValues())
     Icon.Default.imagePath = "assets/icons/"
   }
 
-
-
   ngAfterContentInit(): void {
-    d3.select('#blueCircle')
-      .append('svg')
-      .attr('width', 50)
-      .attr('height', 50)
-      .append('circle')
-      .attr('cx', 25)
-      .attr('cy', 25)
-      .attr('r', 20)
-      .attr('fill-opacity', '0.2')
-      .style('fill', 'MidnightBlue')
-      .style('stroke', 'blue')
-      .style('stroke-width', '5px')
-      .style('fill', 'blue');
-
-    d3.select('#orangeCircle')
-      .append('svg')
-      .attr('width', 50)
-      .attr('height', 50)
-      .append('circle')
-      .attr('cx', 25)
-      .attr('cy', 25)
-      .attr('r', 20)
-      .attr('fill-opacity', '0.2')
-      .style('fill', 'MidnightBlue')
-      .style('stroke', 'orange')
-      .style('stroke-width', '5px')
-      .style('fill', 'orange');
-
-    d3.select('#redCircle')
-      .append('svg')
-      .attr('width', 50)
-      .attr('height', 50)
-      .append('circle')
-      .attr('cx', 25)
-      .attr('cy', 25)
-      .attr('r', 20)
-      .attr('fill-opacity', '0.2')
-      .style('fill', 'MidnightBlue')
-      .style('stroke', 'red')
-      .style('stroke-width', '5px')
-      .style('fill', 'red');
-    this.refreshValues()
+    this._drawCircles()
+    this._refreshValues()
   }
 
   hidePane(): void {
@@ -131,46 +91,34 @@ export class SideBarComponent implements OnInit, AfterContentInit {
 
   onFilterClick(filterId?: string) {
     if (filterId) {
-      this.filterConfig[filterId] = !this.filterConfig[filterId];
-      if (this.filterConfig[filterId]) {
+      this._filterConfig[filterId] = !this._filterConfig[filterId];
+      if (this._filterConfig[filterId]) {
         document.getElementById(filterId).classList.remove('filter-button-inactive')
       } else {
         document.getElementById(filterId).classList.add('filter-button-inactive')
       }
     }
     let siteLayerSeed = {};
-    if (this.filterConfig.normal) {
+    if (this._filterConfig.normal) {
       siteLayerSeed['normal'] = this.siteLayers.normal
     }
-    if (this.filterConfig.stau) {
+    if (this._filterConfig.stau) {
       siteLayerSeed['stau'] = this.siteLayers.stau
     }
-    if (this.filterConfig.fehlerhaft) {
+    if (this._filterConfig.fehlerhaft) {
       siteLayerSeed['fehlerhaft'] = this.siteLayers.fehlerhaft
     }
-    if (this.filterConfig.stockend) {
+    if (this._filterConfig.stockend) {
       siteLayerSeed['stockend'] = this.siteLayers.stockend
     }
     this.changeFilter.emit(siteLayerSeed)
 
   }
 
-  refreshValues() {
-    this.onFilterClick()
-    this.getFastest();
-    this.getSlowest();
-    this.getVehicleCount();
-    this.getMostVehicles();
-    this.getMeasurementCount();
-    this.getSiteCount();
-    this.getTopTenFastest();
-  }
   getSiteCount() {
     this.siteCount = this._astraCache.getCurrentNested().length;
   }
-  getMeasurementCount() {
-    this.measurementCount = this._astraCache.getCurrentMeasurements()?.measurement?.length;
-  }
+
   getMostVehicles() {
     let maxV = 0;
     let maxVSite: Site;
@@ -252,27 +200,37 @@ export class SideBarComponent implements OnInit, AfterContentInit {
 
   }
 
-  focusOn(site: Site){
-    this.zoomTo(site)
-    this.setMarker(site);
+  focusOn(site: Site) {
+    this.flyTo(site)
+    if (!this._statSitesMarkers.has(site.specificLocation)) {
+      this.setMarker(site);
+    }
   }
+
+  flyTo(site: Site) {
+    this.map.flyTo([site.lanes[0].lat, site.lanes[0].lng], this.map.getMinZoom(), { duration: 2 })
+  }
+
   zoomTo(site: Site) {
-    this.map.flyTo([site.lanes[0].lat, site.lanes[0].lng], this.map.getMaxZoom()-2, { duration: 2 })
+    this.map.flyTo([site.lanes[0].lat, site.lanes[0].lng], this.map.getMaxZoom() - 2, { duration: 2 })
   }
 
-  setMarker(site: Site){
-    let mk: Marker = marker([site.lanes[0].lat, site.lanes[0].lng]).addEventListener('mousedown', () => mk.removeFrom(this.map)).addTo(this.map);
+  setMarker(site: Site) {
+    let mk: Marker = marker([site.lanes[0].lat, site.lanes[0].lng])
+      .addEventListener('mousedown', () => {
+        mk.removeFrom(this.map);
+        this._statSitesMarkers.delete(site.specificLocation)
+      })
+      .addTo(this.map);
+    this._statSitesMarkers.set(site.specificLocation, mk);
   }
 
-  markTopTen(focus: Site) {
-    this.map.flyTo([focus.lanes[0].lat, focus.lanes[0].lng], this.map.getMinZoom(), { duration: 2 })
-    let mk: Marker[] = this.topTenFastest.map(s => {
-      return marker([s.site.lanes[0].lat, s.site.lanes[0].lng]).addEventListener('mousedown', () => mk.forEach(y => this.map.removeLayer(y))).addTo(this.map)
-    })
+  clearAll() {
+    Array.from(this._statSitesMarkers.values()).forEach(mk => this.map.removeLayer(mk))
+    this._statSitesMarkers = new Map<number, Marker>()
   }
 
   private _sortSiteByV(a: Site, b: Site): number {
-
     let fastestA = 0;
     let fastestB = 0;
     a.lanes.forEach(l => l.measurements?.measurementData?.forEach(m => {
@@ -287,5 +245,57 @@ export class SideBarComponent implements OnInit, AfterContentInit {
     }))
     return fastestB - fastestA;
 
+  }
+  private _drawCircles() {
+    d3.select('#blueCircle')
+      .append('svg')
+      .attr('width', 50)
+      .attr('height', 50)
+      .append('circle')
+      .attr('cx', 25)
+      .attr('cy', 25)
+      .attr('r', 20)
+      .attr('fill-opacity', '0.2')
+      .style('fill', 'MidnightBlue')
+      .style('stroke', 'blue')
+      .style('stroke-width', '5px')
+      .style('fill', 'blue');
+
+    d3.select('#orangeCircle')
+      .append('svg')
+      .attr('width', 50)
+      .attr('height', 50)
+      .append('circle')
+      .attr('cx', 25)
+      .attr('cy', 25)
+      .attr('r', 20)
+      .attr('fill-opacity', '0.2')
+      .style('fill', 'MidnightBlue')
+      .style('stroke', 'orange')
+      .style('stroke-width', '5px')
+      .style('fill', 'orange');
+
+    d3.select('#redCircle')
+      .append('svg')
+      .attr('width', 50)
+      .attr('height', 50)
+      .append('circle')
+      .attr('cx', 25)
+      .attr('cy', 25)
+      .attr('r', 20)
+      .attr('fill-opacity', '0.2')
+      .style('fill', 'MidnightBlue')
+      .style('stroke', 'red')
+      .style('stroke-width', '5px')
+      .style('fill', 'red');
+  }
+  private _refreshValues() {
+    this.onFilterClick()
+    this.getFastest();
+    this.getSlowest();
+    this.getVehicleCount();
+    this.getMostVehicles();
+    this.getSiteCount();
+    this.getTopTenFastest();
   }
 }

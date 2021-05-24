@@ -5,7 +5,6 @@ import { LatLngBounds } from 'leaflet';
   providedIn: 'root'
 })
 export class BoundsService {
-  static bounds: LatLngBounds;
 
   static getLatLngOnMap(lat, lng): { lat: number, lng: number } {
     if (lat < lng) {

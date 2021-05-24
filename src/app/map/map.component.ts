@@ -48,7 +48,6 @@ export class MapComponent implements OnInit{
       zoomControl: false,
       layers: [this.mapLayer]
     }).setView([46.6, 7.7], 10);
-    BoundsService.bounds = this.map.getBounds();
     this.map.doubleClickZoom.disable(); 
   }
 

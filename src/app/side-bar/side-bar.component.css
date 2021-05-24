@@ -139,8 +139,12 @@ h2{
   cursor: pointer;
 }
 
+.filter-button:hover {
+  border: 2px solid var(--orange);
+}
+
 .filter-button-inactive{
   border: 2px solid gray;  
-  background-color: rgb(228, 228, 228,0.9);;
+  background-color: rgb(228, 228, 228,0.9);
   color: darkgray;
 }

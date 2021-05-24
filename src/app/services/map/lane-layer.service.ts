@@ -98,7 +98,7 @@ export class LaneLayerService {
           dialogConfig.disableClose = false;
           dialogConfig.id = 'modal-component';
           dialogConfig.maxHeight = '75vh';
-          dialogConfig.maxWidth = '820px';
+          dialogConfig.maxWidth = '800px';
           // https://material.angular.io/components/dialog/overview
           const modalDialog = this._matDialog.open(ModalComponent, dialogConfig);
         });

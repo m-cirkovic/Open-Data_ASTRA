@@ -32,6 +32,7 @@ export class SideBarComponent implements OnInit, AfterContentInit {
   vehicleCount: number;
   measurementCount: number;
   siteCount: number;
+  countOverSpeedLimit: number;
   topTenFastest: { value: number, site: Site }[];
 
 
@@ -115,6 +116,37 @@ export class SideBarComponent implements OnInit, AfterContentInit {
 
   }
 
+  getMeasurementCount() {
+    this.measurementCount = this.getVehicleCount() * this._astraCache.getCurrentMeasurements().measurement
+      .reduce((acc, curr) =>
+        curr.measurementData
+          .reduce((accum, curr) => {
+            if (curr.unit === 'Fahrzeug/h' || curr.unit === 'km/h') {
+              acc += 1
+            }
+            return acc;
+          }, 0)
+        , 0) ;
+  }
+
+  getVehicleCount(): number{
+    this.vehicleCount = this._getVehicleCount() / 60;
+    return this.vehicleCount;
+  }
+
+  private _getVehicleCount() {
+    return this._astraCache.getCurrentMeasurements().measurement
+      .reduce((acc, curr) =>
+        curr.measurementData
+          .reduce((accum, curr) => {
+            if (curr.unit === 'Fahrzeug/h') {
+              acc += curr.value;
+            }
+            return acc;
+          }, 0)
+        , 0)
+  }
+
   getSiteCount() {
     this.siteCount = this._astraCache.getCurrentNested().length;
   }
@@ -137,9 +169,7 @@ export class SideBarComponent implements OnInit, AfterContentInit {
 
     this.mostVehicles = { value: Math.round(maxV), site: maxVSite };
   }
-  getVehicleCount() {
 
-  }
   getSlowest() {
     let min = 100000000;
     let minSite: Site;
@@ -177,9 +207,17 @@ export class SideBarComponent implements OnInit, AfterContentInit {
     this.fastest = { value: Math.round(max), site: maxSite };
   }
 
+  private getCountOverSpeedLimit(){
+    this.countOverSpeedLimit = this._astraCache.getCurrentMeasurements().measurement.reduce((acc, curr) => acc += curr.measurementData.reduce((accum, current) =>{
+      if(current.unit === 'km/h' && current.value > 125){
+        accum++;
+      }
+      return accum;
+    },0), 0)
+  }
+
   getTopTenFastest() {
     let velocitySorted: number[] = []
-
     let fastestSortet = [];
     this._astraCache.getCurrentNested().forEach(s => {
       let hasLanesFasterThanZero = false;
@@ -198,6 +236,10 @@ export class SideBarComponent implements OnInit, AfterContentInit {
     let topTenVFastest = velocitySorted.slice(0, 10);
     this.topTenFastest = topTenVFastest.map((v, i: number) => { return { value: Math.round(v), site: fastestSortet[i] } })
 
+  }
+
+  markTopTen(){
+    this.topTenFastest.forEach(t => this.focusOn(t.site))
   }
 
   focusOn(site: Site) {
@@ -296,6 +338,8 @@ export class SideBarComponent implements OnInit, AfterContentInit {
     this.getVehicleCount();
     this.getMostVehicles();
     this.getSiteCount();
+    this.getMeasurementCount();
+    this.getCountOverSpeedLimit();
     this.getTopTenFastest();
   }
 }

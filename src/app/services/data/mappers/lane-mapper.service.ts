@@ -11,14 +11,14 @@ import { TmcMapperService } from './tmc-mapper.service';
 export class LaneMapperService {
 
 
-  constructor(private _tmcMapper:TmcMapperService){}
+  constructor(private _tmcMapper: TmcMapperService) { }
 
-  public mapToSite(lanes: Observable<Lane[]> ): Observable<Site[]>{
+  public mapToSite(lanes: Observable<Lane[]>): Observable<Site[]> {
     return lanes.pipe(
       map(lanes => lanes.reduce(LaneMapperService.laneReducer, new Map<number, Lane[]>())),
       map(map => Array.from(map.entries())),
       map(k => k.map(s => {
-        if(!s[0]){
+        if (!s[0]) {
           return new Site(undefined, [])
         }
         return new Site(s[0], s[1])
@@ -26,14 +26,15 @@ export class LaneMapperService {
     )
   }
 
-  public fillWithMeasurements(measurements: Observable<Measurements>, sites: Observable<Site[]>): Observable<Site[]>{
-   return measurements.pipe(
-    map(m => new Map<string, Measurement>(m.measurement.map(measurement => [measurement.siteId, measurement]))),
-    map(m => sites.pipe(
-      tap(site => site.forEach(s => s.lanes.map(l => l.measurements = m.get(l.siteId))))
-    )),
-    concatAll(),
-   )
+  public fillWithMeasurements(measurements: Observable<Measurements>, sites: Observable<Site[]>, thisArg?: any): Observable<Site[]> {
+    return measurements.pipe(
+      tap(m => thisArg._measurement = m),
+      map(m => new Map<string, Measurement>(m.measurement.map(measurement => [measurement.siteId, measurement]))),
+      map(m => sites.pipe(
+        tap(site => site.forEach(s => s.lanes.map(l => l.measurements = m.get(l.siteId))))
+      )),
+      concatAll(),
+    )
   }
 
   public static laneReducer(prev: Map<number, Lane[]>, curr: Lane): Map<number, Lane[]> {

@@ -66,21 +66,12 @@ export class LaneLayerService {
     );
   }
 
-  mapToLayerGroup(sites: Site[], popup: PopUpService, color: string): L.LayerGroup {
+  private mapToLayerGroup(sites: Site[], popup: PopUpService, color: string): L.LayerGroup {
     const layer = L.markerClusterGroup({
       disableClusteringAtZoom: 12,
       iconCreateFunction: (cluster) => {
         const childCount = cluster.getChildCount();
-        let c = ' marker-cluster-';
-        if (color === 'red') {
-          c += 'red';
-        }
-        else if (color === 'orange') {
-          c += 'orange';
-        }
-        else {
-          c += 'blue';
-        }
+        let c = ` marker-cluster-${color ? color : 'blue'}`;
         return new L.DivIcon({
           html: '<div><span>' + childCount + '</span></div>',
           className: 'marker-cluster' + c, iconSize: new L.Point(40, 40)
@@ -105,10 +96,4 @@ export class LaneLayerService {
     }));
     return layer;
   }
-
-  private _getAvg(site: Site): number {
-    const measurements = site.lanes.map(s => s.measurements);
-    return AverageService.getAvg(measurements.filter(m => !m?.reasonForDataError), 'km/h');
-  }
-
 }

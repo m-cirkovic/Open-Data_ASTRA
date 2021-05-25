@@ -42,53 +42,51 @@
       </li>
     </ul>
   </div>
-  
-    <div id="info" class="tab-pane pt-2">
-      <button type="button" class="close" aria-label="Close" (click)="hidePane()">
-        <span aria-hidden="true">&times;</span>
-      </button>
-      <div class="container">
-        <div class="header">
-          <div class="m-3 d-flex justify-content-between align-items">
-            <h1>Wilkommen</h1>
-          </div>
-        </div>
-        <div class="m-3">
-          <p>
-            Informieren Sie sich auf unserer App, wo es schweizweit aktuell Stau hat. Durch die freizugänglichen Daten
-            der <a href="https://opentransportdata.swiss/de/">Open-Data-Plattform Mobilität Schweiz</a> haben wir eine
-            App
-            entwickelt
-            in welcher man nur in wenigen Klicks herausfinden kann, welche Route man für die nächste Fahrt vermeiden
-            sollte!
-          </p>
-          <h2>Anwendung</h2>
-          <p>Durch Betrachten der Karte erkennen Sie, auf welchen Strecken, es aktuell Stau hat:</p>
-          <div class="d-flex flex-row container p-1 my-1 border rounded">
-            <div id="blueCircle" class="p-2"></div>
-            <p class="p-2 my-auto">Freie fahrt! Die Strasse ist nur leicht befahren.</p>
-          </div>
-          <div class="d-flex flex-row container p-1 my-1 border rounded">
-            <div id="orangeCircle" class="p-2"></div>
-            <p class="p-2 my-auto">Augen auf die Strasse, Sie sind nicht alleine! Man fährt hier nicht schneller als
-              30km/h</p>
-          </div>
-          <div class="d-flex flex-row container p-1 my-1 border rounded">
-            <div id="redCircle" class="p-2"></div>
-            <p class="p-2 my-auto">Es wird eine lange Fahrt. Vermeiden sie diesen Streckenabschnitt, falls möglich. Man
-              fährt hier nicht schneller als 10km/h</p>
-          </div>
-          <p>
-            Für mehr Informationen über Ihre gewünschte Strecke, klicken Sie auf die entsprechende Messstation und es
-            erscheint ein Pop-up-Fenster mit der allgemeinen Verkehrslage.
-            Spezifischere Angaben zur Art des Verkehrs erhalten Sie durch das Klicken auf den erschienenen Knopf
-            "weitere
-            Informationen".
-          </p>
-        </div>
 
+  <div id="info" class="tab-pane pt-2">
+    <button type="button" class="close" aria-label="Close" (click)="hidePane()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <div class="container">
+      <div class="header">
+        <div class="m-3 d-flex justify-content-between align-items">
+          <h1>Wilkommen</h1>
+        </div>
+      </div>
+      <div class="m-3">
+        <p>
+          Informieren Sie sich auf unserer App, wo es schweizweit aktuell Stau hat. Durch die freizugänglichen Daten
+          der <a href="https://opentransportdata.swiss/de/">Open-Data-Plattform Mobilität Schweiz</a> haben wir eine
+          App
+          entwickelt
+          in welcher man nur in wenigen Klicks herausfinden kann, welche Route man für die nächste Fahrt vermeiden
+          sollte!
+        </p>
+        <h2>Anwendung</h2>
+        <p>Durch Betrachten der Karte erkennen Sie, auf welchen Strecken, es aktuell Stau hat:</p>
+        <div class="d-flex flex-row container p-1 my-1 border rounded">
+          <div id="blueCircle" class="p-2"></div>
+          <p class="p-2 my-auto">Freie fahrt! Die Strasse ist nur leicht befahren.</p>
+        </div>
+        <div class="d-flex flex-row container p-1 my-1 border rounded">
+          <div id="orangeCircle" class="p-2"></div>
+          <p class="p-2 my-auto">Augen auf die Strasse, Sie sind nicht alleine! Man fährt hier nicht schneller als
+            30km/h</p>
+        </div>
+        <div class="d-flex flex-row container p-1 my-1 border rounded">
+          <div id="redCircle" class="p-2"></div>
+          <p class="p-2 my-auto">Es wird eine lange Fahrt. Vermeiden sie diesen Streckenabschnitt, falls möglich. Man
+            fährt hier nicht schneller als 10km/h</p>
+        </div>
+        <p>
+          Für mehr Informationen über Ihre gewünschte Strecke, klicken Sie auf die entsprechende Messstation und es
+          erscheint ein Pop-up-Fenster mit der allgemeinen Verkehrslage.
+          Spezifischere Angaben zur Art des Verkehrs erhalten Sie durch das Klicken auf den erschienenen Knopf
+          "Details".
+        </p>
       </div>
     </div>
+  </div>
 
   <div id="stats" class="tab-pane pt-2">
     <button type="button" class="close" aria-label="Close" (click)="hidePane()">
@@ -132,7 +130,7 @@
             </div>
           </div>
         </div>
-        
+
       </div>
     </div>
   </div>
@@ -151,8 +149,7 @@
         <div class="d-flex justify-content-center">
           <div (click)="onFilterClick('normal')" class="filter-button " id="normal">Normaler
             Verkehr</div>
-          <div (click)="onFilterClick('fehlerhaft')" class="filter-button "
-            id="fehlerhaft">Fehlerhafte Messungen</div>
+          <div (click)="onFilterClick('fehlerhaft')" class="filter-button " id="fehlerhaft">Fehlerhafte Messungen</div>
           <div (click)="onFilterClick('stau')" class="filter-button " id="stau">Stau</div>
           <div (click)="onFilterClick('stockend')" class="filter-button " id="stockend">Stockender
             Verkehr</div>
@@ -187,23 +184,23 @@
       </div>
     </div>
   </div>
-    <div id="personal" class="tab-pane pt-2">
-      <div class="close" aria-label="Close" (click)="hidePane()">
-        <span aria-hidden="true">&times;</span>
-      </div>
-      <div class="container">
-        <div class="header">
-          <div class="mr-1 d-flex justify-content-between align-items-center">
-            <h1>Entwickler</h1>
-          </div>
-        </div>
-        <p>Diese App wurde im Rahmen der Opendata Vorlesung an der Universität Bern erstellt.</p>
+  <div id="personal" class="tab-pane pt-2">
+    <div class="close" aria-label="Close" (click)="hidePane()">
+      <span aria-hidden="true">&times;</span>
+    </div>
+    <div class="container">
+      <div class="header">
         <div class="mr-1 d-flex justify-content-between align-items-center">
-          <p>Manuel Schüpbach: <br>
-            Bachelor Student Informatik</p>
-          <p>Marko Cirkovic: <br>
-            Bachelor Student Informatik</p>
+          <h1>Entwickler</h1>
         </div>
+      </div>
+      <p>Diese App wurde im Rahmen der Opendata Vorlesung an der Universität Bern erstellt.</p>
+      <div class="mr-1 d-flex justify-content-between align-items-center">
+        <p>Manuel Schüpbach: <br>
+          Bachelor Student Informatik</p>
+        <p>Marko Cirkovic: <br>
+          Bachelor Student Informatik</p>
       </div>
     </div>
+  </div>
 </div>

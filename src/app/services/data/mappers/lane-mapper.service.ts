@@ -19,7 +19,7 @@ export class LaneMapperService {
       map(map => Array.from(map.entries())),
       map(k => k.map(s => {
         if(!s[0]){
-          console.log('err', s[0], s[1])
+          return new Site(undefined, [])
         }
         return new Site(s[0], s[1])
       }))

@@ -17,3 +17,8 @@
 #modal-action-button {
   margin-right: 30px;
 }
+
+.close{
+  position: relative;
+  top: -20px;
+}

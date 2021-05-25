@@ -11,51 +11,32 @@ body {
   background-color: #fff;
 }
 
-/* Overwrite the styles of the mat-dialog-container element globally, but only for those
-that have an id of `modal-component` */
-/* https://stackoverflow.com/a/48689004/9263761 */
 mat-dialog-container#modal-component {
   border: 3px solid gray;
   border-radius: 11px;
   background-color: whitesmoke;
 }
 
-
-.mycluster1 {
-  border-radius: 20px;
-  width: 40px;
-  height: 40px;
-  background-color: greenyellow;
-  text-align: center;
-  font-size: 24px;
-}
-.mycluster2 {
-  border-radius: 30px;
-  width: 60px;
-  height: 60px;
-  background-color: #ffdb58;
-  text-align: center;
-  font-size: 24px;
-  padding-top: 10px;
-  box-sizing: border-box;
-}
-
 .marker-cluster-red {
-  background-color: rgba(255,0,0,0.3);
+  background-color: rgba(255, 0, 0, 0.3);
 }
+
 .marker-cluster-red div {
-  background-color: rgba(255,0,0,0.4);
+  background-color: rgba(255, 0, 0, 0.4);
 }
+
 .marker-cluster-orange {
-  background-color: rgba(255,165,0,0.3);
+  background-color: rgba(255, 165, 0, 0.4);
 }
+
 .marker-cluster-orange div {
-  background-color: rgba(255,165,0,0.4);
+  background-color: rgba(255, 165, 0, 0.9);
 }
 
 .marker-cluster-blue {
-  background-color: rgba(0,0,255,0.3);
+  background-color: rgba(0, 0, 255, 0.3);
 }
+
 .marker-cluster-blue div {
-  background-color: rgba(0,0,255,0.4);
+  background-color: rgba(0, 0, 255, 0.4);
 }

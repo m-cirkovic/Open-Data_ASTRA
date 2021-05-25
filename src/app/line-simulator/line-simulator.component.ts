@@ -28,15 +28,13 @@ export class LineSimulatorComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    console.log(this.getTrafficDensity(this.lane));
-    console.log(this.lane);
     this.createSvg();
     this.repeat();
   }
 
   private createSvg(): void {
     this.svg = d3.select(this.lineSim.nativeElement)
-      .attr('width', 700) // Set the attributes of the SVG element
+      .attr('width', 702) // Set the attributes of the SVG element
       .attr('height', 50)
       .style('background-color', '#eee');
   }
@@ -118,31 +116,18 @@ export class LineSimulatorComponent implements OnInit, AfterViewInit {
 
   private createTruckCircle(): any {
     this.circle = this.svg.append('image')
-      .attr('xlink:href', 'assets/images/pngegg.png' )
-      .attr('x', -40)
-      .attr('y', 0)
-      .attr('height', 50)
-      .attr('width', 50);
+      .attr('xlink:href', 'assets/images/Sinnbild_LKW.svg.png' )
+      .attr('x', -30)
+      .attr('y', 15)
+      .attr('height', 35);
   }
-/*
-    this.circle = this.svg.append('circle')
-      .attr('cx', -25)
-      .attr('cy', 25)
-      .attr('r', 20)
-      .attr('fill-opacity', '0.1')
-      .style('fill', 'MidnightBlue')
-      .style('stroke', 'blue')
-      .style('stroke-width', '5px')
-      .style('fill', 'blue');
- */
-  
+
   private createCarCircle(): any {
     this.circle = this.svg.append('image')
-      .attr('xlink:href', 'assets/images/pngegg.png' )
+      .attr('xlink:href', 'assets/images/Car_pictogram.svg.png' )
       .attr('x', -30)
       .attr('y', 20)
-      .attr('height', 30)
-      .attr('width', 30);
+      .attr('height', 30);
   }
 
   private chooseCircle(unit: string): void {

@@ -1,8 +1,8 @@
 <div id="modal-content-wrapper">
   <header id="modal-header">
-    <div class="close" (click)="closeModal()">
+    <button class="close" (click)="closeModal()" style="opacity: 0.4">
       <span aria-hidden="true">&times;</span>
-    </div>
+    </button>
     <h1 id="modal-title">Richtung {{this.name}}</h1>
   </header>
   <section id="modal-body" class="d-flex flex-wrap">
@@ -13,13 +13,36 @@
           <div class="card-text">
             <div *ngIf="l.measurements.reasonForDataError; then error else noError"></div>
             <ng-template #noError>
-              <app-line-simulator [lane]="l"></app-line-simulator>
-              <div class="container border">
-                <h4>Durchschnittsgeschwindikeit:</h4>
-                <p>
-                  <strong>Leichtverkehr:</strong> {{ getCarSpeed(l) }} km/h <br>
-                  <strong>Schwerverkehr:</strong> {{ getLorrySpeed(l) }} km/h
-                </p>
+              <div class="container border rounded" style="padding-left: 0; padding-right: 0">
+                <app-line-simulator [lane]="l"></app-line-simulator>
+                <div class="container p-2">
+                  <div class="row">
+                    <div class="col">
+                      <div class="d-flex flex-row container my-1 align-items-start">
+                        <img src="assets/images/Car_pictogram.svg.png" height="10%" width="10%" class="my-auto">
+                        <p style="width: 100%;" class="my-auto">: {{ getCarSpeed(l) }} km/h</p>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="d-flex flex-row container my-1">
+                        <img src="assets/images/Sinnbild_LKW.svg.png" height="10%" width="10%" class="my-auto">
+                        <p style="width: 100%;" class=" my-auto">: {{ getLorrySpeed(l) }} km/h</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col">
+                      <div class="d-flex flex-row container my-1">
+                        Anzahl Fahrzeuge pro Stunde: {{getCarAmount(l)}}
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="d-flex flex-row container my-1">
+                        Anzahl Fahrzeuge pro Stunde: {{getLorryAmount(l)}}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </ng-template>
             <ng-template #error>

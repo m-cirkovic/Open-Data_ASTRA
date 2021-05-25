@@ -18,7 +18,7 @@ export class LineSimulatorComponent implements OnInit, AfterViewInit {
   private maxVelocity = 135;
   private animationDuration = 5000;
   private maxAnimationDuration = this.animationDuration + 100;
-  private maxDensity = 2000;
+  private maxDensity = 3500;
 
 
   constructor() {
@@ -35,7 +35,7 @@ export class LineSimulatorComponent implements OnInit, AfterViewInit {
   private createSvg(): void {
     this.svg = d3.select(this.lineSim.nativeElement)
       .attr('width', 702) // Set the attributes of the SVG element
-      .attr('height', 50)
+      .attr('height', 40)
       .style('background-color', '#eee');
   }
 
@@ -114,27 +114,27 @@ export class LineSimulatorComponent implements OnInit, AfterViewInit {
     return this.maxAnimationDuration - ((speed / this.maxVelocity) * (this.animationDuration));
   }
 
-  private createTruckCircle(): any {
+  private createTruck(): any {
     this.circle = this.svg.append('image')
       .attr('xlink:href', 'assets/images/Sinnbild_LKW.svg.png' )
       .attr('x', -30)
-      .attr('y', 15)
-      .attr('height', 35);
+      .attr('y', 10)
+      .attr('height', 30);
   }
 
-  private createCarCircle(): any {
+  private createCar(): any {
     this.circle = this.svg.append('image')
       .attr('xlink:href', 'assets/images/Car_pictogram.svg.png' )
       .attr('x', -30)
-      .attr('y', 20)
-      .attr('height', 30);
+      .attr('y', 17)
+      .attr('height', 25);
   }
 
   private chooseCircle(unit: string): void {
     if (unit === 'car') {
-      this.createCarCircle();
+      this.createCar();
     } else {
-      this.createTruckCircle();
+      this.createTruck();
     }
   }
 

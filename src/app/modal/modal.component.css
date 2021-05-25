@@ -22,3 +22,6 @@
   position: relative;
   top: -20px;
 }
+#no_wrap {
+  white-space: nowrap;
+}

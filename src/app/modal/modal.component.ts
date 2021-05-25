@@ -36,6 +36,10 @@ export class ModalComponent implements OnInit {
     this.dialogRef.close();
   }
 
+  public getLaneNumber(l:Lane){
+    return l.siteId.split('.')[1];
+  }
+
   public getCarSpeed(l: Lane): number {
     return l.measurements.measurementData.reduce((acc, curr) => {
       if (curr.unit === 'km/h' && curr.vehicleType === 'Leichtfahrzeuge') {

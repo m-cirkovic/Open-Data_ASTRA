@@ -6,47 +6,30 @@
     <h1 id="modal-title">Richtung {{this.name}}</h1>
   </header>
   <section id="modal-body" class="d-flex flex-wrap">
-    <div *ngFor="let l of site.lanes" class="mt-1">
-      <div class="card">
-        <div class="card-body">
-          <h3 class="card-title">Spur {{ l.siteId.split('.')[1] }}</h3>
+    <div class="card">
+      <div class="card-body">
+        <div *ngFor="let l of site.lanes" class="mt-1">
           <div class="card-text">
             <div *ngIf="l.measurements.reasonForDataError; then error else noError"></div>
             <ng-template #noError>
-              <div class="container border rounded" style="padding-left: 0; padding-right: 0">
+              <div class=" border rounded">
                 <app-line-simulator [lane]="l"></app-line-simulator>
-                <div class="container p-2">
-                  <div class="row">
-                    <div class="col">
-                      <div class="d-flex flex-row container my-1 align-items-start">
-                        <img src="assets/images/Car_pictogram.svg.png" height="10%" width="10%" class="my-auto">
-                        <p style="width: 100%;" class="my-auto">: {{ getCarSpeed(l) }} km/h</p>
-                      </div>
+                <div class=" p-2">
+                    <div class="d-flex flex-row align-items-start">
+                      <p class="my-auto mr-5">Spur {{ getLaneNumber(l) }}:</p>
+                      <img src="assets/images/Car_pictogram.svg.png" height="5%" width="5%" class="ml-5 my-auto">
+                      <p class="my-auto mr-2">: {{ getCarAmount(l) }} pro Stunde, </p>
+                      <p class="my-auto mr-5"> {{ getCarSpeed(l) }} km/h </p>
+                      <img src="assets/images/Sinnbild_LKW.svg.png" height="5%" width="5%" class="ml-5 my-auto">
+                      <p class="my-auto mr-2">: {{ getLorryAmount(l) }} pro Stunde, </p>
+                      <p class="my-auto ">{{ getLorrySpeed(l) }} km/h</p>
                     </div>
-                    <div class="col">
-                      <div class="d-flex flex-row container my-1">
-                        <img src="assets/images/Sinnbild_LKW.svg.png" height="10%" width="10%" class="my-auto">
-                        <p style="width: 100%;" class=" my-auto">: {{ getLorrySpeed(l) }} km/h</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col">
-                      <div class="d-flex flex-row container my-1">
-                        Anzahl Fahrzeuge pro Stunde: {{getCarAmount(l)}}
-                      </div>
-                    </div>
-                    <div class="col">
-                      <div class="d-flex flex-row container my-1">
-                        Anzahl Fahrzeuge pro Stunde: {{getLorryAmount(l)}}
-                      </div>
-                    </div>
-                  </div>
+
                 </div>
               </div>
             </ng-template>
             <ng-template #error>
-              <div class="d-flex flex-row container p-1 my-1">
+              <div class="d-flex flex-row border rounded">
                 <img src="/assets/icons/error-7-512.ico" height="4%" width="4%" class="my-auto">
                 <p style="width: 100%;" class="p-2 my-auto"> Fehlermeldung: {{ l.measurements.reasonForDataError }}</p>
               </div>

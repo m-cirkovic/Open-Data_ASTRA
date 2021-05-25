@@ -95,17 +95,6 @@ h2{
   }
 }
 
-#unibe_logo{
-  width: 28%;
-  height: 100%;
-  padding: 2%;
-}
-#astra_logo{
-  width: 70%;
-  height: 100%;
-  padding: 2%;
-}
-
 .map-button-text{
   position: absolute;
   visibility: hidden;
@@ -126,25 +115,4 @@ h2{
 .map-button img{
   border-radius: 5px;
   width: 100%;
-}
-.filter-button{
-  border-radius: 5px;
-  padding: 5px;
-  margin: 5px;
-  font-weight: bold;
-  text-decoration: none;
-  border: 2px solid var(--yellow);
-  background-color: white;
-  color: gray;
-  cursor: pointer;
-}
-
-.filter-button:hover {
-  border: 2px solid var(--orange);
-}
-
-.filter-button-inactive{
-  border: 2px solid gray;  
-  background-color: rgb(228, 228, 228,0.9);
-  color: darkgray;
 }

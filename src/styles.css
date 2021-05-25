@@ -8,7 +8,7 @@ body {
   display: grid;
   justify-items: center;
   align-items: center;
-  background-color: #3a3a3a;
+  background-color: #fff;
 }
 
 /* Overwrite the styles of the mat-dialog-container element globally, but only for those

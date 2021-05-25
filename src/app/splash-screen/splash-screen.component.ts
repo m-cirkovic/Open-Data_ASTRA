@@ -15,7 +15,7 @@ export class SplashScreenComponent implements OnInit {
     "brewing coffee",
     "spinning up the computer",
     "gathering the measurements",
-    "collecting dropped data"
+    "collecting dropped data", 
   ]
 
   public funnySlogan: string = '';
@@ -23,7 +23,7 @@ export class SplashScreenComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    timer(this.funnySlogans.length, 800).pipe(
+    timer(this.funnySlogans.length, 1000).pipe(
       tap(a => this.funnySlogan = this.funnySlogans[a])
     ).subscribe()
   }

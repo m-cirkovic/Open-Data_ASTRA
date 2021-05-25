@@ -1,5 +1,6 @@
 <div class="map-container">
-  <app-side-bar (changeFilter)="updateFilter($event)" (changeMap)="updateMapLayer($event)" [map]="map" [mapChangeEvent$]="layersSubject.asObservable()" [siteLayers]="siteLayers"></app-side-bar>
+  <app-side-bar (changeFilter)="updateFilter($event)" (changeMap)="updateMapLayer($event)" [map]="map"
+    [mapChangeEvent$]="layersSubject.asObservable()" [siteLayers]="siteLayers"></app-side-bar>
   <div class="map-frame">
     <div id="map"></div>
   </div>

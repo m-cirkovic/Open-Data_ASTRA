@@ -73,3 +73,48 @@ $scaffolding-theme: mat-light-theme((
   font-weight: bold;
 }
 
+.filter-button{
+  border-radius: 5px;
+  padding: 5px;
+  margin: 5px;
+  font-weight: bold;
+  text-decoration: none;
+  border: 2px solid var(--yellow);
+  background-color: white;
+  color: gray;
+  cursor: pointer;
+}
+
+.filter-button:hover {
+  border: 2px solid var(--orange);
+}
+
+.filter-button-inactive{
+  border: 2px solid gray;  
+  background-color: rgb(228, 228, 228,0.9);
+  color: darkgray;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 8px;
+  margin-right: 1px;
+  border-radius: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background-color: transparent; 
+  border-radius: 5px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+  border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}

@@ -85,13 +85,6 @@
             "weitere
             Informationen".
           </p>
-          <hr>
-          <div class="container">
-            <div class="mr-1 d-flex justify-content-between align-items">
-              <img src="assets/images/astra_logo.png" id="astra_logo" class="img-responsive">
-              <img src="assets/images/unibe_logo.png" id="unibe_logo" class="img-responsive">
-            </div>
-          </div>
         </div>
 
       </div>
@@ -157,13 +150,13 @@
       <div class="m-3">
         <h2 class="my-3">Messstellen</h2>
         <div class="d-flex justify-content-center">
-          <a (click)="onFilterClick('normal')" class="filter-button " id="normal">Normaler
-            Verkehr</a>
-          <a (click)="onFilterClick('fehlerhaft')" class="filter-button "
-            id="fehlerhaft">Fehlerhafte Messungen</a>
-          <a (click)="onFilterClick('stau')" class="filter-button " id="stau">Stau</a>
-          <a (click)="onFilterClick('stockend')" class="filter-button " id="stockend">Stockender
-            Verkehr</a>
+          <div (click)="onFilterClick('normal')" class="filter-button " id="normal">Normaler
+            Verkehr</div>
+          <div (click)="onFilterClick('fehlerhaft')" class="filter-button "
+            id="fehlerhaft">Fehlerhafte Messungen</div>
+          <div (click)="onFilterClick('stau')" class="filter-button " id="stau">Stau</div>
+          <div (click)="onFilterClick('stockend')" class="filter-button " id="stockend">Stockender
+            Verkehr</div>
         </div>
         <h2 class="my-3">Karten</h2>
         <div class="d-flex flex-row flex-wrap justify-content-center">

@@ -3,7 +3,6 @@ import * as L from 'leaflet';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MapLayerService } from '../services/map/map-layer.service';
 import { Subject } from 'rxjs';
-import { BoundsService } from '../services/map/BoundsService';
 
 
 @Component({
@@ -47,7 +46,7 @@ export class MapComponent implements OnInit{
       minZoom: 8,
       zoomControl: false,
       layers: [this.mapLayer]
-    }).setView([46.6, 7.7], 10);
+    }).setView([46.6, 7.7], 8);
     this.map.doubleClickZoom.disable(); 
   }
 

@@ -1,4 +1,4 @@
-import { NgModule, OnInit } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
@@ -15,7 +15,6 @@ import { ModalComponent } from './modal/modal.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import { SplashScreenComponent } from './splash-screen/splash-screen.component';
 import { SideBarComponent } from './side-bar/side-bar.component';
-import { PieComponent } from './pie/pie.component';
 import { TimeBarComponent } from './time-bar/time-bar.component';
 import {LeafletMarkerClusterModule} from '@asymmetrik/ngx-leaflet-markercluster';
 import { LineSimulatorComponent } from './line-simulator/line-simulator.component';
@@ -27,7 +26,6 @@ import { LineSimulatorComponent } from './line-simulator/line-simulator.componen
     ModalComponent,
     SplashScreenComponent,
     SideBarComponent,
-    PieComponent,
     TimeBarComponent,
     LineSimulatorComponent
   ],

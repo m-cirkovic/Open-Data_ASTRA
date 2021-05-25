@@ -9,7 +9,6 @@
     color: gray;
 }
 .tabs {
-
     height: 100%;
     margin: 0;
     padding:0;
@@ -30,9 +29,6 @@ li button{
     outline:none;
     cursor:pointer;
 }
-.active{
-    background-color:rgb(228, 228, 228);
-}
 .active svg{
     fill: grey;
 }
@@ -47,9 +43,7 @@ svg{
 }
 .tab-pane{
     display: none;
-    min-width: 25vw;
-
-    max-width: 35vw;
+    width: 35vw;
 }
 .header{
     margin-top: 0;
@@ -63,9 +57,10 @@ svg{
 .mr-1{
     margin-right: 5px;
 }
-#close-button{
+.close{
   position: relative;
-  left: -7px
+  right: 5px;
+  top: -8px;
 }
 h2{
   margin: 0;

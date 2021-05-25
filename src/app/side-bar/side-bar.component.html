@@ -100,10 +100,23 @@
       </div>
       <div class="m-3">
         <p>Hier finden sie einige Zahlen welche aus den aktuellen Messungen berechnet wurden.</p>
-        <div (click)="clearAll()" class="filter-button ">
+        <div (click)="clearAll()" class="filter-button">
           Alle Marker löschen
         </div>
         <h3>Allgemeine Daten</h3>
+        <div class="filter-button filter-button-disabled d-flex justify-content-between">
+          <span>Anzahl Standorte:</span><span>{{siteCount.toLocaleString()}}</span>
+        </div>
+        <div class="filter-button filter-button-disabled d-flex justify-content-between">
+          <span>Anzahl Messungen:</span><span>{{measurementCount.toLocaleString()}}</span>
+        </div>
+        <div class="filter-button filter-button-disabled d-flex justify-content-between">
+          <span>Anzahl Fahrzeuge:</span><span>{{vehicleCount.toLocaleString()}}</span>
+        </div>
+        <div class="filter-button filter-button-disabled d-flex justify-content-between">
+          <span>Anzahl Messstellen erhöhter Geschwindigkeit:</span><span>{{countOverSpeedLimit.toLocaleString()}}</span>
+        </div>
+        <h3>Top Messdaten</h3>
         <div (dblclick)="zoomTo(fastest.site)" (click)="focusOn(fastest.site)" title="km/h"
           class="filter-button  d-flex justify-content-between">
           <span>Schnellste Messung: </span><span>{{ fastest.site.locationName}} ({{ fastest.value }} km/h)</span>
@@ -117,15 +130,10 @@
           <span>Höchster Verkehrsfluss:</span><span>{{ mostVehicles.site.locationName}} ({{ mostVehicles.value }}
             Fahrzeuge/h)</span>
         </div>
-        <div class="filter-button  d-flex justify-content-between">
-          <span>Anzahl Standorte:</span><span>{{siteCount}}</span>
-        </div>
-      </div>
-      <div class="m-3">
         <h3>Top 10 schnellste Messungen</h3>
         <div class="d-flex flex-row flex-wrap justify-content-start ">
           <div *ngFor="let t of topTenFastest" class="filter-button  flex-grow-1">
-            <div (dblclick)="zoomTo(t.site)" (click)="focusOn(t.site)">
+            <div (dblclick)="zoomTo(t.site)" (click)="markTopTen(t.site)">
               <span>{{t.site.locationName}} </span> <span> ({{t.value}} km/h)</span>
             </div>
           </div>

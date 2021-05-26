@@ -11,21 +11,20 @@ export class SplashScreenComponent implements OnInit {
 
   public funnySlogans =
   [
-    "waking up the developer",
-    "brewing coffee",
-    "spinning up the computer",
-    "gathering the measurements",
-    "collecting dropped data", 
-  ]
+    'wecke den Entwickler auf',
+    'bereite mir schnell ein Kaffee zu',
+    'fahre den Computer hoch',
+    'sammle die Messungen'
+  ];
 
-  public funnySlogan: string = '';
+  public funnySlogan = '';
   constructor(
   ) { }
 
   ngOnInit(): void {
-    timer(this.funnySlogans.length, 1000).pipe(
+    timer(this.funnySlogans.length, 500).pipe(
       tap(a => this.funnySlogan = this.funnySlogans[a])
-    ).subscribe()
+    ).subscribe();
   }
 
 

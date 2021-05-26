@@ -167,7 +167,7 @@ export class LineSimulatorComponent implements OnInit, AfterViewInit {
       .attr('x', 725);
     setTimeout(() => {
       this.repeat();
-    }, this.getTraffic(this.getTrafficDensity(this.lane)));
+    }, this.getTraffic(this.getTrafficDensity(this.lane))/2);
   }
 
 }

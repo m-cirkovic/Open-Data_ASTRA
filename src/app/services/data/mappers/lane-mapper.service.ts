@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { concatAll, map, tap } from 'rxjs/operators';
 import { Measurement, Measurements } from '../../../models/Internal/measurement.model';
 import { Lane, Site } from '../../../models/Internal/site.model';
+import { AstraCacheService } from '../astra/astra-cache.service';
 import { TmcMapperService } from './tmc-mapper.service';
 
 @Injectable({
@@ -26,26 +27,26 @@ export class LaneMapperService {
     )
   }
 
-  public fillWithMeasurements(measurements: Observable<Measurements>, sites: Observable<Site[]>, thisArg?: any): Observable<Site[]> {
+  public fillWithMeasurements(measurements: Observable<Measurements>, sites: Observable<Site[]>, thisArg: any, saveSite: (sites: Site[], a: AstraCacheService) => void,  saveMeasurements: (ms: Measurements, a: AstraCacheService) => void): Observable<Site[]> {
     return measurements.pipe(
-      tap(m => thisArg._measurement = m),
+      tap(m => saveMeasurements(m, thisArg)),
       map(m => new Map<string, Measurement>(m.measurement.map(measurement => [measurement.siteId, measurement]))),
       map(m => sites.pipe(
-        tap(site => site.forEach(s => s.lanes.map(l => l.measurements = m.get(l.siteId))))
+        tap(site => site.forEach(s => s.lanes.map(l => l.measurements = m.get(l.siteId)))),
+        tap(sites => saveSite(sites, thisArg))
       )),
       concatAll(),
     )
   }
 
-  public static laneReducer(prev: Map<number, Lane[]>, curr: Lane): Map<number, Lane[]> {
-    let lanes = prev.get(curr.specificLocation)
+  public static laneReducer(acc: Map<number, Lane[]>, curr: Lane): Map<number, Lane[]> {
+    let lanes = acc.get(curr.specificLocation)
     if (lanes) {
       lanes.push(curr);
-      prev.set(curr.specificLocation, lanes);
     } else {
-      prev.set(curr.specificLocation, [curr]);
+      acc.set(curr.specificLocation, [curr]);
     }
-    return prev;
+    return acc;
   }
 
 

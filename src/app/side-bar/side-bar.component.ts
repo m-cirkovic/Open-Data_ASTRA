@@ -21,7 +21,6 @@ export class SideBarComponent implements OnInit, AfterContentInit {
   @Input() mapChangeEvent$: Observable<Control.LayersObject>;
 
   sidebar: Control;
-  dynamic = false;
   loading = false;
   private _currentTab: string;
 
@@ -117,7 +116,7 @@ export class SideBarComponent implements OnInit, AfterContentInit {
   }
 
   getMeasurementCount() {
-    this.measurementCount = this.getVehicleCount() * this._astraCache.getCurrentMeasurements().measurement
+    this.measurementCount = this.getVehicleCount() * this._astraCache.currentMeasurments.measurement
       .reduce((acc, curr) =>
         curr.measurementData
           .reduce((accum, curr) => {
@@ -135,7 +134,7 @@ export class SideBarComponent implements OnInit, AfterContentInit {
   }
 
   private _getVehicleCount() {
-    return this._astraCache.getCurrentMeasurements().measurement
+    return this._astraCache.currentMeasurments.measurement
       .reduce((acc, curr) =>
         curr.measurementData
           .reduce((accum, curr) => {
@@ -208,7 +207,7 @@ export class SideBarComponent implements OnInit, AfterContentInit {
   }
 
   private getCountOverSpeedLimit(){
-    this.countOverSpeedLimit = this._astraCache.getCurrentMeasurements().measurement.reduce((acc, curr) => acc += curr.measurementData.reduce((accum, current) =>{
+    this.countOverSpeedLimit = this._astraCache.currentMeasurments.measurement.reduce((acc, curr) => acc += curr.measurementData.reduce((accum, current) =>{
       if(current.unit === 'km/h' && current.value > 125){
         accum++;
       }

@@ -1,7 +1,7 @@
 
 import { Injectable } from '@angular/core';
 import { Observable, of, Subject } from 'rxjs';
-import { concatAll, delay, map, tap } from 'rxjs/operators';
+import { concatAll, map, tap } from 'rxjs/operators';
 import { Measurements } from '../../../models/Internal/measurement.model';
 import { Site } from '../../../models/Internal/site.model';
 import { AstraApiService } from './astra-api.service';
@@ -16,15 +16,18 @@ import { TmcMapperService } from '../mappers/tmc-mapper.service';
  */
 export class AstraCacheService {
 
-  private _latestMeasurments: Measurements;
   private _staticMeasurements: Measurements;
-  private _dynamicSites: Site[];
+  private _dynamicMeasurments: Measurements[] = [];
+
   private _staticSites: Site[];
+  private _dynamicSites: Site[];
+
   private _site: Site;
-  private _currentMeasurementDate: Date;
 
   private _currentNested: Site[];
-  private _measurement: Measurements;
+  private _currentMeasurementDate: Date;
+
+  public currentMeasurments;
 
   constructor(
     private _astraApi: AstraApiService,
@@ -38,23 +41,53 @@ export class AstraCacheService {
    * @returns latest Measurements which are nested in the sites.
    */
   public sitesWithLatestMeasurements(dynamic: boolean): Observable<Site[]> {
-    let site$: Observable<Site[]> = dynamic ? this._getDynamicSites() : this._getStaticSites();
-    let _measurement$: Observable<Measurements> = dynamic ? this.getLatestMeasurements() : this._getStaticMeasurements();
-    return this._laneMapper.fillWithMeasurements(_measurement$, site$, this).pipe(
-      tap(s => this._currentMeasurementDate = s[0].lanes[0].measurements.publicationTime),
-      tap(s => this._currentNested = s),
+    return dynamic ? this._getDynamicNestedSites() : this._getStaticNestedSites();
+  }
+
+  private _getDynamicNestedSites(): Observable<Site[]> {
+    return this._laneMapper.fillWithMeasurements(
+      this.getDynamicMeasurements(),
+      this._getDynamicSites(),
+      this,
+      this.setDynamicSites,
+      this.setDynamicMeasurements
     )
+  }
+
+  private _getStaticNestedSites(): Observable<Site[]> {
+    return this._laneMapper.fillWithMeasurements(this._getStaticMeasurements(), this._getStaticSites(), this, this.setStaticSites, this.setStaticMeasurements)
+  }
+
+  public setStaticSites(staticSites: Site[], thisArg: AstraCacheService) {
+    thisArg._currentNested = staticSites;
+    thisArg._staticSites = staticSites;
+  }
+
+  public setDynamicSites(dynamicSites: Site[], thisArg: AstraCacheService) {
+    thisArg._currentNested = dynamicSites;
+    thisArg._dynamicSites = dynamicSites;
+  }
+
+  public setStaticMeasurements(staticMeasurements: Measurements, thisArg: AstraCacheService) {
+    thisArg.currentMeasurments = staticMeasurements;
+    thisArg._currentMeasurementDate = staticMeasurements.publicationDate;
+    thisArg._staticMeasurements = staticMeasurements;
+  }
+  public setDynamicMeasurements(dynamicMeasurements: Measurements, thisArg: AstraCacheService) {
+    thisArg.currentMeasurments = dynamicMeasurements;
+    thisArg._currentMeasurementDate = dynamicMeasurements.publicationDate;
+    thisArg._dynamicMeasurments.push(dynamicMeasurements);
   }
 
   public getCurrentNested(): Site[] {
     return this._currentNested;
   }
 
-  public getCurrentMeasurements(): Measurements {
-    return this._measurement;
+  public getCurrentMeasurements(dynamic: boolean): Measurements {
+    return dynamic ? this._staticMeasurements : this._dynamicMeasurments.slice(-1)[0];
   }
 
-  public getMeasurementDate(): Date {
+  public getMeasurementDate(dynamic: boolean): Date {
     return this._currentMeasurementDate;
   }
 
@@ -62,9 +95,9 @@ export class AstraCacheService {
     return Date.now() - this._currentMeasurementDate.valueOf() < 1000 * 60;
   }
 
-  private getLatestMeasurements(): Observable<Measurements> {
-    if (this._latestMeasurments && this.isMostCurrentDate()) {
-      return of(this._latestMeasurments)
+  private getDynamicMeasurements(): Observable<Measurements> {
+    if (this._dynamicMeasurments.length > 0 && this.isMostCurrentDate()) {
+      return of(this._dynamicMeasurments.slice(-1)[0])
     } else {
       return this._fetchMeasurements();
     }
@@ -102,7 +135,7 @@ export class AstraCacheService {
 
   private _fetchMeasurements(): Observable<Measurements> {
     return this._astraApi.getMeasurements().pipe(
-      tap(m => this._latestMeasurments = m)
+      tap(m => this._dynamicMeasurments.push(m))
     )
   }
 

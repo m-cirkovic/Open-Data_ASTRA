@@ -68,7 +68,6 @@ export class LaneLayerService {
 
   private mapToLayerGroup(sites: Site[], popup: PopUpService, color: string): L.LayerGroup {
     const layer = L.markerClusterGroup({
-      disableClusteringAtZoom: 12,
       iconCreateFunction: (cluster) => {
         const childCount = cluster.getChildCount();
         let c = ` marker-cluster-${color ? color : 'blue'}`;

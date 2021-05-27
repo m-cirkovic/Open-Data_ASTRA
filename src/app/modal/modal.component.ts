@@ -1,10 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {MatDialogRef} from '@angular/material/dialog';
-import {ModalInfoService} from '../services/modal-info.service';
-import {Lane, Site} from '../models/Internal/site.model';
-import {Measurement, MeasurementData} from '../models/Internal/measurement.model';
-import {AstraCacheService} from '../services/data/astra/astra-cache.service';
-import {TmcMapperService} from '../services/data/mappers/tmc-mapper.service';
+import { Component, OnInit } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
+import { ModalInfoService } from '../services/modal-info.service';
+import { Lane, Site } from '../models/Internal/site.model';
+import { Measurement, MeasurementData } from '../models/Internal/measurement.model';
+import { AstraCacheService } from '../services/data/astra/astra-cache.service';
+import { TmcMapperService } from '../services/data/mappers/tmc-mapper.service';
 import * as d3 from 'd3';
 
 @Component({
@@ -36,16 +36,12 @@ export class ModalComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  public getLaneNumber(l: Lane){
+  public getLaneNumber(l: Lane) {
     return l.siteId.split('.')[1];
   }
 
   public getDesignation(l: Lane): string {
-    if (l.siteId.split('.')[1].substring(0, 2) === 'CH') {
-      return l.siteId.split('.')[1];
-    } else {
-      return 'Spur: ' + l.siteId.split('.')[1];
-    }
+    return `Spur ${Number.parseInt(l.siteId.split('.').pop(), 10)}`;
   }
 
   public getCarSpeed(l: Lane): number {

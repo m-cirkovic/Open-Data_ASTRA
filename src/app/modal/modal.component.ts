@@ -36,8 +36,16 @@ export class ModalComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  public getLaneNumber(l:Lane){
+  public getLaneNumber(l: Lane){
     return l.siteId.split('.')[1];
+  }
+
+  public getDesignation(l: Lane): string {
+    if (l.siteId.split('.')[1].substring(0, 2) === 'CH') {
+      return l.siteId.split('.')[1];
+    } else {
+      return 'Spur: ' + l.siteId.split('.')[1];
+    }
   }
 
   public getCarSpeed(l: Lane): number {

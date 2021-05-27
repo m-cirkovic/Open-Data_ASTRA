@@ -35,11 +35,7 @@ export class ModalComponent implements OnInit {
   public closeModal(): void {
     this.dialogRef.close();
   }
-
-  public getLaneNumber(l: Lane) {
-    return l.siteId.split('.')[1];
-  }
-
+  
   public getDesignation(l: Lane): string {
     return `Spur ${Number.parseInt(l.siteId.split('.').pop(), 10)}`;
   }

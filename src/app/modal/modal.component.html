@@ -29,7 +29,7 @@
             </ng-template>
             <ng-template #error>
               <div class="d-flex flex-row border border-danger align-items-start rounded">
-                <p id="no_wrap" class="p-2 my-auto" >Spur {{getLaneNumber(l)}}: </p>
+                <p id="no_wrap" class="p-2 my-auto" >{{getDesignation(l)}}: </p>
                 <img src="/assets/icons/error-7-512.ico" height="20vh" width="20vw" class="my-auto">
                 <p class="p-2 my-auto"> Fehlermeldung: {{ l.measurements.reasonForDataError }}</p>
               </div>

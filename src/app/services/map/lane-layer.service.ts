@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { merge, Observable, of } from 'rxjs';
-import { catchError, map, reduce, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { AstraCacheService } from '../data/astra/astra-cache.service';
 import * as L from 'leaflet';
 import { PopUpService } from './pop-up.service';
 import { Site } from 'src/app/models/Internal/site.model';
-import { AverageService } from '../data/mappers/average.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ModalComponent } from 'src/app/modal/modal.component';
 
@@ -21,49 +20,39 @@ export class LaneLayerService {
 
   ) { }
 
-  getAllLayers(options?: { dynamic?: boolean }): Observable<L.Control.LayersObject> {
+  getAllLayers(options?: { dynamic?: boolean }): Observable<any> {
     const siteLayersSeed: L.Control.LayersObject = {};
     const sites = this._astraCache.sitesWithLatestMeasurements(options.dynamic);
-    return merge(this._getNormalLayers(sites), this._getErrorLayers(sites), this._getJamLayers(sites), this._getStagnatingLayers(sites)).pipe(
-      reduce((acc, curr) => ({ ...acc, ...curr }), siteLayersSeed),
-      catchError((err, caught) => of({}))
-    );
-  }
-
-  private _getStagnatingLayers(s: Observable<Site[]>): Observable<L.Control.LayersObject> {
-    return s.pipe(
-      map(s => s.filter(sites => sites.lanes.filter(l => !l.measurements?.reasonForDataError).length > 0)),
-      map(s => s.filter(site => site.lanes.filter(l => l.measurements?.measurementData.filter(m => m.value >= 10 && m.value < 30 && m.value > 0 && m.unit === 'km/h').length > 0).length > 0)),
-      map(s => this.mapToLayerGroup(s, this._popupService, 'orange')),
-      map(l => ({ ['stockend']: l })),
-    );
-  }
-
-  private _getJamLayers(s: Observable<Site[]>): Observable<L.Control.LayersObject> {
-    return s.pipe(
-      map(s => s.filter(sites => sites.lanes.filter(l => !l.measurements?.reasonForDataError).length > 0)),
-      map(s => s.filter(site => site.lanes.filter(l => l.measurements?.measurementData.filter(m => m.value < 10 && m.value > 0 && m.unit === 'km/h').length > 0).length > 0)),
-      map(s => this.mapToLayerGroup(s, this._popupService, 'red')),
-      map(l => ({ ['stau']: l })),
-    );
-  }
-
-  private _getNormalLayers(s: Observable<Site[]>): Observable<L.Control.LayersObject> {
-    return s.pipe(
-      tap(a => console.log(a[0].lanes[0].measurements.publicationTime)),
-      map(s => s.filter(sites => sites.lanes.filter(l => !l.measurements?.reasonForDataError).length > 0)),
-      map(s => s.filter(site => site.lanes.filter(l => l.measurements?.measurementData.filter(m => m.value > 30 && m.unit === 'km/h').length > 0).length > 0)),
-      map(s => this.mapToLayerGroup(s, this._popupService, 'blue')),
-      map(l => ({ ['normal']: l })),
-    );
-  }
-
-  private _getErrorLayers(s: Observable<Site[]>): Observable<L.Control.LayersObject> {
-    return s.pipe(
-      map(s => s.filter(sites => sites.lanes.filter(l => l.measurements?.reasonForDataError).length > 0)),
-      map(s => this.mapToLayerGroup(s, this._popupService, 'blue')),
-      map(l => ({ ['fehlerhaft']: l }))
-    );
+    return sites.pipe(
+      map(sites => sites.reduce((acc: Foo, curr) => {
+        if (curr.lanes.filter(l => l.measurements?.reasonForDataError).length > 0) {
+          acc['fehlerhaft'].sites.push(curr);
+        } else if (curr.lanes.filter(l => l.measurements?.measurementData.filter(d => d.unit === 'km/h' && d.value < 30 && d.value >= 10).length > 0).length > 0) {
+          acc['stockend'].sites.push(curr);
+        } else if (curr.lanes.filter(l => l.measurements?.measurementData.filter(d => d.unit === 'km/h' && d.value < 10 && d.value > 0).length > 0).length > 0) {
+          acc['stau'].sites.push(curr);
+        } else {
+          acc['normal'].sites.push(curr);
+        }
+        return acc;
+      }, {
+        'stau': { color: 'red', sites: [] },
+        'fehlerhaft': { color: 'blue', sites: [] },
+        'stockend': { color: 'orange', sites: [] },
+        'normal': { color: 'blue', sites: [] }
+      })
+      ),
+      map(sites => {
+        let a: L.Control.LayersObject = {};
+        Object.entries(sites).forEach(s => {
+          if(s[1].sites){
+            a[s[0]] = this.mapToLayerGroup(s[1].sites, this._popupService, s[1].color)
+          }
+        })
+        return a;
+      }
+      )
+    )
   }
 
   private mapToLayerGroup(sites: Site[], popup: PopUpService, color: string): L.LayerGroup {
@@ -77,7 +66,7 @@ export class LaneLayerService {
         });
       }
     });
-    sites.forEach(s => L.circleMarker([s.lanes[0].lat, s.lanes[0].lng], { color }).addTo(layer).bindPopup(popup.siteToHtml(s)).on('popupopen', (a) => {
+    sites.filter(s => s.lanes[0]).forEach(s => L.circleMarker([s.lanes[0].lat, s.lanes[0].lng], { color }).addTo(layer).bindPopup(popup.siteToHtml(s)).on('popupopen', (a) => {
       const popUp = a.target.getPopup();
       popUp.getElement()
         .querySelector('.open-modal')
@@ -95,4 +84,12 @@ export class LaneLayerService {
     }));
     return layer;
   }
+}
+
+interface Foo {
+  [name: string]: Bar
+}
+interface Bar {
+  color: string;
+  sites: Site[]
 }

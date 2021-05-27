@@ -51,10 +51,10 @@ export class MapComponent implements OnInit{
   }
 
   private _addLayersToMap() {
-    Object.values(this.savedSiteLayers).forEach(val => this.map.addLayer(val))
+    Object.values(this.savedSiteLayers).forEach(val => {if(val) this.map.addLayer(val)})
   }
   private _removeLayersFromMap() {
-    Object.values(this.savedSiteLayers).forEach(val => this.map.removeLayer(val))
+    Object.values(this.savedSiteLayers).forEach(val => {if(val) this.map.removeLayer(val)} )
   }
   
   public updateMap(newLayers: L.Control.LayersObject) {

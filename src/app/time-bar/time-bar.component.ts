@@ -3,6 +3,7 @@ import { Control, DomUtil, Map } from 'leaflet';
 import { AstraCacheService } from '../services/data/astra/astra-cache.service';
 import { LaneLayerService } from '../services/map/lane-layer.service';
 
+
 @Component({
   selector: 'app-time-bar',
   templateUrl: './time-bar.component.html',
@@ -11,7 +12,7 @@ import { LaneLayerService } from '../services/map/lane-layer.service';
 export class TimeBarComponent implements OnInit {
 
   @Output() updateData = new EventEmitter();
-  
+
   @Input() map: Map;
   timebar: Control;
   dynamic = false;
@@ -28,7 +29,7 @@ export class TimeBarComponent implements OnInit {
     })
     this.timebar = new TimeBar({
       position: 'bottomright'
-    }).addTo(this.map) 
+    }).addTo(this.map)
   }
 
   date(): Date{
@@ -41,7 +42,7 @@ export class TimeBarComponent implements OnInit {
   changeData(): void {
     this.dynamic = !this.dynamic;
     this.getNewMeasurement();
-    
+
   }
 
   getNewMeasurement(): void{
@@ -50,5 +51,9 @@ export class TimeBarComponent implements OnInit {
       this.updateData.emit(layers);
       this.loading = false;
     });
+    setTimeout(() => {
+      this.loading = false;
+      this.getNewMeasurement();
+    }, 60000);
   }
 }

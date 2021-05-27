@@ -52,7 +52,6 @@ export class TimeBarComponent implements OnInit {
       this.loading = false;
     });
     setTimeout(() => {
-      this.loading = false;
       this.getNewMeasurement();
     }, 60000);
   }

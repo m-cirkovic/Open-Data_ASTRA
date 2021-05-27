@@ -14,14 +14,18 @@
             <ng-template #noError>
               <div class=" border border rounded">
                 <div class=" p-2">
-                  <div class="d-flex flex-row align-items-start">
-                    <p class="my-auto mr-5">{{ getDesignation(l) }}:</p>
-                    <img src="assets/images/Car_pictogram.svg.png" height="5%" width="5%" class="ml-5 my-auto">
-                    <p class="my-auto mr-2">: {{ getCarAmount(l) }} pro Stunde, </p>
-                    <p class="my-auto mr-5"> {{ getCarSpeed(l) }} km/h </p>
-                    <img src="assets/images/Sinnbild_LKW.svg.png" height="5%" width="5%" class="ml-5 my-auto">
-                    <p class="my-auto mr-2">: {{ getLorryAmount(l) }} pro Stunde, </p>
-                    <p class="my-auto ">{{ getLorrySpeed(l) }} km/h</p>
+                  <div class="row">
+                    <div class="col-7 d-flex flex-row align-items-start">
+                      <p class="my-auto mr-5">{{ getDesignation(l) }}:</p>
+                      <img src="assets/images/Car_pictogram.svg.png" height="100%" width="10%" class="ml-10 my-auto">
+                      <p class="my-auto mr-2">: {{ getCarAmount(l) }} pro Stunde, </p>
+                      <p class="my-auto mr-5"> {{ getCarSpeed(l) }} km/h </p>
+                    </div>
+                    <div class="col-5 d-flex flex-row align-items-start">
+                      <img src="assets/images/Sinnbild_LKW.svg.png" height="100%" width="14%" class="ml-10 my-auto">
+                      <p class="my-auto mr-2">: {{ getLorryAmount(l) }} pro Stunde, </p>
+                      <p class="my-auto ">{{ getLorrySpeed(l) }} km/h</p>
+                    </div>
                   </div>
                 </div>
                 <app-line-simulator [lane]="l" class="pt-2"></app-line-simulator>

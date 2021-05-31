@@ -12,9 +12,9 @@ export class SplashScreenComponent implements OnInit {
   public funnySlogans =
   [
     'wecke den Entwickler auf',
-    'bereite mir schnell ein Kaffee zu',
+    'bereite mir schnell einen Kaffee zu',
     'fahre den Computer hoch',
-    'sammle die Messungen'
+    'sammle die Daten'
   ];
 
   public funnySlogan = '';

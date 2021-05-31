@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { interval, of, timer } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { repeat, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-splash-screen',
@@ -28,10 +28,10 @@ export class SplashScreenComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    timer(this.funnySlogans.length, 1000).pipe(
-      tap(a => this.funnySlogan = this.funnySlogans[a])
+    const index = 0;
+    timer(this.funnySlogans.length, 2000).pipe(
+      tap(a => this.funnySlogan = this.funnySlogans[a % this.funnySlogans.length]),
+      repeat(15)
     ).subscribe();
   }
-
-
 }

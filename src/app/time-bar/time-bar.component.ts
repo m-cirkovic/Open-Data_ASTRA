@@ -34,7 +34,7 @@ export class TimeBarComponent implements OnInit {
       position: 'bottomright'
     })
       .addTo(this.map)
-
+    this.toggleLiveButton()
   }
 
   date(): Date {
@@ -45,10 +45,21 @@ export class TimeBarComponent implements OnInit {
   }
 
   changeData(): void {
+    if(this.loading) return;
     this.dynamic = !this.dynamic;
     this._backendPoll?.unsubscribe();
     this.getNewMeasurement();
+    this.toggleLiveButton();
+  }
 
+  toggleLiveButton(){
+    
+      if (this.dynamic) {
+        document.getElementById('livebutton').classList.remove('tb-button-inactive')
+      } else {
+        document.getElementById('livebutton').classList.add('tb-button-inactive')
+      }
+    
   }
 
   getNewMeasurement(): void {

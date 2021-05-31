@@ -1,19 +1,14 @@
-<div id="timebar" class="timebar d-flex p-2">
+<div id="timebar" class="timebar d-flex p-1">
     <p *ngIf="!current()" class="my-auto font-weight-bold">{{ date() | date:'dd.MM.YY HH:mm' }}</p>
     <p *ngIf="current()" class="my-auto font-weight-bold">{{ date() | date:'HH:mm' }} (aktuell)</p>
-    <div  class="d-flex flex-row">
-        <div class="ml-2 custom-control custom-switch my-auto">
-            <input (click)="changeData()" type="checkbox" class="custom-control-input" id="customSwitch1" [checked]="dynamic">
-            <label class="custom-control-label" for="customSwitch1"></label>
-        </div>
-        <p *ngIf="dynamic && !loading" class="my-auto">Live</p>
-        <p *ngIf="!dynamic" class="my-auto">Snapshot</p>
-    </div>
 
-    <div *ngIf="loading" class="my-auto">
-        <div class="spinner-border spinner-border-sm text-warning" role="status">
-            <span class="sr-only">Loading...</span>
+    <div (click)="changeData()" class="ml-2 tb-button my-auto d-flex flex-row" id="livebutton">
+        <span *ngIf="!loading" class="my-auto">Live</span>
+        <div *ngIf="loading" class="my-auto">
+            <div class="spinner-border spinner-border-sm text-warning" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
         </div>
-        <span></span>
+
     </div>
 </div>

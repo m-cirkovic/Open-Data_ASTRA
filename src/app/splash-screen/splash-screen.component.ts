@@ -14,7 +14,13 @@ export class SplashScreenComponent implements OnInit {
     'wecke den Entwickler auf',
     'bereite mir schnell einen Kaffee zu',
     'fahre den Computer hoch',
-    'sammle die Daten'
+    'sammle die Daten',
+    'verteile Punkte auf der Karte',
+    'zähle Messstellen',
+    'filtere Punkte nach Geschwindikeit',
+    'suche schnellste Messung',
+    'suche langsamste Messung',
+    'lokalisiere höchstes Verkehrsaufkommen'
   ];
 
   public funnySlogan = '';
@@ -22,7 +28,7 @@ export class SplashScreenComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    timer(this.funnySlogans.length, 500).pipe(
+    timer(this.funnySlogans.length, 1000).pipe(
       tap(a => this.funnySlogan = this.funnySlogans[a])
     ).subscribe();
   }

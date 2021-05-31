@@ -208,7 +208,7 @@ export class SideBarComponent implements OnInit, AfterContentInit {
 
   private getCountOverSpeedLimit(){
     this.countOverSpeedLimit = this._astraCache.currentMeasurments.measurement.reduce((acc, curr) => acc += curr.measurementData.reduce((accum, current) =>{
-      if(current.unit === 'km/h' && current.value > 125){
+      if(current.unit === 'km/h' && current.value > 130){
         accum++;
       }
       return accum;

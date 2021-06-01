@@ -29,7 +29,6 @@ export class SideBarComponent implements OnInit, AfterContentInit {
   slowest: { value: number, site: Site };
   mostVehicles: { value: number, site: Site };
   vehicleCount: number;
-  measurementCount: number;
   siteCount: number;
   countOverSpeedLimit: number;
   topTenFastest: { value: number, site: Site }[];
@@ -115,20 +114,9 @@ export class SideBarComponent implements OnInit, AfterContentInit {
 
   }
 
-  getMeasurementCount() {
-    this.measurementCount = this.getVehicleCount() * this._astraCache.currentMeasurments.measurement
-      .reduce((acc, curr) =>
-        curr.measurementData
-          .reduce((accum, curr) => {
-            if (curr.unit === 'Fahrzeug/h' || curr.unit === 'km/h') {
-              acc += 1
-            }
-            return acc;
-          }, 0)
-        , 0) ;
-  }
+  
 
-  getVehicleCount(): number{
+  getVehicleCount(): number {
     this.vehicleCount = this._getVehicleCount() / 60;
     return this.vehicleCount;
   }
@@ -206,13 +194,13 @@ export class SideBarComponent implements OnInit, AfterContentInit {
     this.fastest = { value: Math.round(max), site: maxSite };
   }
 
-  private getCountOverSpeedLimit(){
-    this.countOverSpeedLimit = this._astraCache.currentMeasurments.measurement.reduce((acc, curr) => acc += curr.measurementData.reduce((accum, current) =>{
-      if(current.unit === 'km/h' && current.value > 130){
+  private getCountOverSpeedLimit() {
+    this.countOverSpeedLimit = this._astraCache.currentMeasurments.measurement.reduce((acc, curr) => acc += curr.measurementData.reduce((accum, current) => {
+      if (current.unit === 'km/h' && current.value > 130) {
         accum++;
       }
       return accum;
-    },0), 0)
+    }, 0), 0)
   }
 
   getTopTenFastest() {
@@ -237,7 +225,7 @@ export class SideBarComponent implements OnInit, AfterContentInit {
 
   }
 
-  markTopTen(){
+  markTopTen() {
     this.topTenFastest.forEach(t => this.focusOn(t.site))
   }
 
@@ -337,7 +325,6 @@ export class SideBarComponent implements OnInit, AfterContentInit {
     this.getVehicleCount();
     this.getMostVehicles();
     this.getSiteCount();
-    this.getMeasurementCount();
     this.getCountOverSpeedLimit();
     this.getTopTenFastest();
   }

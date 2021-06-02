@@ -17,7 +17,8 @@ import { BoundsService } from '../../map/BoundsService';
 })
 export class AstraApiService {
 
-  private _auth = '57c5dbbbf1fe4d0001000018543da6f8789f4f868587d0de6163eccd';
+  private _auth = '57c5dbbbf1fe4d0001000018e4f31816e24e419094fb6fbcafb7be42';
+  private _url = '/api';
   private _body: string;
   private _body$ = this._http.get('assets/SoapRequestBody.xml', { responseType: 'text' }).pipe(tap(b => this._body = b), share());
   
@@ -40,10 +41,10 @@ export class AstraApiService {
 
   public getMeasurements(): Observable<Measurements> {
     return this.getBody().pipe(
-      map(body => this._http.post('/api', body, {
+      map(body => this._http.post(this._url, body, {
         responseType: 'text',
         headers: new HttpHeaders()
-          .set('Content-Type', 'text/xml')
+          .set('Content-Type', 'text/plain')
           .append('Authorization', this._auth)
           .append('SOAPAction', 'http://opentransportdata.swiss/TDP/Soap_Datex2/Pull/v1/pullMeasuredData')
       })
@@ -102,10 +103,10 @@ export class AstraApiService {
 
   public getLanes(): Observable<Lane[]> {
     return this.getBody().pipe(
-      map(body => this._http.post('/api', body, {
+      map(body => this._http.post(this._url, body, {
         responseType: 'text',
         headers: new HttpHeaders()
-          .set('Content-Type', 'text/xml')
+          .set('Content-Type', 'text/plain')
           .append('Authorization', this._auth)
           .append('SOAPAction', 'http://opentransportdata.swiss/TDP/Soap_Datex2/Pull/v1/pullMeasurementSiteTable')
       })

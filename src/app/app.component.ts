@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import * as L from 'leaflet';
 import { Observable, } from 'rxjs';
 import { LaneLayerService } from './services/map/lane-layer.service';
@@ -11,10 +11,10 @@ import { LaneLayerService } from './services/map/lane-layer.service';
 export class AppComponent {
   title = 'Verkehrszähler';
 
-  siteLayer$: Observable<any> = this._layerService.getAllLayers({ dynamic: false });
+  siteLayer$: Observable<any> = this._layerService.getAllLayers({ dynamic: this.dynamic });
 
 
 
-  constructor(private _layerService: LaneLayerService) {
+  constructor(private _layerService: LaneLayerService, @Inject('DYNAMIC') private dynamic: boolean) {
   }
 }

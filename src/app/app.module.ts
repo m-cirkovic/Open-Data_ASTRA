@@ -44,7 +44,8 @@ import { LineSimulatorComponent } from './line-simulator/line-simulator.componen
     BsModalService,
     ComponentLoaderFactory,
     PositioningService,
-    PopUpService
+    PopUpService,
+    { provide: 'DYNAMIC', useValue: true },
   ],
   bootstrap: [AppComponent],
   entryComponents: [ModalComponent]

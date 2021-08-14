@@ -6,6 +6,8 @@ import { Measurement, MeasurementData } from '../models/Internal/measurement.mod
 import { AstraCacheService } from '../services/data/astra/astra-cache.service';
 import { TmcMapperService } from '../services/data/mappers/tmc-mapper.service';
 import * as d3 from 'd3';
+import { PopupService } from '@ng-bootstrap/ng-bootstrap/util/popup';
+import { PopUpService } from '../services/map/pop-up.service';
 
 @Component({
   selector: 'app-modal',
@@ -74,6 +76,10 @@ export class ModalComponent implements OnInit {
       }
       return Math.round(acc);
     }, 0);
+  }
+
+  public getId(): string{
+    return PopUpService.getId(this.site.lanes[0].siteId);
   }
 
 }

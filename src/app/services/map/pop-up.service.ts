@@ -15,7 +15,7 @@ export class PopUpService {
     const noError = measurements.filter(m => !m?.reasonForDataError);
     const error = measurements.filter(m => m?.reasonForDataError);
     return `<div class ="container-fluid" style="color:gray;">
-            <div><span class="h4">Richtung ${site.locationName}</span> <br/><span class="p">Id: ${site.lanes[0].siteId.split('.')[0]}</span></div>
+            <div><span class="h4">Richtung ${site.locationName}</span> <br/><span class="p"> ${PopUpService.getId(site.lanes[0].siteId)}</span></div>
             <hr>
             <p>
             <span title="Durchschnittsgeschwindigkeit über alle Spuren"><strong>Geschwindigkeit:</strong> ${AverageService.getAvgVehicleSpeed(noError)} km/h </span><br>
@@ -32,6 +32,11 @@ export class PopUpService {
     } else {
       return '';
     }
+  }
+
+  static getId(id: string){
+    let split = id.split('.');
+    return split.length === 2 ? split[0] : split[0] + '.' + split[1];
   }
 
 }

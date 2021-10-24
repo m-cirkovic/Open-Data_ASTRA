@@ -33,7 +33,7 @@ export class MapLayerService {
   };
 
   private mapLayerMap: Map<string, TileLayer> =new Map(Object.entries({
-    'default': this.openStreetMap_CH,
+    'default': this.stadiamap,
     'swisstopo': this.swissTopo,
     'osm': this.openStreetMap_CH,
     'opentopo': this.openTopoMap,

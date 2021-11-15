@@ -1,9 +1,14 @@
-# Scaffolding
+# Verkehrszähler :blue_car: :red_car: :truck:
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.2.6.
+Dieses Projekt visulaisiert den aktuellen Verkehrsfluss in der Schweiz. Auf der Website [astra.maschuep.ch](https://astra.maschuep.ch) können sie die aktuelle Version des Projekts auskundschaften. 
 
 ## Development server
+Wir gehen davon aus, dass sie npm und NodeJs bereits installiert haben.
 
-Run `npm start` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+- Geben Sie `npm start` in iher Konsole ein
+- Navigieren Sie im Browser zu `http://localhost:4200/`
+- Nun sehen sie den aktuellen Stand der Entwicklung und des Verkehrs :truck:
 
-## API KEY traffic counters
+## Participation
+
+Wenn sie Ideen oder Andregungen haben erstellen sie am besten ein Issue [hier](https://github.com/m-cirkovic/Open-Data_ASTRA/issues).

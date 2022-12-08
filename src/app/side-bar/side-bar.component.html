@@ -2,8 +2,8 @@
   <div class="tabs">
     <ul>
       <li>
-        <button (click)="changeTab( 'info' )">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle"
+        <button (mousedown)="changeTab('info')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" 
             viewBox="0 0 16 16">
             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
             <path
@@ -12,7 +12,7 @@
         </button>
       </li>
       <li>
-        <button (click)="changeTab( 'stats')">
+        <button (mousedown)="changeTab('stats')">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
             class="bi bi-file-bar-graph" viewBox="0 0 16 16">
             <path
@@ -23,7 +23,7 @@
         </button>
       </li>
       <li>
-        <button (click)="changeTab( 'filter')">
+        <button (mousedown)="changeTab( 'filter')">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-filter"
             viewBox="0 0 16 16">
             <path
@@ -32,7 +32,7 @@
         </button>
       </li>
       <li>
-        <button (click)="changeTab( 'personal')">
+        <button (mousedown)="changeTab('personal')">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person"
             viewBox="0 0 16 16">
             <path
@@ -43,11 +43,11 @@
     </ul>
   </div>
 
-  <div id="info" class="tab-pane pt-2">
+  <div class="tab-pane pt-2" *ngIf="currentTab === 'info'">
     <button type="button" class="close" aria-label="Close" (click)="hidePane()">
       <span aria-hidden="true">&times;</span>
     </button>
-    <div class="container">
+    <div>
       <div class="header">
         <div class="m-3 d-flex justify-content-between align-items">
           <h1>Wilkommen</h1>
@@ -90,7 +90,7 @@
     </div>
   </div>
 
-  <div id="stats" class="tab-pane pt-2">
+  <div class="tab-pane pt-2" *ngIf="currentTab === 'stats'">
     <button type="button" class="close" aria-label="Close" (click)="hidePane()">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -169,7 +169,7 @@
       </div>
     </div>
   </div>
-  <div id="filter" class="tab-pane pt-2">
+  <div id="filter" class="tab-pane pt-2" *ngIf="currentTab === 'filter'">
     <button type="button" class="close" aria-label="Close" (click)="hidePane()">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -181,37 +181,37 @@
       </div>
       <div class="m-3">
         <h2 class="my-3">Messstellen</h2>
-        <div class="d-flex justify-content-center">
-          <div (click)="onFilterClick('normal')" class="filter-button " id="normal">Normaler
+        <div class="d-flex justify-content-center wrap grow">
+          <div (mousedown)="onFilterClick('normal')" class="filter-button " id="normal">Normaler
             Verkehr
           </div>
-          <div (click)="onFilterClick('fehlerhaft')" class="filter-button " id="fehlerhaft">Fehlerhafte Messungen</div>
-          <div (click)="onFilterClick('stau')" class="filter-button " id="stau">Stau</div>
-          <div (click)="onFilterClick('stockend')" class="filter-button " id="stockend">Stockender
+          <div (mousedown)="onFilterClick('fehlerhaft')" class="filter-button " id="fehlerhaft">Fehlerhafte Messungen</div>
+          <div (mousedown)="onFilterClick('stau')" class="filter-button " id="stau">Stau</div>
+          <div (mousedown)="onFilterClick('stockend')" class="filter-button " id="stockend">Stockender
             Verkehr
           </div>
         </div>
         <h2 class="my-3">Karten</h2>
         <div class="d-flex flex-row flex-wrap justify-content-center">
-          <div (click)="onMapClick('swisstopo')" class="map-button m-1">
+          <div (mousedown)="onMapClick('swisstopo')" class="map-button m-1">
             <div class="map-button-text d-flex justify-content-center align-items-center">
               <h3>Swiss Topo</h3>
             </div>
             <img src="/assets/images/swisstopo.png">
           </div>
-          <div (click)="onMapClick('opentopo')" class="map-button m-1">
+          <div (mousedown)="onMapClick('opentopo')" class="map-button m-1">
             <div class="map-button-text d-flex justify-content-center align-items-center">
               <h3>Open Topo Map</h3>
             </div>
             <img src="/assets/images/opentopo.png">
           </div>
-          <div (click)="onMapClick('osm')" class="map-button m-1">
+          <div (mousedown)="onMapClick('osm')" class="map-button m-1">
             <div class="map-button-text d-flex justify-content-center align-items-center">
               <h3>Open Street Map</h3>
             </div>
             <img src="/assets/images/osm.png">
           </div>
-          <div (click)="onMapClick('stadia')" class="map-button m-1">
+          <div (mousedown)="onMapClick('stadia')" class="map-button m-1">
             <div class="map-button-text d-flex justify-content-center align-items-center">
               <h3>Stadia</h3>
             </div>
@@ -221,7 +221,7 @@
       </div>
     </div>
   </div>
-  <div id="personal" class="tab-pane pt-2">
+  <div class="tab-pane pt-2" *ngIf="currentTab === 'personal'">
     <button class="close" aria-label="Close" (click)="hidePane()">
       <span aria-hidden="true">&times;</span>
     </button>

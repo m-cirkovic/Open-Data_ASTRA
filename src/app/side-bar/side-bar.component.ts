@@ -1,8 +1,8 @@
-import { AfterContentInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { circle, Control, DomUtil, Icon, Map as LMap, Marker, marker, popup, tooltip } from 'leaflet';
+import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Control, DomUtil, Icon, Map as LMap, Marker, marker, popup, tooltip } from 'leaflet';
 import * as d3 from 'd3';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable, timer } from 'rxjs';
+import { take, tap } from 'rxjs/operators';
 import { Site } from '../models/Internal/site.model';
 import { AstraCacheService } from '../services/data/astra/astra-cache.service';
 
@@ -22,7 +22,7 @@ export class SideBarComponent implements OnInit, AfterContentInit {
 
   sidebar: Control;
   loading = false;
-  private _currentTab: string;
+  public currentTab: string;
 
 
   fastest: { value: number, site: Site };
@@ -62,26 +62,18 @@ export class SideBarComponent implements OnInit, AfterContentInit {
   }
 
   ngAfterContentInit(): void {
-    this._drawCircles()
-    this._refreshValues()
+    this._refreshValues();
   }
 
   hidePane(): void {
-    document.getElementById(this._currentTab).style.display = 'none';
-    this._currentTab = '';
+    this.currentTab = '';
   }
 
   changeTab(tab: string): void {
-    const current = document.getElementById(this._currentTab);
-    if (current) {
-      current.style.display = 'none';
-    }
-    if (tab !== this._currentTab) {
-      document.getElementById(tab).style.display = 'block';
-      this._currentTab = tab;
-    } else {
-      this._currentTab = null;
-    }
+    if (!tab) return;
+    this.currentTab = (this.currentTab) === tab ? '' : tab;
+    console.log('current: ', this.currentTab, 'new: ', tab)
+    timer(100).pipe(take(1)).subscribe(_ => this._drawCircles());
   }
 
   onMapClick(event: string) {
@@ -114,7 +106,7 @@ export class SideBarComponent implements OnInit, AfterContentInit {
 
   }
 
-  
+
 
   getVehicleCount(): number {
     this.vehicleCount = this._getVehicleCount() / 60;
@@ -273,8 +265,8 @@ export class SideBarComponent implements OnInit, AfterContentInit {
       }
     }))
     return fastestB - fastestA;
-
   }
+
   private _drawCircles() {
     d3.select('#blueCircle')
       .append('svg')

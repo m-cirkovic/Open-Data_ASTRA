@@ -12,7 +12,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {PopUpService} from './services/map/pop-up.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ModalComponent } from './modal/modal.component';
-import {MatDialogModule} from '@angular/material/dialog';
+import {MatLegacyDialogModule as MatDialogModule} from '@angular/material/legacy-dialog';
 import { SplashScreenComponent } from './splash-screen/splash-screen.component';
 import { SideBarComponent } from './side-bar/side-bar.component';
 import { TimeBarComponent } from './time-bar/time-bar.component';

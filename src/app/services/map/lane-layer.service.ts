@@ -5,7 +5,7 @@ import { AstraCacheService } from '../data/astra/astra-cache.service';
 import * as L from 'leaflet';
 import { PopUpService } from './pop-up.service';
 import { Site } from 'src/app/models/Internal/site.model';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog, MatLegacyDialogConfig as MatDialogConfig } from '@angular/material/legacy-dialog';
 import { ModalComponent } from 'src/app/modal/modal.component';
 
 @Injectable({

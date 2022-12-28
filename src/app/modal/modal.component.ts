@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { ModalInfoService } from '../services/modal-info.service';
 import { Lane, Site } from '../models/Internal/site.model';
 import { Measurement, MeasurementData } from '../models/Internal/measurement.model';

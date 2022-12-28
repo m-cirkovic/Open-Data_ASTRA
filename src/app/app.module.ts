@@ -20,34 +20,33 @@ import {LeafletMarkerClusterModule} from '@asymmetrik/ngx-leaflet-markercluster'
 import { LineSimulatorComponent } from './line-simulator/line-simulator.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    MapComponent,
-    ModalComponent,
-    SplashScreenComponent,
-    SideBarComponent,
-    TimeBarComponent,
-    LineSimulatorComponent
-  ],
-  imports: [
-    BrowserModule,
-    HttpClientModule,
-    AppRoutingModule,
-    AccordionModule.forRoot(),
-    ModalModule,
-    NgbModule,
-    BrowserAnimationsModule,
-    MatDialogModule,
-    LeafletMarkerClusterModule
-  ],
-  providers: [
-    BsModalService,
-    ComponentLoaderFactory,
-    PositioningService,
-    PopUpService,
-    { provide: 'DYNAMIC', useValue: true },
-  ],
-  bootstrap: [AppComponent],
-  entryComponents: [ModalComponent]
+    declarations: [
+        AppComponent,
+        MapComponent,
+        ModalComponent,
+        SplashScreenComponent,
+        SideBarComponent,
+        TimeBarComponent,
+        LineSimulatorComponent
+    ],
+    imports: [
+        BrowserModule,
+        HttpClientModule,
+        AppRoutingModule,
+        AccordionModule.forRoot(),
+        ModalModule,
+        NgbModule,
+        BrowserAnimationsModule,
+        MatDialogModule,
+        LeafletMarkerClusterModule
+    ],
+    providers: [
+        BsModalService,
+        ComponentLoaderFactory,
+        PositioningService,
+        PopUpService,
+        { provide: 'DYNAMIC', useValue: true },
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }

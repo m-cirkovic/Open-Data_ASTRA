@@ -30,7 +30,7 @@ export class LaneMapperService {
   public fillWithMeasurements(measurements: Observable<Measurements>, sites: Observable<Site[]>, thisArg: any, saveSite: (sites: Site[], a: AstraCacheService) => void,  saveMeasurements: (ms: Measurements, a: AstraCacheService) => void): Observable<Site[]> {
     return measurements.pipe(
       tap(m => saveMeasurements(m, thisArg)),
-      map(m => new Map<string, Measurement>(m.measurement.map(measurement => [measurement.siteId, measurement]))),
+      map(m => new Map<string, Measurement>(m.measurement?.map(measurement => [measurement.siteId, measurement]))),
       map(m => sites.pipe(
         tap(site => site.forEach(s => s.lanes.map(l => l.measurements = m.get(l.siteId)))),
         tap(sites => saveSite(sites, thisArg))

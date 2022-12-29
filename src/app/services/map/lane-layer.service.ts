@@ -5,7 +5,7 @@ import { AstraCacheService } from '../data/astra/astra-cache.service';
 import * as L from 'leaflet';
 import { PopUpService } from './pop-up.service';
 import { Site } from 'src/app/models/Internal/site.model';
-import { MatLegacyDialog as MatDialog, MatLegacyDialogConfig as MatDialogConfig } from '@angular/material/legacy-dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ModalComponent } from 'src/app/modal/modal.component';
 
 @Injectable({
@@ -45,7 +45,7 @@ export class LaneLayerService {
       map(sites => {
         let a: L.Control.LayersObject = {};
         Object.entries(sites).forEach(s => {
-          if(s[1].sites){
+          if (s[1].sites) {
             a[s[0]] = this.mapToLayerGroup(s[1].sites, this._popupService, s[1].color)
           }
         })

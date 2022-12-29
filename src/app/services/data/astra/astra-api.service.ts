@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import * as Parser from 'fast-xml-parser'
 import { Observable, of } from 'rxjs';
-import { catchError, concatAll, map, share, tap } from 'rxjs/operators';
+import { catchError, concatAll, map, share, shareReplay, tap } from 'rxjs/operators';
 import { SitePayloadPublication } from '../../../models/Soap/site.model';
 import { SoapWrapper } from '../../../models/Soap/soap.model';
 import { Lane } from '../../../models/Internal/site.model';
@@ -35,7 +35,7 @@ export class AstraApiService {
       map(r => this.mapToMeasurement(r, this._indexMapper, this._getMeasurementDataValue)),
       concatAll(),
       catchError((err,cau) => {console.log(err,cau); return of(err)}),
-      share()
+      shareReplay(1)
     )
   }
 
@@ -53,7 +53,7 @@ export class AstraApiService {
       map(r => this.mapToMeasurement(r, this._indexMapper, this._getMeasurementDataValue)),
       concatAll(),
       catchError((err,cau) => {console.log(err,cau); return of(err)}),
-      share()
+      shareReplay(1)
     )
 
   }
@@ -137,46 +137,7 @@ export class AstraApiService {
       ))),
     );
   }
-
-  private _isInBounds(){
-
-  }
-
-  private _maptoMeasuremnets(measurements: Observable<string>): Observable<Measurements> {
-    return measurements.pipe(
-      map(xml => Parser.parse(xml, { ignoreNameSpace: true, ignoreAttributes: false })),
-      map(ms => <SoapWrapper<MeasurementPayloadPublication>>ms),
-      map(ms => ms.Envelope.Body.d2LogicalModel.payloadPublication),
-      map(ms => new Measurements(new Date(ms.publicationTime['#text']), ms.siteMeasurements.map(m => {
-        if (m.measuredValue instanceof Array) {
-          return new Measurement(
-            m.measurementSiteReference['@_id'],
-            new Date(ms.publicationTime['#text']),
-            m.measuredValue.map(v => new MeasurementData(
-              this._indexMapper.getVehicle(v['@_index']),
-              this._indexMapper.getUnit(v['@_index']),
-              this._getMeasurementDataValue(v.measuredValue.basicData)
-            )
-            )
-          )
-        } else {
-          return new Measurement(
-            m.measurementSiteReference['@_id'],
-            new Date(ms.publicationTime['#text']),
-            [
-              new MeasurementData(
-                this._indexMapper.getVehicle(m.measuredValue['@_index']),
-                this._indexMapper.getUnit(m.measuredValue['@_index']),
-                this._getMeasurementDataValue(m.measuredValue.measuredValue.basicData)
-              )
-            ],
-            this._msgMapper.getMsg(m)
-          )
-        }
-      }))),
-    )
-  }
-
+ 
   private getBody(): Observable<string>{
     return this._body ? of(this._body) : this._body$
   }

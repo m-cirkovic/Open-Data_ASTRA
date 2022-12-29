@@ -1,3 +1,4 @@
+import { OnInit } from '@angular/core';
 import { Component, Inject } from '@angular/core';
 import * as L from 'leaflet';
 import { Observable, } from 'rxjs';
@@ -9,7 +10,7 @@ import { VisitCountService } from './services/visit-count.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'Verkehrszähler';
 
   siteLayer$: Observable<any> = this._layerService.getAllLayers({ dynamic: this.dynamic });
@@ -22,5 +23,5 @@ export class AppComponent {
   ngOnInit(){
     this.counter.countVisit().subscribe();
   }
-  
+
 }

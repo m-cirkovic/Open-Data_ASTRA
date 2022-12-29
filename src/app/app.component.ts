@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import * as L from 'leaflet';
 import { Observable, } from 'rxjs';
 import { LaneLayerService } from './services/map/lane-layer.service';
+import { VisitCountService } from './services/visit-count.service';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +16,11 @@ export class AppComponent {
 
 
 
-  constructor(private _layerService: LaneLayerService, @Inject('DYNAMIC') private dynamic: boolean) {
+  constructor(private _layerService: LaneLayerService, @Inject('DYNAMIC') private dynamic: boolean, private counter: VisitCountService) {
   }
+
+  ngOnInit(){
+    this.counter.countVisit().subscribe();
+  }
+  
 }

@@ -1,12 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
-import { ModalInfoService } from '../services/modal-info.service';
+import { MatDialogRef } from '@angular/material/dialog';
 import { Lane, Site } from '../models/Internal/site.model';
-import { Measurement, MeasurementData } from '../models/Internal/measurement.model';
 import { AstraCacheService } from '../services/data/astra/astra-cache.service';
 import { TmcMapperService } from '../services/data/mappers/tmc-mapper.service';
-import * as d3 from 'd3';
-import { PopupService } from '@ng-bootstrap/ng-bootstrap/util/popup';
 import { PopUpService } from '../services/map/pop-up.service';
 
 @Component({

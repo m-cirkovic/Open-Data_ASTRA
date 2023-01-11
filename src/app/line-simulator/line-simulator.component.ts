@@ -1,5 +1,5 @@
-import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
-import {Lane} from '../models/Internal/site.model';
+import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Lane } from '../models/Internal/site.model';
 import * as d3 from 'd3';
 
 
@@ -34,8 +34,9 @@ export class LineSimulatorComponent implements OnInit, AfterViewInit {
 
   private createSvg(): void {
     this.svg = d3.select(this.lineSim.nativeElement)
-      .attr('width', 702) // Set the attributes of the SVG element
-      .attr('height', 40)
+      .attr('viewbox', '0,0,100%,40')
+      .attr('width', '100%') // Set the attributes of the SVG element
+      .attr('height', '40px')
       .style('background-color', '#eee');
   }
 
@@ -116,7 +117,7 @@ export class LineSimulatorComponent implements OnInit, AfterViewInit {
 
   private createTruck(): any {
     this.circle = this.svg.append('image')
-      .attr('xlink:href', 'assets/images/Sinnbild_LKW.svg.png' )
+      .attr('xlink:href', 'assets/images/Sinnbild_LKW.svg.png')
       .attr('x', -30)
       .attr('y', 10)
       .attr('height', 30);
@@ -124,7 +125,7 @@ export class LineSimulatorComponent implements OnInit, AfterViewInit {
 
   private createCar(): any {
     this.circle = this.svg.append('image')
-      .attr('xlink:href', 'assets/images/Car_pictogram.svg.png' )
+      .attr('xlink:href', 'assets/images/Car_pictogram.svg.png')
       .attr('x', -30)
       .attr('y', 17)
       .attr('height', 25);
@@ -164,10 +165,10 @@ export class LineSimulatorComponent implements OnInit, AfterViewInit {
       .transition()
       .duration(this.getSpeedDuration(this.getSpeed(this.lane, unit)))
       .ease(d3.easeLinear)
-      .attr('x', 725);
+      .attr('x', 730);
     setTimeout(() => {
       this.repeat();
-    }, this.getTraffic(this.getTrafficDensity(this.lane))/2);
+    }, this.getTraffic(this.getTrafficDensity(this.lane)) / 2);
   }
 
 }

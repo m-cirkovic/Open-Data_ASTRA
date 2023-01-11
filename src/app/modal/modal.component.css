@@ -1,8 +1,7 @@
 #modal-content-wrapper {
-  width: 100%;
-  height: 100%;
   display: grid;
   color :gray;
+  padding: 10px
 }
 
 #modal-title {
@@ -20,8 +19,10 @@
 
 .close{
   position: relative;
-  top: -20px;
 }
 #no_wrap {
   white-space: nowrap;
+}
+div > header > button{
+  margin-right: 10px;
 }

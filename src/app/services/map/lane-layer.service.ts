@@ -24,7 +24,7 @@ export class LaneLayerService {
     const siteLayersSeed: L.Control.LayersObject = {};
     const sites = this._astraCache.sitesWithLatestMeasurements(options.dynamic);
     return sites.pipe(
-      map(sites => sites.reduce((acc: Foo, curr) => {
+      map(sites => sites.reduce((acc, curr) => {
         if (curr.lanes.filter(l => l.measurements?.reasonForDataError).length > 0) {
           acc['fehlerhaft'].sites.push(curr);
         } else if (curr.lanes.filter(l => l.measurements?.measurementData.filter(d => d.unit === 'km/h' && d.value < 30 && d.value >= 10).length > 0).length > 0) {
@@ -66,30 +66,29 @@ export class LaneLayerService {
         });
       }
     });
-    sites.filter(s => s.lanes[0]).forEach(s => L.circleMarker([s.lanes[0].lat, s.lanes[0].lng], { color }).addTo(layer).bindPopup(popup.siteToHtml(s)).on('popupopen', (a) => {
-      const popUp = a.target.getPopup();
-      popUp.getElement()
-        .querySelector('.open-modal')
-        .addEventListener('click', (e) => {
-          this._astraCache.saveSite(s);
-          const dialogConfig = new MatDialogConfig();
-          // The user can't close the dialog by clicking outside its body
-          dialogConfig.disableClose = false;
-          dialogConfig.id = 'modal-component';
-          dialogConfig.maxHeight = '75vh';
-          dialogConfig.maxWidth = '800px';
-          // https://material.angular.io/components/dialog/overview
-          const modalDialog = this._matDialog.open(ModalComponent, dialogConfig);
-        });
-    }));
+    sites.filter(s => s.lanes[0])
+    .forEach(s => {
+      let marker = new L.CircleMarker<Site>([s.lanes[0].lat, s.lanes[0].lng], { color });
+      marker.feature = { type: 'Feature', geometry: { type: 'Point', coordinates: [s.lanes[0].lat, s.lanes[0].lng] }, properties: s };
+      marker.addTo(layer)
+        .bindPopup(popup.siteToHtml(s))
+        .on('popupopen', (a) => {
+          const popUp = a.target.getPopup();
+          popUp.getElement()
+            .querySelector('.open-modal')
+            .addEventListener('click', (e) => {
+              this._astraCache.saveSite(s);
+              const dialogConfig = new MatDialogConfig();
+              // The user can't close the dialog by clicking outside its body
+              dialogConfig.disableClose = false;
+              dialogConfig.id = 'modal-component';
+              dialogConfig.maxHeight = '75vh';
+              dialogConfig.maxWidth = '800px';
+              // https://material.angular.io/components/dialog/overview
+              const modalDialog = this._matDialog.open(ModalComponent, dialogConfig);
+            });
+        })
+    });
     return layer;
   }
-}
-
-interface Foo {
-  [name: string]: Bar
-}
-interface Bar {
-  color: string;
-  sites: Site[]
 }

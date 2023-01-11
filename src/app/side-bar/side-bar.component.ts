@@ -2,9 +2,10 @@ import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component
 import { Control, DomUtil, Icon, Map as LMap, Marker, marker, popup, tooltip } from 'leaflet';
 import * as d3 from 'd3';
 import { Observable, timer } from 'rxjs';
-import { take, tap } from 'rxjs/operators';
+import { filter, map, startWith, take, tap } from 'rxjs/operators';
 import { Site } from '../models/Internal/site.model';
 import { AstraCacheService } from '../services/data/astra/astra-cache.service';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-side-bar',
@@ -33,12 +34,18 @@ export class SideBarComponent implements OnInit, AfterContentInit {
   countOverSpeedLimit: number;
   topTenFastest: { value: number, site: Site }[];
 
-
   private _filterConfig = {
     'normal': true,
     'fehlerhaft': true,
     'stau': true,
     'stockend': true,
+  }
+
+  layerGroupCount = {
+    fehlerhaft: 0,
+    normal: 0,
+    stau: 0,
+    stockend: 0
   }
 
   private _statSitesMarkers = new Map<number, Marker>();
@@ -58,7 +65,7 @@ export class SideBarComponent implements OnInit, AfterContentInit {
       position: 'topleft'
     }).addTo(this.map);
     this.mapChangeEvent$.pipe(tap(e => this.siteLayers = e)).subscribe(() => this._refreshValues())
-    Icon.Default.imagePath = "assets/icons/"
+    Icon.Default.imagePath = "assets/icons/";
   }
 
   ngAfterContentInit(): void {
@@ -106,7 +113,12 @@ export class SideBarComponent implements OnInit, AfterContentInit {
 
   }
 
-
+  search() {
+    const all = this._astraCache.getCurrentNested()
+  }
+  displayFn(site: Site): string {
+    return site.locationName
+  }
 
   getVehicleCount(): number {
     this.vehicleCount = this._getVehicleCount() / 60;
